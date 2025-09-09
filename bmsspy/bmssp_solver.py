@@ -1,8 +1,8 @@
 from heapq import heappush, heappop
 from math import ceil, log
 
-from bmsspy.bmssp_data_structure import BmsspDataStructure
-from bmsspy.utils import inf
+from .bmssp_data_structure import BmsspDataStructure
+from .utils import inf
 
 
 class BmsspSolver:
@@ -29,6 +29,7 @@ class BmsspSolver:
         self.original_graph_length = len(graph)
         self.graph_length = len(self.graph)
         self.distance_matrix = [inf] * self.graph_length
+        # Addition: Initialize Predecessor array for path reconstruction
         self.predecessor = [-1] * self.graph_length
         self.distance_matrix[origin_id] = 0
 
@@ -185,14 +186,12 @@ class BmsspSolver:
         new_frontier = set()
         heap = []
         heappush(heap, (self.distance_matrix[first_frontier], first_frontier))
-        # Addition: Add visited check to prevent reprocessing and dropping into infinite loops
-        visited = set()
-        # grow until we exceed pivot_relaxation_steps (practical limit), as in Algorithm 2
+        # Grow until we exceed pivot_relaxation_steps (practical limit), as in Algorithm 2
         while heap and len(new_frontier) < self.pivot_relaxation_steps + 1:
             frontier_distance, frontier_idx = heappop(heap)
-            if frontier_idx in visited:
+            # Addition: Add check to ensure that we do not get caught in a relaxation loop
+            if frontier_idx in new_frontier:
                 continue
-            visited.add(frontier_idx)
             new_frontier.add(frontier_idx)
             for connection_idx, connection_distance in self.graph[
                 frontier_idx
@@ -263,8 +262,8 @@ class BmsspSolver:
         data_struct = BmsspDataStructure(
             subset_size=subset_size, upper_bound=upper_bound
         )
-        for pivot in pivots:
-            data_struct.insert_key_value(pivot, self.distance_matrix[pivot])
+
+        data_struct.batch_insert({(p, self.distance_matrix[p]) for p in pivots})
 
         # Track new_frontier and B' according to Algorithm 3
         new_frontier = set()
@@ -345,10 +344,8 @@ class BmsspSolver:
                 <= self.distance_matrix[x]
                 < data_struct_frontier_bound_i
             }
-            for frontier_idx, frontier_distance in (
-                intermediate_frontier | data_struct_frontier_i_filtered
-            ):
-                data_struct.insert_key_value(frontier_idx, frontier_distance)
+
+            data_struct.batch_insert(intermediate_frontier | data_struct_frontier_i_filtered)
 
         # Step 22: Final return
         return min(last_min_pivot_distance, upper_bound), new_frontier | {

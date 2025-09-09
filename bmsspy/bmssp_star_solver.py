@@ -1,8 +1,8 @@
 from heapq import heappush, heappop
 from math import ceil, log
 
-from bmsspy.bmssp_data_structure import BmsspDataStructure
-from bmsspy.utils import inf
+from .bmssp_data_structure import BmsspDataStructure
+from .utils import inf
 
 
 class BmsspStarSolver:
@@ -49,10 +49,6 @@ class BmsspStarSolver:
         self.heuristic_distance_matrix = [inf] * self.graph_length
         self.predecessor = [-1] * self.graph_length
         self.distance_matrix[origin_id] = 0
-        if heuristic_fn is None:
-            raise ValueError(
-                "A heuristic function must be provided for the BMSSP* solver"
-            )
         self.heuristic_fn = heuristic_fn
 
         if self.graph_length <= 2:
@@ -121,10 +117,6 @@ class BmsspStarSolver:
                     prev_frontier_idx
                 ].items():
                     new_distance = prev_frontier_distance + connection_distance
-                    new_heuristic_distance = (
-                        self.heuristic_fn(connection_idx, self.destination_id)
-                        + new_distance
-                    )
                     # Important: Allow equality on relaxations
                     if new_distance <= self.distance_matrix[connection_idx]:
                         # Addition: Add predecessor tracking

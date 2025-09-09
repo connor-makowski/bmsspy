@@ -1,5 +1,5 @@
 from heapq import heappush, heappop
-from bmsspy.utils import inf
+from .utils import inf
 
 
 class BmsspDataStructure:
@@ -63,3 +63,12 @@ class BmsspDataStructure:
             min(self.best.values()) if self.best else self.upper_bound
         )
         return remaining_best, subset
+
+    def batch_insert(self, key_value_pairs: set[tuple[int, int | float]]):
+        """
+        Insert/refresh multiple key-value pairs at once.
+        """
+        for key, value in key_value_pairs:
+            if value < self.best.get(key, inf):
+                self.best[key] = value
+                heappush(self.heap, (value, key))

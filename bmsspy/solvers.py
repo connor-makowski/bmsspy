@@ -1,6 +1,6 @@
-from bmsspy.bmssp_solver import BmsspSolver
-from bmsspy.bmssp_star_solver import BmsspStarSolver
-from bmsspy.utils import input_check, reconstruct_path
+from .bmssp_solver import BmsspSolver
+from .bmssp_star_solver import BmsspStarSolver
+from .utils import input_check, reconstruct_path
 
 
 def bmssp(
