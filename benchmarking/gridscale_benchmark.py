@@ -63,6 +63,8 @@ for name, scgraph_object in graph_data:
         #     ig_spantree_time_stats = {'avg': float('nan'), 'std': float('nan')}
         #     print(f"iGraph spantree time: {ig_spantree_time_stats['avg']:.2f} ms (stdev: {ig_spantree_time_stats['std']:.2f})")
 
+        print(f"Speed Ratio (BMSSP / SCGraph): {bmssp_spantree_time_stats['avg'] / sc_dijkstra_spantree_time_stats['avg']:.2f}")
+
         output.append({
             'graph_name': name,
             'case_name': case_name,

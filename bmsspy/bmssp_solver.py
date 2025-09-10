@@ -2,7 +2,57 @@ from heapq import heappush, heappop
 from math import ceil, log
 
 from .bmssp_data_structure import BmsspDataStructure
-from .utils import inf
+
+inf = float("inf")
+
+# def cnt_reachable_nodes(root: int, forest: dict[int, set[int]]) -> int:
+#     """
+#     Function:
+
+#     - Return the number of nodes reachable from root in the directed forest defined by forest.
+
+#     Required Arguments:
+
+#     - `root`
+#         - Type: int
+#         - What: The starting node for the DFS traversal.
+#     - `forest`
+#         - Type: dict[int, set[int]]
+#         - What: Adjacency list representing the directed forest.
+#     """
+#     seen = set()
+#     diff = {root}
+#     while diff:
+#         seen.update(diff)
+#         diff = set([idx for v in diff for idx in forest[v]]) - seen
+#     return len(seen)
+
+def cnt_reachable_nodes(root: int, forest: dict[int, set[int]]) -> int:
+    """
+    Function:
+
+    - Return the number of nodes reachable from root in the directed forest defined by forest.
+
+    Required Arguments:
+
+    - `root`
+        - Type: int
+        - What: The starting node for the DFS traversal.
+    - `forest`
+        - Type: dict[int, set[int]]
+        - What: Adjacency list representing the directed forest.
+    """
+    seen = set()
+    stack = [root]
+    cnt = 0
+    while stack:
+        x = stack.pop()
+        if x in seen:
+            continue
+        seen.add(x)
+        cnt += 1
+        stack.extend(forest[x])
+    return cnt
 
 
 class BmsspSolver:
@@ -48,8 +98,8 @@ class BmsspSolver:
         # Compute max_tree_depth based on k and t
         self.max_tree_depth = int(
             ceil(
-                log(max(2, self.graph_length)) / max(1, self.target_tree_depth)
-            )
+                    log(max(2, self.graph_length)) / self.target_tree_depth
+                )
         )
 
         # Run the solver algorithm
@@ -115,7 +165,7 @@ class BmsspSolver:
             prev_frontier = curr_frontier
 
         # Build tight-edge forest F on temp_frontier: edges (u -> v) with db[u] + w == db[v]
-        forest_adj = {i: set() for i in temp_frontier}
+        forest = {i: set() for i in temp_frontier}
         indegree = {i: 0 for i in temp_frontier}
         for frontier_idx in temp_frontier:
             frontier_distance = self.distance_matrix[frontier_idx]
@@ -131,27 +181,14 @@ class BmsspSolver:
                     < 1e-12
                 ):
                     # direction is frontier_idx -> connection_idx (parent to child)
-                    forest_adj[frontier_idx].add(connection_idx)
+                    forest[frontier_idx].add(connection_idx)
                     indegree[connection_idx] += 1
 
-        # Non-sticky DFS that counts size of the reachable tree
-        def dfs_count(root):
-            seen = set()
-            stack = [root]
-            cnt = 0
-            while stack:
-                x = stack.pop()
-                if x in seen:
-                    continue
-                seen.add(x)
-                cnt += 1
-                stack.extend(forest_adj[x])
-            return cnt
 
         pivots = set()
         for frontier_idx in frontier:
             if indegree.get(frontier_idx, 0) == 0:
-                size = dfs_count(frontier_idx)
+                size = cnt_reachable_nodes(frontier_idx, forest=forest)
                 if size >= self.pivot_relaxation_steps:
                     pivots.add(frontier_idx)
 
