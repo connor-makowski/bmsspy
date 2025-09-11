@@ -22,7 +22,7 @@ class BmsspDataStructure:
             self.best[key] = value
             heappush(self.heap, (value, key))
 
-    def __pop_current__(self):
+    def pop_current(self):
         """
         Pop the current minimum key that matches self.best.
         Returns None if heap is exhausted of current items.
@@ -51,7 +51,7 @@ class BmsspDataStructure:
 
         # Take up to M distinct current keys
         while count < self.subset_size:
-            key = self.__pop_current__()
+            key = self.pop_current()
             if key is None:
                 break
             subset.add(key)
