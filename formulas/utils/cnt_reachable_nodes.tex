@@ -1,0 +1,21 @@
+\begin{algorithm}[!htbp]
+\SingleSpacedXI
+\caption{Count Reachable Nodes (\texttt{cnt\_reachable\_nodes})}
+\label{alg:utils_cnt_reachable_nodes}
+\SetAlgoLined
+\KwIn{root $r$, directed forest $F$ (adjacency list: $F[v]$ = children of $v$)}
+\KwOut{number of nodes reachable from $r$}
+
+\BlankLine
+$\textit{seen}\leftarrow\emptyset$; $\textit{stack}\leftarrow [\,r\,]$; $cnt \leftarrow 0$\;
+
+\While{$\textit{stack}\neq\emptyset$}{
+  $x\leftarrow$\textsc{pop}(\textit{stack})\;
+  \If{$x\in\textit{seen}$}{\textbf{continue}}
+  $\textit{seen}\leftarrow \textit{seen}\cup\{x\}$; $cnt\leftarrow cnt+1$\;
+  \ForEach{$y\in F[x]$}{
+    \textsc{push}($\textit{stack}, y$)\;
+  }
+}
+\Return{$cnt$}\;
+\end{algorithm}

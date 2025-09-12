@@ -1,0 +1,16 @@
+\begin{algorithm}[!htbp]
+\SingleSpacedXI
+\caption{Reconstruct Path (\texttt{reconstruct\_path})}
+\label{alg:utils_reconstruct_path}
+\SetAlgoLined
+\KwIn{destination node $d$, predecessor list $P$}
+\KwOut{list $L$ representing the reconstructed path from origin to $d$}
+
+$L \leftarrow [\,d\,]$\;
+\While{$P[d] \neq -1$}{
+  $d \leftarrow P[d]$\;
+  append $d$ to $L$\;
+}
+\textsc{Reverse}($L$)\;
+\Return{$L$}\;
+\end{algorithm}

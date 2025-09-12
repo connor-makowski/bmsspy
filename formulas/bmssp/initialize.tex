@@ -1,0 +1,29 @@
+\begin{algorithm}[!htbp]
+\SingleSpacedXI
+\caption{BMSSP Solver Initialization (\texttt{BmsspSolver.\_\_init\_\_})}
+\label{alg:bmssp_init}
+\SetAlgoLined
+\KwIn{graph $G$ (adjacency list), origin set $O$}
+\KwOut{BMSSP object in a solved state}
+
+$\textit{dist}[0..|G|-1] \leftarrow \infty$\;
+{\color{ForestGreen}$\textit{pred}[0..|G|-1] \leftarrow -1$ \tcp*{Track predecessors for path reconstruction}\label{alg:bmssp_init_pred}}
+
+\ForEach{$o \in O$}{
+  $\textit{dist}[o] \leftarrow 0$\;
+}
+
+{\color{blue}\If{$|G| \leq 2$}{
+  \textbf{raise error} ``graph must have more than 2 nodes''
+\label{alg:bmssp_init_graph_size_error}}}
+
+\BlankLine
+$k \leftarrow \max\!\left(2, \lfloor \log(|G|)^{1/3} \rfloor\right)$\;
+
+{\color{blue}$t \leftarrow \max\!\left(2, \lceil \log(|G|)^{2/3} \rceil\right)$ \tcp*{Ceil must be used}\label{alg:bmssp_init_ceil}}
+$\textit{max\_depth} \leftarrow \left\lceil \dfrac{\log(|G|)}{t} \right\rceil$\;
+
+\BlankLine
+$(B, U) \leftarrow$ \textsc{RecursiveBMSSP}($\textit{max\_depth}, \infty, O$)\;
+
+\end{algorithm}

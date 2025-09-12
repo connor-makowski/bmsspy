@@ -1,0 +1,41 @@
+\begin{algorithm}[!htbp]
+\SingleSpacedXI
+\caption{Recursive BMSSP (\texttt{BmsspSolver.recursive\_bmssp})}
+\label{alg:bmssp_recursive_bmssp}
+\SetAlgoLined
+\KwIn{depth $l$, bound $B$, frontier $S$}
+\KwOut{$(B',U)$}
+
+\If{$l=0$}{
+  \Return $(B', U) \leftarrow$ \textsc{BaseCase}($B,S$)\;
+}
+
+$(P,W) \leftarrow$ \textsc{FindPivots}($B,S$)\;
+$D \leftarrow$ new \textsc{BmsspDataStructure}($M,B$) with $M=2^{(l-1)t}$\;
+\ForEach{$p \in P$}{$D.\textsc{Insert}(p, dist[p])$}
+
+{\color{Fuchsia}$B'$} $\leftarrow \min(\{\textit{dist}[p] : p \in P\}\cup\{B\})$; $U \leftarrow \emptyset$\;
+
+\While{$|U| < k^{2lt}$ and $\neg D.\textsc{IsEmpty}()$}{
+  ({\color{Fuchsia}$B_{\mathrm{curr}}$},{\color{Fuchsia}$S_{\mathrm{curr}}$}) $\leftarrow D.\textsc{Pull}()$\;
+  ({\color{Fuchsia}$B'$},{\color{Fuchsia}$U_{\mathrm{curr}}$}) $\leftarrow$ \textsc{RecursiveBMSSP}($l-1$,{\color{Fuchsia}$B_{\mathrm{curr}}$},{\color{Fuchsia}$S_{\mathrm{curr}}$})\;
+  $U \leftarrow U \cup$ {\color{Fuchsia}$U_{\mathrm{curr}}$}\;
+  $K \leftarrow \emptyset$\;
+
+  \ForEach{$u \in$ {\color{Fuchsia}$U_{\mathrm{curr}}$}}{
+    \ForEach{$(v,w) \in G[u]$}{
+      {\color{blue}\If{$v=u$}{ continue \tcp*{Avoid $\infty$ self-loops if they exist in $G$}}}\label{alg:bmssp_recursive_bmssp_self_loop_break}
+      $d' \leftarrow dist[u]+w$\;
+      \If{$d' \leq dist[v]$}{
+        {\color{ForestGreen}\If{$d' < dist[v]$}{ $pred[v]\leftarrow u$; $dist[v]\leftarrow d'$ }}\label{alg:bmssp_recursive_bmssp_pred}
+        \uIf{{\color{Fuchsia}$B_{\mathrm{curr}}$}$ \leq d' < B$}{ $D.\textsc{Insert}(v,d')$ }
+        \ElseIf{{\color{Fuchsia}$B'$}$ \leq d' < $ {\color{Fuchsia}$B_{\mathrm{curr}}$}}{ $K \leftarrow K \cup \{(v,d')\}$ }
+      }
+    }
+  }
+
+  $D.\textsc{BatchPrepend}(K \cup \{(x,dist[x]) : x \in$ {\color{Fuchsia}$S_{\mathrm{curr}}$}$, ${\color{Fuchsia}$B'$}$ \leq dist[x] < $ {\color{Fuchsia}$B_{\mathrm{curr}}$}$\})$\;
+}
+\Return $(B' \leftarrow \min(${\color{Fuchsia}$B'$}$,B),U \leftarrow U \cup \{x \in W : dist[x] < B'\})$\;
+
+\end{algorithm}

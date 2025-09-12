@@ -1,0 +1,20 @@
+\begin{algorithm}[!htbp]
+\SingleSpacedXI
+\caption{Count Reachable Nodes (set-based) (\texttt{cnt\_reachable\_nodes})}
+\label{alg:cnt_reachable_nodes}
+\SetAlgoLined
+%\small
+\KwIn{root $r$, forest $F$ (adjacency list: $F[v]$ = children of $v$)}
+\KwOut{number of nodes reachable from $r$}
+
+\BlankLine
+$\textit{seen}\leftarrow\emptyset$\;
+$\textit{diff}\leftarrow\{r\}$\;
+
+\While{$\textit{diff}\neq\emptyset$}{
+  $\textit{seen}\leftarrow \textit{seen}\cup\textit{diff}$\;
+  $\textit{diff}\leftarrow \bigcup\limits_{v\in\textit{diff}} F[v] \;\setminus\; \textit{seen}$\;
+}
+
+\Return{$|\textit{seen}|$}\;
+\end{algorithm}

@@ -1,0 +1,48 @@
+\begin{algorithm}[!htbp]
+\SingleSpacedXI
+\caption{Find Pivots (\texttt{BmsspSolver.find\_pivots})}
+\label{alg:bmssp_find_pivots}
+\SetAlgoLined
+\KwIn{upper bound $B$, frontier $S$}
+\KwOut{pivot set $P$, temporary frontier $W$}
+$W\leftarrow S$; {\color{Fuchsia}$W_{\mathrm{prev}}$}$\leftarrow S$\;
+\For{$1$ \KwTo $k$ iterations}{
+  {\color{Fuchsia}$W_{\mathrm{curr}}$}$\leftarrow\emptyset$\;
+  \ForEach{$u\in$ {\color{Fuchsia}$W_{\mathrm{prev}}$}}{
+    \ForEach{$(v,w)\in G[u]$}{
+      $d'\leftarrow \textit{dist}[u]+w$\;
+      \If{$d'\le \textit{dist}[v]$}{
+        {\color{ForestGreen}\If{$d'<\textit{dist}[v]$}{
+          $\textit{dist}[v]\leftarrow d'$; $\textit{pred}[v]\leftarrow u$\;\label{alg:bmssp_find_pivots_pred}
+        }}
+        \If{$d'<B$}{{\color{Fuchsia}$W_{\mathrm{curr}}$}$\leftarrow$ {\color{Fuchsia}$W_{\mathrm{curr}}$}$\cup\{v\}$}
+      }
+    }
+  }
+  $W\leftarrow W\cup$ {\color{Fuchsia}$W_{\mathrm{curr}}$}\;
+  \If{$|W|>k|S|$}{\Return{$(S,W)$}}
+  {\color{Fuchsia}$W_{\mathrm{prev}}$}$\leftarrow$ {\color{Fuchsia}$W_{\mathrm{curr}}$}\;
+}
+\BlankLine
+{\color{Bittersweet}
+$F \leftarrow \{u \mapsto \emptyset : u \in W\}$\;\label{alg:bmssp_find_pivots_forest_expansion}
+$\text{indegreeF} \leftarrow \{u \mapsto 0 : u \in W\}$\;
+
+\ForEach{$u\in W$}{
+  \ForEach{$(v,w)\in G[u]$}{
+    \If{$v\in W$ \textbf{and} $\textit{dist}[u]+w=\textit{dist}[v]$}{
+      $F[u]\leftarrow F[u]\cup\{v\}$\;
+      $\text{indegreeF}[v]\leftarrow \text{indegreeF}[v]+1$\;
+    }
+  }
+}
+\BlankLine
+$P\leftarrow\emptyset$\;
+\ForEach{$u\in S$}{
+  \If{$\text{indegreeF}[u]=0$}{
+    \If{$\textsc{CntReachableNodes}(u,F)\ge k$}{$P\leftarrow P\cup\{u\}$}
+  }
+}
+}
+\Return{$(P,W)$}\;
+\end{algorithm}

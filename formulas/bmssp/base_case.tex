@@ -1,0 +1,26 @@
+\begin{algorithm}[!htbp]
+\SingleSpacedXI
+\caption{Base Case (\texttt{BmsspSolver.base\_case})}
+\label{alg:bmssp_base_case}
+\SetAlgoLined
+\KwIn{upper bound $B$, singleton frontier $S$}
+\KwOut{new bound $B'$, new frontier $S'$}
+$Heap \leftarrow \textsc{BinaryHeap}((\textit{dist}[x],x))$; $S' \leftarrow \emptyset$\;
+\While{$Heap\neq\emptyset$ \textbf{and} $|S'|<k+1$}{
+  $(u,d) \leftarrow Heap.ExtractMin()$\;
+  {\color{blue}\If{$u\in S'$}{continue \tcp*{Avoid $\infty$ loops due to the $\le$ relaxation}}}\label{alg:bmssp_base_case_loop_break}
+  $S'\leftarrow S'\cup\{u\}$\;
+  \ForEach{$(v,w)\in G[u]$}{
+    $d'\leftarrow d+w$\;
+    \If{$d'\le \textit{dist}[v]$ \textbf{and} $d'<B$}{
+      {\color{ForestGreen}\If{$d'<\textit{dist}[v]$}{$\textit{dist}[v]\leftarrow d'$; $\textit{pred}[v]\leftarrow u$}}\label{alg:bmssp_base_case_pred}
+      $Heap.InsertOrDecreaseKey(v,d')$\;\label{alg:bmssp_base_case_push}
+    }
+  }
+}
+\eIf{$|S'| \le k$}{
+  \Return{$(B'\leftarrow B,S')$}\;
+}{
+  \Return{$(B'\leftarrow \max\{\textit{dist}[v]: v\in S'\},S'\leftarrow \{v\in S': \textit{dist}[v]<B'\})$}\;
+}
+\end{algorithm}
