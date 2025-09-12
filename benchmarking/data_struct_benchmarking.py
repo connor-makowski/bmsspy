@@ -18,27 +18,27 @@ def benchmark(batch_sizes, repeats=30):
             'items': n,
         }
 
-        # Time batch_insert
+        # Time batch_prepend
         t_data = []
         for _ in range(repeats):
             ds = BmsspDataStructure(subset_size=10, upper_bound=1e9)
-            ds.batch_insert(pre_key_value_pairs)  # Pre-fill to avoid empty structure
+            ds.batch_prepend(pre_key_value_pairs)  # Pre-fill to avoid empty structure
             start = time.perf_counter()
-            ds.batch_insert(key_value_pairs)
+            ds.batch_prepend(key_value_pairs)
             t_data.append((time.perf_counter() - start)*1000)
-        results["batch_insert_ms"] = mean(t_data)
-        results["batch_insert_ms_std"] = stdev(t_data)
+        results["batch_prepend_ms"] = mean(t_data)
+        results["batch_prepend_ms_std"] = stdev(t_data)
 
-        # Time batch_insert_alt
+        # Time batch_prepend_alt
         t_data = []
         for _ in range(repeats):
             ds = BmsspDataStructure(subset_size=10, upper_bound=1e9)
-            ds.batch_insert_alt(pre_key_value_pairs)  # Pre-fill to avoid empty structure
+            ds.batch_prepend_alt(pre_key_value_pairs)  # Pre-fill to avoid empty structure
             start = time.perf_counter()
-            ds.batch_insert_alt(key_value_pairs)
+            ds.batch_prepend_alt(key_value_pairs)
             t_data.append((time.perf_counter() - start)*1000)
-        results["batch_insert_alt_ms"] = mean(t_data)
-        results["batch_insert_alt_ms_std"] = stdev(t_data)
+        results["batch_prepend_alt_ms"] = mean(t_data)
+        results["batch_prepend_alt_ms_std"] = stdev(t_data)
 
         output.append(results)
     return output
@@ -54,5 +54,5 @@ pamda.write_csv(
 )
 
 for item in output:
-    faster = "alt" if item['batch_insert_alt_ms'] < item['batch_insert_ms'] else "regular"
-    print(f"{item['items']:7d} items | batch_insert={item['batch_insert_ms']:.6f}ms | batch_insert_alt={item['batch_insert_alt_ms']:.6f}ms → {faster}")
+    faster = "alt" if item['batch_prepend_alt_ms'] < item['batch_prepend_ms'] else "regular"
+    print(f"{item['items']:7d} items | batch_prepend={item['batch_prepend_ms']:.6f}ms | batch_prepend_alt={item['batch_prepend_alt_ms']:.6f}ms → {faster}")
