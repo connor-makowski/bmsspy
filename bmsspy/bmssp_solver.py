@@ -68,17 +68,17 @@ class BmsspSolver:
             raise ValueError("Your provided graph must have more than 2 nodes")
 
         # Practical choices (k and t) based on n
+        # Modification: Use log base 2 to ensure everything is properly relaxed
         self.pivot_relaxation_steps = max(
-            2, int(log(graph_len) ** (1 / 3))
+            2, int(log(graph_len, 2) ** (1 / 3))
         )  # k
-        # Modification: Change int to ceil
         self.target_tree_depth = max(
-            2, ceil(log(graph_len) ** (2 / 3))
+            2, int(log(graph_len, 2) ** (2 / 3))
         )  # t
 
         # Compute max_recursion_depth based on t
         self.max_recursion_depth = ceil(
-            log(graph_len) / self.target_tree_depth
+            log(graph_len, 2) / self.target_tree_depth
         ) # l
 
 
