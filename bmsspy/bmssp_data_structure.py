@@ -18,8 +18,9 @@ class BmsspDataStructure:
         """
         Insert/refresh a key-value pair;
         """
-        self.best[key] = value
-        heappush(self.heap, (value, key))
+        if value < self.best.get(key, inf):
+            self.best[key] = value
+            heappush(self.heap, (value, key))
 
     def pop_current(self):
         """

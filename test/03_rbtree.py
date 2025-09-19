@@ -1,5 +1,7 @@
 from bmsspy.rbtree import RBTree
 
+print("\n===============\nRed Black Tree Tests:\n===============")
+
 tree = RBTree()
 
 try: 

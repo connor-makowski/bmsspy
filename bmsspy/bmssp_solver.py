@@ -69,23 +69,24 @@ class BmsspSolver:
 
         # Practical choices (k and t) based on n
         self.pivot_relaxation_steps = max(
-            2, int(log(graph_len) ** (1 / 3.0))
+            2, int(log(graph_len) ** (1 / 3))
         )  # k
         # Modification: Change int to ceil
         self.target_tree_depth = max(
-            2, ceil(log(graph_len) ** (2 / 3.0))
+            2, ceil(log(graph_len) ** (2 / 3))
         )  # t
 
-        # Compute max_tree_depth based on k and t
-        self.max_tree_depth = int(
-            ceil(
-                    log(graph_len) / self.target_tree_depth
-                )
-        )
+        # Compute max_recursion_depth based on t
+        self.max_recursion_depth = ceil(
+            log(graph_len) / self.target_tree_depth
+        ) # l
+
+
+        # print(f"Pivot relaxation steps (k): {self.pivot_relaxation_steps}, Target tree depth (t): {self.target_tree_depth}, Max recursion depth (l): {self.max_recursion_depth}")
 
         # Run the solver algorithm
         upper_bound, frontier = self.recursive_bmssp(
-            self.max_tree_depth, inf, origin_ids
+            self.max_recursion_depth, inf, origin_ids
         )
 
     def find_pivots(
@@ -230,10 +231,10 @@ class BmsspSolver:
                 for i in new_frontier
                 if self.distance_matrix[i] < new_upper_bound
             }
-            return new_upper_bound, new_frontier
         else:
             # Success for this base case: return current upper_bound unchanged and the completed set
-            return upper_bound, new_frontier
+            new_upper_bound = upper_bound
+        return new_upper_bound, new_frontier
 
     def recursive_bmssp(
         self, recursion_depth: int, upper_bound: int | float, frontier: set[int]
@@ -264,12 +265,22 @@ class BmsspSolver:
             - Type: set[int]
             - What: Set of vertices v such that distance_matrix[v] < new_upper_bound
         """
+        # printing = True
+        # spacing = f"{recursion_depth}: "+"    " * (self.max_recursion_depth - recursion_depth)
+        # if printing:
+        #     print(f"{spacing}* Starting: Recursion depth: {recursion_depth}, Frontier: {frontier}, Upper bound: {upper_bound}")
+
         # Base case
         if recursion_depth == 0:
-            return self.base_case(upper_bound, frontier)
+            new_upper_bound, new_frontier = self.base_case(upper_bound, frontier)
+            # if printing:
+            #     print(f"{spacing}Base case reached: Upper Bound: {new_upper_bound}, Frontier: {new_frontier}")
+            return new_upper_bound, new_frontier
 
         # Step 4: Find pivots and temporary frontier
         pivots, temp_frontier = self.find_pivots(upper_bound, frontier)
+        # if printing:
+        #     print(f"{spacing}- Pivots: {pivots}, Temp Frontier: {temp_frontier}")
 
         # Step 5–6: initialize data_struct with pivots
         # subset_size = 2^((l-1) * t)
@@ -277,14 +288,15 @@ class BmsspSolver:
         data_struct = BmsspDataStructure(
             subset_size=subset_size, upper_bound=upper_bound
         )
-        
+        # if printing:
+        #     print(f"{spacing}- Root Inserting: {pivots}")
         for p in pivots:
             data_struct.insert_key_value(p, self.distance_matrix[p])
 
         # Track new_frontier and B' according to Algorithm 3
         new_frontier = set()
-        # Store the min_pivot_distance for use if the frontier is empty and we break early
-        min_pivot_distance = min(
+        # Store the completion_bound for use if the frontier is empty and we break early
+        completion_bound = min(
             (self.distance_matrix[p] for p in pivots), default=upper_bound
         )
 
@@ -301,9 +313,13 @@ class BmsspSolver:
             data_struct_frontier_bound_temp, data_struct_frontier_temp = (
                 data_struct.pull()
             )
+            # if printing:
+            #     print(f"{spacing}- DS Pulled: Bound: {data_struct_frontier_bound_temp}, Frontier Temp: {data_struct_frontier_temp}")
 
             # Step 11: Recurse on (l-1, data_struct_frontier_bound_temp, data_struct_frontier_temp)
-            min_pivot_distance, new_frontier_temp = self.recursive_bmssp(
+            # if printing:
+            #     print(f"{spacing}- Recursing:")
+            completion_bound, new_frontier_temp = self.recursive_bmssp(
                 recursion_depth - 1,
                 data_struct_frontier_bound_temp,
                 data_struct_frontier_temp,
@@ -311,6 +327,8 @@ class BmsspSolver:
 
             # Track results
             new_frontier.update(new_frontier_temp)
+            # if printing:
+            #     print(f"{spacing}- Recursed: Updated Completion Bound: {completion_bound}, New Frontier Temp: {new_frontier_temp}")
 
             # Step 13: Initialize intermediate_frontier to batch-prepend
             intermediate_frontier = set()
@@ -336,11 +354,13 @@ class BmsspSolver:
                             <= new_distance
                             < upper_bound
                         ):
+                            # if printing:
+                            #     print(f"{spacing}- Relax Inserting: {connection_idx}")
                             data_struct.insert_key_value(
                                 connection_idx, new_distance
                             )
                         elif (
-                            min_pivot_distance
+                            completion_bound
                             <= new_distance
                             < data_struct_frontier_bound_temp
                         ):
@@ -348,21 +368,42 @@ class BmsspSolver:
                                 (connection_idx, new_distance)
                             )
 
-            # Step 21: Batch prepend intermediate_frontier plus filtered data_struct_frontier_temp in min_pivot_distance, data_struct_frontier_bound_temp)
+            # Step 21: Batch prepend intermediate_frontier plus filtered data_struct_frontier_temp in completion_bound, data_struct_frontier_bound_temp)
             data_struct_frontier_temp_filtered = {
                 (x, self.distance_matrix[x])
                 for x in data_struct_frontier_temp
-                if min_pivot_distance
+                if completion_bound
                 <= self.distance_matrix[x]
                 < data_struct_frontier_bound_temp
             }
 
+            # if printing:
+            #     print(f"{spacing}- Batch Inserting {intermediate_frontier | data_struct_frontier_temp_filtered}")
             data_struct.batch_prepend(intermediate_frontier | data_struct_frontier_temp_filtered)
 
         # Step 22: Final return
-        new_bound = min(min_pivot_distance, upper_bound)
-        return new_bound, new_frontier | {
+        # TODO: Verify this is necessary. Completion bound should always be <= upper_bound
+        # new_bound = min(completion_bound, upper_bound)
+        # if completion_bound > upper_bound:
+        #     print(f"----Warning: completion_bound {completion_bound} > upper_bound {upper_bound}")
+
+        # new_frontier = new_frontier | {
+        #     v
+        #     for v in temp_frontier
+        #     if self.distance_matrix[v] < new_bound
+        # }
+        # if printing:
+        #     print(f"{spacing}- Finished: New Bound: {new_bound}, New Frontier: {new_frontier}")
+
+        # return new_bound, new_frontier
+
+
+        new_frontier = new_frontier | {
             v
             for v in temp_frontier
-            if self.distance_matrix[v] < new_bound
+            if self.distance_matrix[v] < completion_bound
         }
+        # if printing:
+        #     print(f"{spacing}- Finished: Completion Bound: {completion_bound}, New Frontier: {new_frontier}")
+
+        return completion_bound, new_frontier
