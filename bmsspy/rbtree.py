@@ -603,7 +603,7 @@ class RBTree(BSTree, RBTreeRebalance, RBTreeFixup):
                     else:
                         self.insert(key=k)
 
-    def insert(self, key: any, value: any = None) -> None:
+    def insert(self, key: any, value: any = None) -> RBNode:
         """
         Function:
 
@@ -627,6 +627,7 @@ class RBTree(BSTree, RBTreeRebalance, RBTreeFixup):
         node = RBNode(key, value, False if self.root else True)
         if self.__insert_node__(self.root, node):
             self.__rebalance__(node)
+        return node
 
     def remove(self, key: any) -> None:
         """

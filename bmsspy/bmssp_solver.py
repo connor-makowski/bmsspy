@@ -1,7 +1,7 @@
 from heapq import heappush, heappop
 from math import ceil, log
 
-from .bmssp_data_structure import BmsspDataStructure
+from .bmssp_data_structure_algo import BmsspDataStructure
 
 inf = float("inf")
 
@@ -313,6 +313,7 @@ class BmsspSolver:
             data_struct_frontier_bound_temp, data_struct_frontier_temp = (
                 data_struct.pull()
             )
+            print(data_struct_frontier_bound_temp, data_struct_frontier_temp, data_struct.subset_size, data_struct.is_empty())
             # if printing:
             #     print(f"{spacing}- DS Pulled: Bound: {data_struct_frontier_bound_temp}, Frontier Temp: {data_struct_frontier_temp}")
 
