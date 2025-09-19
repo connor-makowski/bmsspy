@@ -13,7 +13,7 @@ $W\leftarrow S$; {\color{Fuchsia}$W_{\mathrm{prev}}$}$\leftarrow S$\;
       $d'\leftarrow \textit{dist}[u]+w$\;
       \If{$d'\le \textit{dist}[v]$}{
         {\color{ForestGreen}\If{$d'<\textit{dist}[v]$}{
-          $\textit{dist}[v]\leftarrow d'$; $\textit{pred}[v]\leftarrow u$\;\label{alg:bmssp_find_pivots_pred}
+          $\textit{dist}[v]\leftarrow d'$; $\textit{pred}[v]\leftarrow u$\tcp*{Update tracking arrays}\label{alg:bmssp_find_pivots_pred}
         }}
         \If{$d'<B$}{{\color{Fuchsia}$W_{\mathrm{curr}}$}$\leftarrow$ {\color{Fuchsia}$W_{\mathrm{curr}}$}$\cup\{v\}$}
       }
@@ -25,8 +25,8 @@ $W\leftarrow S$; {\color{Fuchsia}$W_{\mathrm{prev}}$}$\leftarrow S$\;
 }
 \BlankLine
 {\color{Bittersweet}
-$F \leftarrow \{u \mapsto \emptyset : u \in W\}$\;\label{alg:bmssp_find_pivots_forest_expansion}
-$\text{indegreeF} \leftarrow \{u \mapsto 0 : u \in W\}$\;
+$F \leftarrow \{u \mapsto \emptyset : u \in W\}$\tcp*{Create an empty forest $F$ to be filled}\label{alg:bmssp_find_pivots_forest_expansion}
+$\text{indegreeF} \leftarrow \{u \mapsto 0 : u \in W\}$\tcp*{Create an empty $indegreeF$ to be filled}
 
 \ForEach{$u\in W$}{
   \ForEach{$(v,w)\in G[u]$}{
@@ -40,7 +40,8 @@ $\text{indegreeF} \leftarrow \{u \mapsto 0 : u \in W\}$\;
 $P\leftarrow\emptyset$\;
 \ForEach{$u\in S$}{
   \If{$\text{indegreeF}[u]=0$}{
-    \If{$\textsc{CntReachableNodes}(u,F)\ge k$}{$P\leftarrow P\cup\{u\}$}
+    \If{$\textsc{CountReachableNodes}(u,F)\ge k$}
+    {$P\leftarrow P\cup\{u\}$}
   }
 }
 }

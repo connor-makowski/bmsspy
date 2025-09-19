@@ -13,7 +13,9 @@ $Heap \leftarrow \textsc{BinaryHeap}((\textit{dist}[x],x))$; $S' \leftarrow \emp
   \ForEach{$(v,w)\in G[u]$}{
     $d'\leftarrow d+w$\;
     \If{$d'\le \textit{dist}[v]$ \textbf{and} $d'<B$}{
-      {\color{ForestGreen}\If{$d'<\textit{dist}[v]$}{$\textit{dist}[v]\leftarrow d'$; $\textit{pred}[v]\leftarrow u$}}\label{alg:bmssp_base_case_pred}
+      {\color{ForestGreen}\If{$d'<\textit{dist}[v]$}{
+        $\textit{dist}[v]\leftarrow d'$; $\textit{pred}[v]\leftarrow u$\tcp*{Update tracking arrays}\label{alg:bmssp_base_case_pred}
+      }}
       $Heap.InsertOrDecreaseKey(v,d')$\;\label{alg:bmssp_base_case_push}
     }
   }
