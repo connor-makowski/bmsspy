@@ -100,6 +100,6 @@ def test_data_structure_parity(seed):
 if __name__ == "__main__":
     print("\n===============\nData structure Tests:\n===============")
     basic_test()
-    for i in range(1000):
+    for i in range(10000):
         test_data_structure_parity(i)
     print("All tests passed!")

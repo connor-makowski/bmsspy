@@ -173,9 +173,12 @@ class BmsspDataStructure:
         ):  # Don't split if new block would have the same upper bound
             return
         new_list = LinkedList()
+        max_value = -inf
         # Move nodes with value < median_value to the new linked list to preserve original upper bound
         for node in linked_list:
             if node.value < median_value:
+                if node.value > max_value:
+                    max_value = node.value
                 new_list.append(node.key, node.value)
                 self.keys[node.key] = (
                     new_list.tail,
@@ -192,7 +195,7 @@ class BmsspDataStructure:
         if linked_list.prev_list:
             linked_list.prev_list.next_list = new_list
         linked_list.prev_list = new_list
-        self.D1.insert(median_value - 1, new_list)
+        self.D1.insert(max_value, new_list)
         if linked_list.is_empty():
             raise ValueError("Linked list should not be empty after split.")
 
@@ -203,6 +206,14 @@ class BmsspDataStructure:
         min_pairs = {}
         for key, value in key_value_pairs:
             if key not in min_pairs or value < min_pairs[key]:
+                if key in self.keys:
+                    item = self.keys[key]
+                    if item[0].value < value:
+                        continue  # No need to update if the new value is not lower
+                    elif item[1] == 0:
+                        self.delete_d0(key)
+                    else:
+                        self.delete_d1(key)
                 min_pairs[key] = value
         if len(min_pairs) == 0:
             return
