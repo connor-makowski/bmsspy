@@ -204,7 +204,9 @@ class BmsspDataStructure:
         for key, value in key_value_pairs:
             if key not in min_pairs or value < min_pairs[key]:
                 min_pairs[key] = value
-        if len(min_pairs) <= self.subset_size:
+        if len(min_pairs) == 0:
+            return
+        elif len(min_pairs) <= self.subset_size:
             # If we are small enough, just insert them all as a block
             old_head = self.D0
             self.D0 = LinkedList()
@@ -262,6 +264,7 @@ class BmsspDataStructure:
         Remove the returned keys from the structure (matching Alg. 3 semantics).
         remaining_best is the smallest value still present after removal, or self.upper_bound if empty.
         """
+
         smallest_d0 = set()
         if self.D0 and not self.D0.is_empty():
             current_list = self.D0
