@@ -24,9 +24,10 @@ class LinkedList:
         self.head = None
         self.tail = None
         self.size = 0
-        self.prev_list = None  # Pointer to the previous linked list in the chain
+        self.prev_list = (
+            None  # Pointer to the previous linked list in the chain
+        )
         self.next_list = None  # Pointer to the next linked list in the chain
-        self.rbtree_node = None  # Pointer to the RB tree node that points to this linked list
 
     def __iter__(self):
         current = self.head
@@ -47,8 +48,6 @@ class LinkedList:
 
     def remove(self, node):
         if node.parent_list != self:
-            print("expected list:", node.parent_list)
-            print("actual list:", self)
             raise ValueError("Node does not belong to this linked list.")
         self.size -= 1
         if node.prev:
@@ -61,10 +60,16 @@ class LinkedList:
             self.tail = node.prev
 
     def is_empty(self):
-        return self.head is None
-    
+        return self.size <= 0
+
     def __str__(self):
-        str = "->".join(f"({node.key},{node.value})" for node in self) + "\n" + self.next_list.__str__() if self.next_list is not None else ""
+        str = (
+            "->".join(f"({node.key},{node.value})" for node in self)
+            + "\n"
+            # + self.next_list.__str__()
+            # if self.next_list is not None
+            # else ""
+        )
         return str
 
 
@@ -76,7 +81,8 @@ class BmsspDataStructure:
 
     def __init__(self, subset_size: int, upper_bound: int | float):
         # subset_size: how many items to return per pull (must match Alg. 3 for level l -> Given as M)
-        self.subset_size = max(1, subset_size)
+        self.subset_size = max(2, subset_size)
+        self.pull_size = max(1, subset_size)
         self.upper_bound = upper_bound
         self.keys = (
             {}
@@ -89,48 +95,33 @@ class BmsspDataStructure:
         self.D1.insert(
             self.upper_bound, list
         )  # Start with one empty linked list with upper bound B
-        list.rbtree_node = self.D1.root
-
-    def remove_from_d1(self, node):
-        block = node.parent_list.rbtree_node
-        linked_list = node.parent_list
-        # Remove the key-value pair from the linked list
-        linked_list.remove(node)
-        # If the linked list is empty, remove it from D1
-        if linked_list.is_empty():
-            if linked_list.prev_list:
-                linked_list.prev_list.next_list = linked_list.next_list
-            if linked_list.next_list:
-                linked_list.next_list.prev_list = linked_list.prev_list
-            del linked_list  # Just to be explicit
-            self.D1.remove(block.key)
-            # If D1 is now empty, add a new empty linked list with upper bound B
-            if self.D1.root is None:
-                list = LinkedList()
-                node = self.D1.insert(self.upper_bound, list)
-                list.rbtree_node = node
 
     def delete_d1(self, key):
         if key not in self.keys:
-            return
+            raise ValueError("Key not found in data structure.")
         list_node = self.keys.pop(key)[0]
-        block = list_node.parent_list.rbtree_node
         linked_list = list_node.parent_list
         # Remove the key-value pair from the linked list
         linked_list.remove(list_node)
         # If the linked list is empty, remove it from D1
         if linked_list.is_empty():
-            if linked_list.prev_list:
-                linked_list.prev_list.next_list = linked_list.next_list
-            if linked_list.next_list:
-                linked_list.next_list.prev_list = linked_list.prev_list
-            del linked_list  # Just to be explicit
-            self.D1.remove(block.key)
-            # If D1 is now empty, add a new empty linked list with upper bound B
-            if self.D1.root is None:
-                list = LinkedList()
-                node = self.D1.insert(self.upper_bound, list)
-                list.rbtree_node = node
+            block = self.D1.find(list_node.value, target="upper")
+            if (
+                block.key != self.upper_bound
+            ):  # allow the upper bound block to remain even if empty
+                if linked_list.prev_list:
+                    linked_list.prev_list.next_list = linked_list.next_list
+                if linked_list.next_list:
+                    linked_list.next_list.prev_list = linked_list.prev_list
+                if (
+                    block.val == linked_list
+                ):  # Only remove if it hasn't been replaced
+                    self.D1.remove(block.key)
+                else:
+                    raise ValueError(
+                        "Linked list not found in RBTree (probably due to a key collision)."
+                    )
+                del linked_list  # Just to be explicit
 
     def delete_d0(self, key):
         if key not in self.keys:
@@ -146,7 +137,7 @@ class BmsspDataStructure:
                 linked_list.next_list.prev_list = linked_list.prev_list
             if linked_list == self.D0:
                 self.D0 = linked_list.next_list
-            del linked_list # Just to be explicit
+            del linked_list  # Just to be explicit
 
     def insert_key_value(self, key: int, value: int | float):
         """
@@ -173,18 +164,16 @@ class BmsspDataStructure:
 
         # If the linked list exceeds the subset size, perform a split
         if linked_list.size > self.subset_size:
-            self.split(linked_list)
+            self.split(linked_list, block.key)
 
-    def split(self, linked_list):
+    def split(self, linked_list, upper_bound):
         median_value = median_high(node.value for node in linked_list)
+        if (
+            median_value == upper_bound
+        ):  # Don't split if new block would have the same upper bound
+            return
         new_list = LinkedList()
-        new_list.next_list = linked_list
-        new_list.prev_list = linked_list.prev_list
-        if linked_list.prev_list:
-            linked_list.prev_list.next_list = new_list
-        linked_list.prev_list = new_list
         # Move nodes with value < median_value to the new linked list to preserve original upper bound
-        to_remove = []
         for node in linked_list:
             if node.value < median_value:
                 new_list.append(node.key, node.value)
@@ -192,15 +181,19 @@ class BmsspDataStructure:
                     new_list.tail,
                     1,
                 )  # Update with the new node
-                to_remove.append(node)
-        for node in to_remove:
-            linked_list.remove(node)
+                linked_list.remove(node)
 
+        if new_list.is_empty():
+            # Sometimes the new list would have been all median values, in which case we don't need to split
+            return
         # Update D1 with the new linked list
-        node = self.D1.insert(median_value, new_list)
-        new_list.rbtree_node = node
-        if linked_list.is_empty() or new_list.is_empty():
-            print(new_list, median_value)
+        new_list.next_list = linked_list
+        new_list.prev_list = linked_list.prev_list
+        if linked_list.prev_list:
+            linked_list.prev_list.next_list = new_list
+        linked_list.prev_list = new_list
+        self.D1.insert(median_value - 1, new_list)
+        if linked_list.is_empty():
             raise ValueError("Linked list should not be empty after split.")
 
     def batch_prepend(self, key_value_pairs: list[tuple[int, int | float]]):
@@ -241,7 +234,7 @@ class BmsspDataStructure:
                     # Split by median
                     values = [value for _, value in current_pairs]
                     median = median_high(values)
-                    
+
                     # Split into upper and lower halves
                     upper_list = []
                     lower_list = []
@@ -255,8 +248,8 @@ class BmsspDataStructure:
                             if len(lower_list) <= len(upper_list):
                                 lower_list.append((key, value))
                             else:
-                                upper_list.append((key, value))                            
-                    
+                                upper_list.append((key, value))
+
                     # Push lower list first so it gets processed last (to preserve order)
                     if lower_list:
                         stack.append(lower_list)
@@ -273,14 +266,18 @@ class BmsspDataStructure:
         if self.D0 and not self.D0.is_empty():
             current_list = self.D0
             # First create the set - we don't know if we will need all of them yet so don't remove
-            while len(smallest_d0) < self.subset_size and current_list is not None:
+            while (
+                len(smallest_d0) < self.subset_size and current_list is not None
+            ):
                 for item in current_list:
                     smallest_d0.add(item.key)
                 current_list = current_list.next_list
         smallest_d1 = set()
         if self.D1.root is not None:
             current_list = self.D1.get_min(self.D1.root).val
-            while len(smallest_d1) < self.subset_size and current_list is not None:
+            while (
+                len(smallest_d1) < self.subset_size and current_list is not None
+            ):
                 for item in current_list:
                     smallest_d1.add(item.key)
                 current_list = current_list.next_list
@@ -288,10 +285,9 @@ class BmsspDataStructure:
         # TODO: implement an O(M) merge instead of sorting (see same github issue as above)
         combined = list(smallest_d0) + list(smallest_d1)
         combined.sort(key=lambda k: self.keys[k][0].value)
-        subset = combined[:self.subset_size]
-        print(self.D1.get_min(self.D1.root).val)
-        # Now remove the selected keys from the structure
+        subset = combined[: self.pull_size]
         for key in subset:
+            # Now remove the selected keys from the structure
             if key in self.keys:
                 if self.keys[key][1] == 0:
                     self.delete_d0(key)
@@ -300,12 +296,15 @@ class BmsspDataStructure:
         # Compute lower bound for remaining
         remaining_best = self.upper_bound
         if self.D0 and not self.D0.is_empty():
-            remaining_best = min(remaining_best, min(node.value for node in self.D0))
-        if self.D1.root is not None and self.D1.root.val.size > 0:
-            min_bound = self.D1.get_min(self.D1.root)
-            print(min_bound.key, min_bound.val)
-            print([(key, item[0].value) for key, item in self.keys.items() if item[1] == 1])
-            remaining_best = min(remaining_best, min(node.value for node in self.D1.get_min(self.D1.root).val))
+            remaining_best = min(
+                remaining_best, min(node.value for node in self.D0)
+            )
+        smallest_block = self.D1.get_min(self.D1.root)
+        if smallest_block is not None and smallest_block.val.size > 0:
+            remaining_best = min(
+                remaining_best,
+                min(node.value for node in smallest_block.val),
+            )
         return remaining_best, set(subset)
 
     def is_empty(self) -> bool:

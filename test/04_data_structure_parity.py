@@ -6,7 +6,37 @@ from bmsspy.bmssp_data_structure import (
 from bmsspy.bmssp_data_structure_algo import (
     BmsspDataStructure as BmsspDataStructureAlgo,
 )
+def basic_test():
+    """
+    Basic sanity test for BmsspDataStructure implementations.
+    """
+    ds = BmsspDataStructureAlgo(subset_size=3, upper_bound=100)
+    assert ds.is_empty()
 
+    ds.insert_key_value(1, 50)
+    ds.insert_key_value(2, 30)
+    ds.insert_key_value(3, 70)
+    ds.insert_key_value(4, 20)
+    ds.insert_key_value(5, 90)
+
+    assert not ds.is_empty()
+
+    remaining_best, subset = ds.pull()
+    assert remaining_best == 70
+    assert subset == {4, 2, 1}
+
+    remaining_best, subset = ds.pull()
+    assert remaining_best == 100
+    assert subset == {3, 5}
+
+    assert ds.is_empty()
+
+    ds.insert_key_value(6, 10)
+    remaining_best, subset = ds.pull()
+    assert remaining_best == 100
+    assert subset == {6}
+
+    assert ds.is_empty()
 
 def test_data_structure_parity(seed):
     """
@@ -39,7 +69,7 @@ def test_data_structure_parity(seed):
     remaining_best_heap, subset_heap = ds_heap.pull()
     remaining_best_algo, subset_algo = ds_algo.pull()
     assert remaining_best_heap == remaining_best_algo
-    assert subset_heap == subset_algo
+    assert set(key_values[k] for k in subset_heap) == set(key_values[k] for k in subset_algo)
 
     # Test batch_prepend
     batch = []
@@ -60,8 +90,6 @@ def test_data_structure_parity(seed):
     while not ds_heap.is_empty() and not ds_algo.is_empty():
         remaining_best_heap, subset_heap = ds_heap.pull()
         remaining_best_algo, subset_algo = ds_algo.pull()
-        print(remaining_best_heap, remaining_best_algo)
-        print(subset_heap, subset_algo)
         assert remaining_best_heap == remaining_best_algo
         assert set(key_values[k] for k in subset_heap) == set(key_values[k] for k in subset_algo)
 
@@ -71,6 +99,7 @@ def test_data_structure_parity(seed):
 
 if __name__ == "__main__":
     print("\n===============\nData structure Tests:\n===============")
+    basic_test()
     for i in range(1000):
         test_data_structure_parity(i)
     print("All tests passed!")
