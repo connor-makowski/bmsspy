@@ -174,6 +174,7 @@ class BmsspDataStructure:
         new_list = LinkedList()
         max_value = -inf
         # Move nodes with value < median_value to the new linked list to preserve original upper bound
+        # TODO: This can fail to split if all values are the same as the median value. Need to handle this case.
         for node in linked_list:
             if node.value < median_value:
                 if node.value > max_value:
