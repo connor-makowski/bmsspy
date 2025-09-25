@@ -21,6 +21,7 @@ for data in tests:
     sortsplit_output = sortsplit(data)
     assert sorted(quicksplit_output['lower']) == sortsplit_output['lower'], f"Mismatch for Quickselect lower: {quicksplit_output['lower']} != {sortsplit_output['lower']}"
     assert sorted(quicksplit_output['higher']) == sortsplit_output['higher'], f"Mismatch for Quickselect higher: {quicksplit_output['higher']} != {sortsplit_output['higher']}"
+    assert quicksplit_output['pivot'] == sortsplit_output['pivot'], f"Mismatch for pivot: {quicksplit_output['pivot']} != {sortsplit_output['pivot']}"
 
     # Benchmark performance
     qs_time = pamda_timer(quicksplit, iterations = 3).get_time_stats(arr=data)
