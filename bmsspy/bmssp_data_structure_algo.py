@@ -1,6 +1,5 @@
-# Note: This median function breaks the big O (see: https://github.com/python/cpython/issues/65791)
-from statistics import median_high
 from .rbtree import RBTree
+from .quicksplit import quicksplit, sortsplit
 
 inf = float("inf")
 
@@ -167,7 +166,7 @@ class BmsspDataStructure:
             self.split(linked_list, block.key)
 
     def split(self, linked_list, upper_bound):
-        median_value = median_high(node.value for node in linked_list)
+        median_value = max(quicksplit([i.value for i in linked_list])["lower"])
         if (
             median_value == upper_bound
         ):  # Don't split if new block would have the same upper bound
@@ -246,8 +245,7 @@ class BmsspDataStructure:
                 else:
                     # Split by median
                     values = [value for _, value in current_pairs]
-                    median = median_high(values)
-
+                    median = max(quicksplit(values)["lower"])
                     # Split into upper and lower halves
                     upper_list = []
                     lower_list = []
@@ -295,11 +293,23 @@ class BmsspDataStructure:
                 for item in current_list:
                     smallest_d1.add(item.key)
                 current_list = current_list.next_list
-        # Now combine the two sets to get the final subset
-        # TODO: implement an O(M) merge instead of sorting (see same github issue as above)
+        # Now combine the two sets to get the final subset and limit the length
         combined = list(smallest_d0) + list(smallest_d1)
-        combined.sort(key=lambda k: self.keys[k][0].value)
-        subset = combined[: self.pull_size]
+        if len(combined) > self.pull_size:
+            combined_values = {}
+            # Create a mapping from value to keys to allow quick lookup after quicksplit
+            for k in combined:
+                val = combined_values.get(self.keys[k][0].value, [])
+                val.append(k)
+                combined_values[self.keys[k][0].value] = val
+            # Use quicksplit to get the pull_size lowest values
+            subset_vals = quicksplit(
+                [self.keys[k][0].value for k in combined], self.pull_size
+            )["lower"]
+            # Map them back to the keys
+            subset = [combined_values[v].pop() for v in subset_vals]
+        else:
+            subset = combined
         for key in subset:
             # Now remove the selected keys from the structure
             if key in self.keys:
