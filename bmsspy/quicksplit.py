@@ -1,4 +1,5 @@
 from math import ceil
+from typing import Any
 
 def median(arr:list[int|float], split:bool=True) -> int|float:
     """
@@ -146,7 +147,7 @@ def quicksplit_dict(data:dict[Any, list[int|float]], lower_bucket_size:int=None)
 
     Required Arguments:
 
-    - data: A dictionary where keys are integers and values are lists of integers or floats to be split.
+    - data: A dictionary where keys are any hashable type and values are lists of integers or floats to be split.
 
     Optional Arguments:
 
@@ -162,12 +163,12 @@ def quicksplit_dict(data:dict[Any, list[int|float]], lower_bucket_size:int=None)
     """
     # If no lower bucket size is given, split in half or as close as possible
     if lower_bucket_size is None:
-        lower_bucket_size = len(arr)/2
+        lower_bucket_size = len(data)/2
     lower_bucket_size = ceil(lower_bucket_size)
-    assert 0 < lower_bucket_size <= len(arr), "lower_bucket_size must be positive and less than or equal to the length of the array"
+    assert 0 < lower_bucket_size <= len(data), "lower_bucket_size must be positive and less than or equal to the length of the array"
     higher = []
     lower = []
-    arr = list(data.items())
+    arr = data.items()
     while True:
         pivot = median_of_medians([v for k, v in arr], split=False)
         # Loop over the array once to partition into three lists
@@ -176,10 +177,9 @@ def quicksplit_dict(data:dict[Any, list[int|float]], lower_bucket_size:int=None)
         pivots = []
         above = []
         for item in arr:
-            key, value = item
-            if value < pivot:
+            if item[1] < pivot:
                 below.append(item)
-            elif value > pivot:
+            elif item[1] > pivot:
                 above.append(item)
             else:
                 pivots.append(item)
@@ -196,7 +196,7 @@ def quicksplit_dict(data:dict[Any, list[int|float]], lower_bucket_size:int=None)
             lower = lower + below + pivots[:pivot_split_idx]
             higher = pivots[pivot_split_idx:] + above + higher
             if pivot_split_idx == 0:
-                pivot = max([v for k, v in below])
+                pivot = max([i[1] for i in below])
             return {
                 'lower': dict(lower),
                 'higher': dict(higher),
