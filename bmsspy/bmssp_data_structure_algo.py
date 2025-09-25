@@ -4,6 +4,16 @@ from .quicksplit import quicksplit, quicksplit_dict
 inf = float("inf")
 
 
+def is_lowest_value(value, linked_list_chain):
+    current = linked_list_chain
+    while current is not None:
+        for node in current:
+            if node.value < value:
+                return False
+        current = current.next_list
+    return True
+
+
 class LinkedListNode:
     def __init__(self, key=None, value=None, parent_list=None):
         self.key = key
@@ -23,6 +33,7 @@ class LinkedList:
         self.head = None
         self.tail = None
         self.size = 0
+        self.upper_bound = inf  # Upper bound for the values in this linked list
         self.prev_list = (
             None  # Pointer to the previous linked list in the chain
         )
@@ -62,14 +73,15 @@ class LinkedList:
         return self.size <= 0
 
     def __str__(self):
-        str = (
+        current = (
             "->".join(f"({node.key},{node.value})" for node in self)
-            + "\n"
-            # + self.next_list.__str__()
+            + "UB:"
+            + str(self.upper_bound)
+            # + ("\n" + self.next_list.__str__())
             # if self.next_list is not None
             # else ""
         )
-        return str
+        return current
 
 
 class BmsspDataStructure:
@@ -91,6 +103,7 @@ class BmsspDataStructure:
             RBTree()
         )  # D1 is a RB tree tracking upper bounds of linked lists
         list = LinkedList()
+        list.upper_bound = upper_bound
         self.D1.insert(
             self.upper_bound, list
         )  # Start with one empty linked list with upper bound B
@@ -103,24 +116,20 @@ class BmsspDataStructure:
         # Remove the key-value pair from the linked list
         linked_list.remove(list_node)
         # If the linked list is empty, remove it from D1
-        if linked_list.is_empty():
-            block = self.D1.find(list_node.value, target="upper")
+        if linked_list.is_empty() and linked_list.upper_bound != self.upper_bound:
+            block = self.D1.find(linked_list.upper_bound)
             if (
-                block.key != self.upper_bound
-            ):  # allow the upper bound block to remain even if empty
-                if linked_list.prev_list:
-                    linked_list.prev_list.next_list = linked_list.next_list
-                if linked_list.next_list:
-                    linked_list.next_list.prev_list = linked_list.prev_list
-                if (
-                    block.val == linked_list
-                ):  # Only remove if it hasn't been replaced
-                    self.D1.remove(block.key)
+                block.val == linked_list
+            ):  # Only remove if it hasn't been replaced
+                if linked_list.next_list.upper_bound == linked_list.upper_bound:
+                    block.val = linked_list.next_list
                 else:
-                    raise ValueError(
-                        "Linked list not found in RBTree (probably due to a key collision)."
-                    )
-                del linked_list  # Just to be explicit
+                    self.D1.remove(block.key)
+            if linked_list.prev_list:
+                linked_list.prev_list.next_list = linked_list.next_list
+            if linked_list.next_list:
+                linked_list.next_list.prev_list = linked_list.prev_list
+  
 
     def delete_d0(self, key):
         if key not in self.keys:
@@ -160,25 +169,30 @@ class BmsspDataStructure:
         linked_list = block.val
         linked_list.append(key, value)
         self.keys[key] = (linked_list.tail, 1)  # Update with the new node
-
         # If the linked list exceeds the subset size, perform a split
         if linked_list.size > self.subset_size:
-            self.split(linked_list, block.key)
+            self.split(linked_list)
 
-    def split(self, linked_list, upper_bound):
+
+    def split(self, linked_list):
         median_value = quicksplit([i.value for i in linked_list])["pivot"]
-        if (
-            median_value == upper_bound
-        ):  # Don't split if new block would have the same upper bound
-            return
-        new_list = LinkedList()
-        max_value = -inf
+        current_head = self.D1.find(median_value)
+        use_current = current_head is not None and median_value != linked_list.upper_bound
+        new_list = current_head.val if use_current else LinkedList()
+        maximum_size = linked_list.size // 2
         # Move nodes with value < median_value to the new linked list to preserve original upper bound
-        # TODO: This can fail to split if all values are the same as the median value. Need to handle this case.
         for node in linked_list:
             if node.value < median_value:
-                if node.value > max_value:
-                    max_value = node.value
+                new_list.append(node.key, node.value)
+                self.keys[node.key] = (
+                    new_list.tail,
+                    1,
+                )  # Update with the new node
+                linked_list.remove(node)
+        for node in linked_list:
+            if new_list.size >= maximum_size:
+                break
+            elif node.value == median_value:
                 new_list.append(node.key, node.value)
                 self.keys[node.key] = (
                     new_list.tail,
@@ -189,15 +203,21 @@ class BmsspDataStructure:
         if new_list.is_empty():
             # Sometimes the new list would have been all median values, in which case we don't need to split
             return
-        # Update D1 with the new linked list
-        new_list.next_list = linked_list
-        new_list.prev_list = linked_list.prev_list
-        if linked_list.prev_list:
-            linked_list.prev_list.next_list = new_list
-        linked_list.prev_list = new_list
-        self.D1.insert(max_value, new_list)
+        if not use_current:
+            new_list.upper_bound = median_value
+            # Update D1 with the new linked list
+            new_list.next_list = linked_list
+            new_list.prev_list = linked_list.prev_list
+            if linked_list.prev_list:
+                linked_list.prev_list.next_list = new_list
+            linked_list.prev_list = new_list
+            self.D1.insert(median_value, new_list)
+        elif new_list.size > self.subset_size:
+            # If the new list is still too large, we need to split it again
+            self.split(new_list)
         if linked_list.is_empty():
             raise ValueError("Linked list should not be empty after split.")
+        
 
     def batch_prepend(self, key_value_pairs: list[tuple[int, int | float]]):
         """
@@ -301,6 +321,7 @@ class BmsspDataStructure:
                 remaining_best, min(node.value for node in self.D0)
             )
         smallest_block = self.D1.get_min(self.D1.root)
+
         if smallest_block is not None and smallest_block.val.size > 0:
             remaining_best = min(
                 remaining_best,
