@@ -1,5 +1,5 @@
 from .rbtree import RBTree
-from .quicksplit import quicksplit, sortsplit
+from .quicksplit import quicksplit, quicksplit_dict
 
 inf = float("inf")
 
@@ -166,7 +166,7 @@ class BmsspDataStructure:
             self.split(linked_list, block.key)
 
     def split(self, linked_list, upper_bound):
-        median_value = max(quicksplit([i.value for i in linked_list])["lower"])
+        median_value = quicksplit([i.value for i in linked_list])["pivot"]
         if (
             median_value == upper_bound
         ):  # Don't split if new block would have the same upper bound
@@ -228,7 +228,7 @@ class BmsspDataStructure:
         else:
             # Otherwise, split by median and try again. (note that the lower half goes in last to preserve order)
             # Iterative approach to batch prepend
-            stack = [list(min_pairs.items())]  # Start with all key-value pairs
+            stack = [min_pairs]  # Start with all key-value pairs
             while stack:
                 current_pairs = stack.pop()
                 if len(current_pairs) <= self.subset_size:
@@ -239,33 +239,17 @@ class BmsspDataStructure:
                     if old_head:
                         old_head.prev_list = self.D0
                     # Add all pairs to the new block
-                    for key, value in current_pairs:
+                    for key, value in current_pairs.items():
                         self.D0.append(key, value)
                         self.keys[key] = (self.D0.tail, 0)
                 else:
                     # Split by median
-                    values = [value for _, value in current_pairs]
-                    median = max(quicksplit(values)["lower"])
-                    # Split into upper and lower halves
-                    upper_list = []
-                    lower_list = []
-                    for key, value in current_pairs:
-                        if value < median:
-                            lower_list.append((key, value))
-                        elif value > median:
-                            upper_list.append((key, value))
-                        else:
-                            # Equal to median, distribute evenly
-                            if len(lower_list) <= len(upper_list):
-                                lower_list.append((key, value))
-                            else:
-                                upper_list.append((key, value))
-
+                    split_items = quicksplit_dict(current_pairs)
                     # Push lower list first so it gets processed last (to preserve order)
-                    if lower_list:
-                        stack.append(lower_list)
-                    if upper_list:
-                        stack.append(upper_list)
+                    if split_items["lower"]:
+                        stack.append(split_items["lower"])
+                    if split_items["higher"]:
+                        stack.append(split_items["higher"])
 
     def pull(self):
         """
@@ -296,18 +280,10 @@ class BmsspDataStructure:
         # Now combine the two sets to get the final subset and limit the length
         combined = list(smallest_d0) + list(smallest_d1)
         if len(combined) > self.pull_size:
-            combined_values = {}
-            # Create a mapping from value to keys to allow quick lookup after quicksplit
-            for k in combined:
-                val = combined_values.get(self.keys[k][0].value, [])
-                val.append(k)
-                combined_values[self.keys[k][0].value] = val
             # Use quicksplit to get the pull_size lowest values
-            subset_vals = quicksplit(
-                [self.keys[k][0].value for k in combined], self.pull_size
+            subset = quicksplit_dict(
+                {k: self.keys[k][0].value for k in combined}, self.pull_size
             )["lower"]
-            # Map them back to the keys
-            subset = [combined_values[v].pop() for v in subset_vals]
         else:
             subset = combined
         for key in subset:
