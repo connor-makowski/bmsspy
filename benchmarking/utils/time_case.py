@@ -1,15 +1,15 @@
 # SCGraph Utils
 from scgraph.spanning import SpanningTree as SCSpanning
 # Other Utilities
-from pamda import pamda
 from pamda.pamda_timer import pamda_timer
 
 # Local Imports and Utils
 from bmsspy.solvers import bmssp
 from .graphs import get_nx_shortest_path, get_igraph_shortest_path
+from .vanilla_dijkstra import vanilla_dijkstra
 
 
-def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None, print_console=True):
+def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None, test_vanilla_dijkstra:bool=False, print_console:bool=True):
 
     output = {
         'graph_name': graph_name,
@@ -27,6 +27,20 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
         print(f"BMSSP time: {bmssp_spantree_time_stats['avg']:.2f} ms (stdev: {bmssp_spantree_time_stats['std']:.2f})")
     output['bmssp_spantree_time_ms'] = bmssp_spantree_time_stats['avg']
     output['bmssp_spantree_stdev'] = bmssp_spantree_time_stats['std']
+
+    if test_vanilla_dijkstra:
+        if len(scgraph) > 12000:
+            if print_console:
+                print("Skipping Vanilla Dijkstra due to large graph size (> 12000 nodes).")
+            output['vanilla_dijkstra_time_ms'] = float('nan')
+            output['vanilla_dijkstra_stdev'] = float('nan')
+        else:
+            vanilla_dijkstra_time_stats = pamda_timer(vanilla_dijkstra, iterations = 10).get_time_stats(graph=scgraph, origin_id=origin)
+            if print_console:
+                print(f"Vanilla Dijkstra time: {vanilla_dijkstra_time_stats['avg']:.2f} ms (stdev: {vanilla_dijkstra_time_stats['std']:.2f})")
+            output['vanilla_dijkstra_time_ms'] = vanilla_dijkstra_time_stats['avg']
+            output['vanilla_dijkstra_stdev'] = vanilla_dijkstra_time_stats['std']
+
 
     # SCGraph Dijkstra Timing
     sc_dijkstra_spantree_time_stats = pamda_timer(SCSpanning.makowskis_spanning_tree, iterations = 10).get_time_stats(graph=scgraph, node_id=origin)

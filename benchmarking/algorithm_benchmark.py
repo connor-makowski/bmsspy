@@ -61,7 +61,6 @@ for name, scgraph_object in graph_data:
     graph_nodes = len(scgraph)
     graph_edges = nxgraph.number_of_edges()
 
-
     for case_name, origin in test_cases:
         output.append(time_case(
             graph_name = name,
@@ -70,6 +69,7 @@ for name, scgraph_object in graph_data:
             scgraph = scgraph,
             nxgraph = nxgraph,
             igraph = igraph,
+            test_vanilla_dijkstra = True,
             print_console = True
         ))
 
