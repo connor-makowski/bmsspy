@@ -77,9 +77,9 @@ class LinkedList:
             "->".join(f"({node.key},{node.value})" for node in self)
             + "UB:"
             + str(self.upper_bound)
-            # + ("\n" + self.next_list.__str__())
-            # if self.next_list is not None
-            # else ""
+            + ("\n" + self.next_list.__str__())
+            if self.next_list is not None
+            else ""
         )
         return current
 
@@ -177,8 +177,8 @@ class BmsspDataStructure:
     def split(self, linked_list):
         median_value = quicksplit([i.value for i in linked_list])["pivot"]
         current_head = self.D1.find(median_value)
-        use_current = current_head is not None and median_value != linked_list.upper_bound
-        new_list = current_head.val if use_current else LinkedList()
+        existing_lower_head = current_head is not None and median_value != linked_list.upper_bound
+        new_list = LinkedList()
         maximum_size = linked_list.size // 2
         # Move nodes with value < median_value to the new linked list to preserve original upper bound
         for node in linked_list:
@@ -203,8 +203,8 @@ class BmsspDataStructure:
         if new_list.is_empty():
             # Sometimes the new list would have been all median values, in which case we don't need to split
             return
-        if not use_current:
-            new_list.upper_bound = median_value
+        new_list.upper_bound = median_value
+        if not existing_lower_head:
             # Update D1 with the new linked list
             new_list.next_list = linked_list
             new_list.prev_list = linked_list.prev_list
@@ -212,9 +212,15 @@ class BmsspDataStructure:
                 linked_list.prev_list.next_list = new_list
             linked_list.prev_list = new_list
             self.D1.insert(median_value, new_list)
-        elif new_list.size > self.subset_size:
-            # If the new list is still too large, we need to split it again
-            self.split(new_list)
+        elif all(node.value == median_value for node in new_list):
+            # Put the new list after the existing lower head to preserve order
+            new_list.next_list = current_head.val.next_list
+            new_list.prev_list = current_head.val
+            if current_head.val.next_list:
+                current_head.val.next_list.prev_list = new_list
+            current_head.val.next_list = new_list
+        else:
+            raise ValueError("Unexpected condition during split.")
         if linked_list.is_empty():
             raise ValueError("Linked list should not be empty after split.")
         
