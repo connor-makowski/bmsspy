@@ -7,7 +7,7 @@ from utils.time_case import time_case
 
 
 graph_data = [
-    ('33x33 GridGraph', make_gridgraph(33, 33)),
+    ('25x25 GridGraph', make_gridgraph(25, 25)),
     ('50x50 GridGraph', make_gridgraph(50, 50)),
     ('100x100 GridGraph', make_gridgraph(100, 100)),
     ('200x200 GridGraph', make_gridgraph(200, 200)),

@@ -17,23 +17,28 @@ from utils.time_case import time_case
 
 
 graph_data = [
+    # Geographs
     # Small Geographs
-    ('Marnet', marnet_geograph),
-    ('North America Rail', north_america_rail_geograph),
-    ('Oak Ridge Maritime', oak_ridge_maritime_geograph),
-    ('US Freeway', us_freeway_geograph),
+    ('Geograph Marnet', marnet_geograph),
+    ('Geograph North America Rail', north_america_rail_geograph),
+    ('Geograph Oak Ridge Maritime', oak_ridge_maritime_geograph),
+    ('Geograph US Freeway', us_freeway_geograph),
     # Large Geographs
-    ('World Highways and Marnet', world_highways_and_marnet_geograph),
-    ('World Highways', world_highways_geograph),
-    ('World Railways', world_railways_geograph),
+    ('Geograph World Highways and Marnet', world_highways_and_marnet_geograph),
+    # ('Geograph World Highways', world_highways_geograph), # Ignore for testing since it is fairly disconnected
+    # ('Geograph World Railways', world_railways_geograph), # Ignore for testing since it is fairly disconnected
+
+    # GridGraphs
     # Square GridGraphs
-    ('100x100 GridGraph', make_gridgraph(100, 100)),
-    ('200x200 GridGraph', make_gridgraph(200, 200)),
-    ('300x300 GridGraph', make_gridgraph(300, 300)),
-    ('400x400 GridGraph', make_gridgraph(400, 400)),
+    ('Square GridGraph 100x100', make_gridgraph(100, 100)),
+    ('Square GridGraph 200x200', make_gridgraph(200, 200)),
+    ('Square GridGraph 300x300', make_gridgraph(300, 300)),
+    ('Square GridGraph 400x400', make_gridgraph(400, 400)),
     # Rectangular GridGraphs
-    ('100x500 GridGraph', make_gridgraph(100, 500)),
-    ('500x100 GridGraph', make_gridgraph(500, 100)),
+    ('Rectangular GridGraph 100x500', make_gridgraph(100, 500)),
+    ('Rectangular GridGraph 100x1000', make_gridgraph(100, 1000)),
+    ('Rectangular GridGraph 100x1500', make_gridgraph(100, 1500)),
+    ('Rectangular GridGraph 100x2000', make_gridgraph(100, 2000)),
 ]
 
 output = []
@@ -53,9 +58,9 @@ for name, scgraph_object in graph_data:
         ]
     else:
         test_cases = [
-            ('case_1', 0),
-            ('case_2', 100),
-            ('case_3', 1000),
+            ('case_1', 0), # This representes a node id in the geograph (chosen at random) to act as an origin
+            ('case_2', 100), # This representes a node id in the geograph (chosen at random) to act as an origin
+            ('case_3', 1000), # This representes a node id in the geograph (chosen at random) to act as an origin
         ]
 
     graph_nodes = len(scgraph)
