@@ -20,7 +20,7 @@ pip install bmsspy
 ### Use
 
 ```python
-from bmsspy.solvers import bmssp, bmssp_star
+from bmsspy.solvers import bmssp
 
 graph = [
     {1: 1, 2: 1}, 

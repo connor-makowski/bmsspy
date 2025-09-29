@@ -70,7 +70,7 @@ class BmsspSolver:
         # Practical choices (k and t) based on n
         # Modification: Use log base 2 to ensure everything is properly relaxed
         self.pivot_relaxation_steps = max(
-            2, int(log(graph_len, 2) ** (1 / 3))
+            2, ceil(log(graph_len, 2) ** (1 / 3))
         )  # k
         self.target_tree_depth = max(
             2, int(log(graph_len, 2) ** (2 / 3))
