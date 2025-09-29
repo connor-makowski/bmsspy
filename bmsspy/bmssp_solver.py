@@ -1,7 +1,7 @@
 from heapq import heappush, heappop
 from math import ceil, log
 
-from .bmssp_data_structure_algo import BmsspDataStructure
+from .data_structure import BmsspDataStructure
 
 inf = float("inf")
 

@@ -1,9 +1,9 @@
 import random
 
-from bmsspy.bmssp_data_structure import (
+from bmsspy.heap_data_structure import (
     BmsspDataStructure as BmsspDataStructureHeap,
 )
-from bmsspy.bmssp_data_structure_algo import (
+from bmsspy.data_structure import (
     BmsspDataStructure as BmsspDataStructureAlgo,
 )
 def basic_test():
