@@ -68,7 +68,7 @@ class BmsspSolver:
             raise ValueError("Your provided graph must have more than 2 nodes")
 
         # Practical choices (k and t) based on n
-        # Modification: Use log base 2 to ensure everything is properly relaxed
+        # Modification: Use log base 2 to ensure everything is properly relaxed and round up k
         self.pivot_relaxation_steps = max(
             2, ceil(log(graph_len, 2) ** (1 / 3))
         )  # k
