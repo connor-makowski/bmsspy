@@ -3,3 +3,4 @@ networkx==3.5
 pamda==2.8.0
 scgraph==2.14.1
 scgraph_data==2.0.0
+folium==0.20.0
