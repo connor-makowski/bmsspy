@@ -70,6 +70,23 @@ validate(
     expected=marnet_shortest_path_tree["distance_matrix"],
 )
 
+bmssp_us_freeway_solver = BmsspSolver(us_freeway_graph, 1)
+us_freeway_shortest_path_tree = SpanningTree.makowskis_spanning_tree(us_freeway_graph, 1)
+validate(
+    name="BMSSP US Freeway Graph Distance Matrix",
+    realized=bmssp_us_freeway_solver.distance_matrix,
+    expected=us_freeway_shortest_path_tree["distance_matrix"],
+)   
+
+world_highways_and_marnet_solver = BmsspSolver(world_highways_and_marnet_graph, 1)
+world_highways_and_marnet_shortest_path_tree = SpanningTree.makowskis_spanning_tree(world_highways_and_marnet_graph, 1)
+validate(
+    name="BMSSP World Highways and Marnet Graph Distance Matrix",
+    realized=world_highways_and_marnet_solver.distance_matrix,
+    expected=world_highways_and_marnet_shortest_path_tree["distance_matrix"],
+)
+
+print()
 
 graph = marnet_graph
 
