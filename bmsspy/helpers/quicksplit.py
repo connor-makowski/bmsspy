@@ -1,7 +1,8 @@
 from math import ceil
 from typing import Any
 
-def median(arr:list[int|float], split:bool=True) -> int|float:
+
+def median(arr: list[int | float], split: bool = True) -> int | float:
     """
     Function:
 
@@ -26,18 +27,21 @@ def median(arr:list[int|float], split:bool=True) -> int|float:
     len_arr = len(arr)
     idx = len_arr // 2
     sorted_arr = sorted(arr)
-    if len_arr%2 == 1:
+    if len_arr % 2 == 1:
         return sorted_arr[idx]
-    elif split:   
+    elif split:
         return (sorted_arr[idx - 1] + sorted_arr[idx]) / 2
     else:
         return sorted_arr[idx - 1]
 
-def median_of_medians(arr:list[int|float], split_size:int=5, split:bool=True) -> int|float:
+
+def median_of_medians(
+    arr: list[int | float], split_size: int = 5, split: bool = True
+) -> int | float:
     """
     Function:
 
-    - Computes the median of medians of a list of numbers. 
+    - Computes the median of medians of a list of numbers.
     - This is done by dividing the list into sublists of a fixed size (5 in this case)
         - For each sublist, find the median of each sublist
         - Then iteratively find the median of those medians
@@ -71,12 +75,16 @@ def median_of_medians(arr:list[int|float], split_size:int=5, split:bool=True) ->
         extra = []
         # Allow for arrays not divisible by split_size
         if len_arr % split_size != 0:
-            extra = [median(arr[len_arr - (len_arr % split_size):])]
-            arr = arr[:len_arr - (len_arr % split_size)]
-        medians = [sorted(arr[i:i+split_size])[split_median_idx] for i in range(0, len(arr), split_size)]
+            extra = [median(arr[len_arr - (len_arr % split_size) :])]
+            arr = arr[: len_arr - (len_arr % split_size)]
+        medians = [
+            sorted(arr[i : i + split_size])[split_median_idx]
+            for i in range(0, len(arr), split_size)
+        ]
         arr = medians + extra
 
-def quicksplit(arr:list[int|float], lower_bucket_size:int=None) -> dict:
+
+def quicksplit(arr: list[int | float], lower_bucket_size: int = None) -> dict:
     """
     Function:
 
@@ -90,7 +98,7 @@ def quicksplit(arr:list[int|float], lower_bucket_size:int=None) -> dict:
 
     - lower_bucket_size: The desired size of the lower bucket.
         - If not provided, the function will split the array into two equal halves (or as close as possible).
-    
+
     Returns:
 
     - A dictionary with three keys:
@@ -100,9 +108,11 @@ def quicksplit(arr:list[int|float], lower_bucket_size:int=None) -> dict:
     """
     # If no lower bucket size is given, split in half or as close as possible
     if lower_bucket_size is None:
-        lower_bucket_size = len(arr)/2
+        lower_bucket_size = len(arr) / 2
     lower_bucket_size = ceil(lower_bucket_size)
-    assert 0 < lower_bucket_size <= len(arr), "lower_bucket_size must be positive and less than or equal to the length of the array"
+    assert (
+        0 < lower_bucket_size <= len(arr)
+    ), "lower_bucket_size must be positive and less than or equal to the length of the array"
     higher = []
     lower = []
     while True:
@@ -133,13 +143,12 @@ def quicksplit(arr:list[int|float], lower_bucket_size:int=None) -> dict:
             higher = pivots[pivot_split_idx:] + above + higher
             if pivot_split_idx == 0:
                 pivot = max(below)
-            return {
-                'lower': lower,
-                'higher': higher,
-                'pivot': pivot
-            }
+            return {"lower": lower, "higher": higher, "pivot": pivot}
 
-def quicksplit_dict(data:dict[Any, list[int|float]], lower_bucket_size:int=None) -> dict:
+
+def quicksplit_dict(
+    data: dict[Any, list[int | float]], lower_bucket_size: int = None
+) -> dict:
     """
     Function:
 
@@ -153,7 +162,7 @@ def quicksplit_dict(data:dict[Any, list[int|float]], lower_bucket_size:int=None)
 
     - lower_bucket_size: The desired size of the lower bucket.
         - If not provided, the function will split the array into two equal halves (or as close as possible).
-    
+
     Returns:
 
     - A dictionary with three keys:
@@ -163,9 +172,11 @@ def quicksplit_dict(data:dict[Any, list[int|float]], lower_bucket_size:int=None)
     """
     # If no lower bucket size is given, split in half or as close as possible
     if lower_bucket_size is None:
-        lower_bucket_size = len(data)/2
+        lower_bucket_size = len(data) / 2
     lower_bucket_size = ceil(lower_bucket_size)
-    assert 0 < lower_bucket_size <= len(data), "lower_bucket_size must be positive and less than or equal to the length of the array"
+    assert (
+        0 < lower_bucket_size <= len(data)
+    ), "lower_bucket_size must be positive and less than or equal to the length of the array"
     higher = []
     lower = []
     arr = data.items()
@@ -198,12 +209,13 @@ def quicksplit_dict(data:dict[Any, list[int|float]], lower_bucket_size:int=None)
             if pivot_split_idx == 0:
                 pivot = max([i[1] for i in below])
             return {
-                'lower': dict(lower),
-                'higher': dict(higher),
-                'pivot': pivot
+                "lower": dict(lower),
+                "higher": dict(higher),
+                "pivot": pivot,
             }
 
-def sortsplit(arr, lower_bucket_size:int=None) -> dict:
+
+def sortsplit(arr, lower_bucket_size: int = None) -> dict:
     """
     Function:
 
@@ -217,7 +229,7 @@ def sortsplit(arr, lower_bucket_size:int=None) -> dict:
 
     - lower_bucket_size: The desired size of the lower bucket.
         - If not provided, the function will split the array into two equal halves (or as close as possible).
-    
+
     Returns:
 
     - A dictionary with three keys:
@@ -227,11 +239,15 @@ def sortsplit(arr, lower_bucket_size:int=None) -> dict:
 
     """
     if lower_bucket_size is None:
-        lower_bucket_size = len(arr)//2
-    assert lower_bucket_size <= len(arr), "lower_bucket_size must be less than or equal to the length of the array"
+        lower_bucket_size = len(arr) // 2
+    assert lower_bucket_size <= len(
+        arr
+    ), "lower_bucket_size must be less than or equal to the length of the array"
     sorted_arr = sorted(arr)
     return {
-        'lower': sorted_arr[:lower_bucket_size],
-        'higher': sorted_arr[lower_bucket_size:],
-        'pivot': sorted_arr[lower_bucket_size - 1] if lower_bucket_size > 0 else None
+        "lower": sorted_arr[:lower_bucket_size],
+        "higher": sorted_arr[lower_bucket_size:],
+        "pivot": (
+            sorted_arr[lower_bucket_size - 1] if lower_bucket_size > 0 else None
+        ),
     }

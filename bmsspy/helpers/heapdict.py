@@ -4,6 +4,7 @@
 # License: https://github.com/DanielStutzbach/heapdict/blob/master/LICENSE
 from collections.abc import MutableMapping
 
+
 class heapdict(MutableMapping):
     __marker = object()
 
@@ -22,7 +23,7 @@ class heapdict(MutableMapping):
         wrapper = [value, key, len(self)]
         self.d[key] = wrapper
         self.heap.append(wrapper)
-        self._decrease_key(len(self.heap)-1)
+        self._decrease_key(len(self.heap) - 1)
 
     def _min_heapify(self, i):
         n = len(self.heap)

@@ -5,6 +5,7 @@ from .data_structures.data_structure import BmsspDataStructure
 
 inf = float("inf")
 
+
 def cnt_reachable_nodes(root: int, forest: dict[int, set[int]]) -> int:
     """
     Function:
@@ -34,7 +35,12 @@ def cnt_reachable_nodes(root: int, forest: dict[int, set[int]]) -> int:
 
 
 class BmsspSolver:
-    def __init__(self, graph: list[dict[int, int | float]], origin_ids: set[int] | int, DataStructure=BmsspDataStructure):
+    def __init__(
+        self,
+        graph: list[dict[int, int | float]],
+        origin_ids: set[int] | int,
+        DataStructure=BmsspDataStructure,
+    ):
         """
         Function:
 
@@ -74,15 +80,12 @@ class BmsspSolver:
         self.pivot_relaxation_steps = max(
             2, ceil(log(graph_len, 2) ** (1 / 3))
         )  # k
-        self.target_tree_depth = max(
-            2, int(log(graph_len, 2) ** (2 / 3))
-        )  # t
+        self.target_tree_depth = max(2, int(log(graph_len, 2) ** (2 / 3)))  # t
 
         # Compute max_recursion_depth based on t
         self.max_recursion_depth = ceil(
             log(graph_len, 2) / self.target_tree_depth
-        ) # l
-
+        )  # l
 
         # print(f"Pivot relaxation steps (k): {self.pivot_relaxation_steps}, Target tree depth (t): {self.target_tree_depth}, Max recursion depth (l): {self.max_recursion_depth}")
 
@@ -158,13 +161,12 @@ class BmsspSolver:
             ].items():
                 if (
                     connection_idx in temp_frontier
-                    and 
-                    (frontier_distance + connection_distance) == self.distance_matrix[connection_idx]
+                    and (frontier_distance + connection_distance)
+                    == self.distance_matrix[connection_idx]
                 ):
                     # direction is frontier_idx -> connection_idx (parent to child)
                     forest[frontier_idx].add(connection_idx)
                     indegree[connection_idx] += 1
-
 
         pivots = set()
         for frontier_idx in frontier:
@@ -274,7 +276,9 @@ class BmsspSolver:
 
         # Base case
         if recursion_depth == 0:
-            new_upper_bound, new_frontier = self.base_case(upper_bound, frontier)
+            new_upper_bound, new_frontier = self.base_case(
+                upper_bound, frontier
+            )
             # if printing:
             #     print(f"{spacing}Base case reached: Upper Bound: {new_upper_bound}, Frontier: {new_frontier}")
             return new_upper_bound, new_frontier
@@ -381,7 +385,9 @@ class BmsspSolver:
 
             # if printing:
             #     print(f"{spacing}- Batch Inserting {intermediate_frontier | data_struct_frontier_temp_filtered}")
-            data_struct.batch_prepend(intermediate_frontier | data_struct_frontier_temp_filtered)
+            data_struct.batch_prepend(
+                intermediate_frontier | data_struct_frontier_temp_filtered
+            )
 
         # Step 22: Final return
         # TODO: Verify this is necessary. Completion bound should always be <= upper_bound
@@ -398,7 +404,6 @@ class BmsspSolver:
         #     print(f"{spacing}- Finished: New Bound: {new_bound}, New Frontier: {new_frontier}")
 
         # return new_bound, new_frontier
-
 
         new_frontier = new_frontier | {
             v

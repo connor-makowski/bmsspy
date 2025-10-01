@@ -1,7 +1,8 @@
-
 from bmsspy.helpers.heapdict import heapdict
 
 inf = float("inf")
+
+
 class BmsspDataStructure:
     """
     Data structure for inserting, updating and pulling the M smallest key-value pairs

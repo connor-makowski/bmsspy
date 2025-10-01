@@ -6,6 +6,8 @@ from bmsspy.data_structures.heap_data_structure import (
 from bmsspy.data_structures.data_structure import (
     BmsspDataStructure as BmsspDataStructureAlgo,
 )
+
+
 def basic_test():
     """
     Basic sanity test for BmsspDataStructure implementations.
@@ -38,6 +40,7 @@ def basic_test():
 
     assert ds.is_empty()
 
+
 def test_data_structure_parity(seed):
     """
     Verify that both BmsspDataStructure implementations behave identically.
@@ -69,7 +72,9 @@ def test_data_structure_parity(seed):
     remaining_best_heap, subset_heap = ds_heap.pull()
     remaining_best_algo, subset_algo = ds_algo.pull()
     assert remaining_best_heap == remaining_best_algo
-    assert set(key_values[k] for k in subset_heap) == set(key_values[k] for k in subset_algo)
+    assert set(key_values[k] for k in subset_heap) == set(
+        key_values[k] for k in subset_algo
+    )
 
     # Test batch_prepend
     batch = []
@@ -91,7 +96,9 @@ def test_data_structure_parity(seed):
         remaining_best_heap, subset_heap = ds_heap.pull()
         remaining_best_algo, subset_algo = ds_algo.pull()
         assert remaining_best_heap == remaining_best_algo
-        assert set(key_values[k] for k in subset_heap) == set(key_values[k] for k in subset_algo)
+        assert set(key_values[k] for k in subset_heap) == set(
+            key_values[k] for k in subset_algo
+        )
 
     assert ds_heap.is_empty()
     assert ds_algo.is_empty()

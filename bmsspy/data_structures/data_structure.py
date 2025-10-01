@@ -116,7 +116,10 @@ class BmsspDataStructure:
         # Remove the key-value pair from the linked list
         linked_list.remove(list_node)
         # If the linked list is empty, remove it from D1
-        if linked_list.is_empty() and linked_list.upper_bound != self.upper_bound:
+        if (
+            linked_list.is_empty()
+            and linked_list.upper_bound != self.upper_bound
+        ):
             block = self.D1.find(linked_list.upper_bound)
             if (
                 block.val == linked_list
@@ -129,7 +132,6 @@ class BmsspDataStructure:
                 linked_list.prev_list.next_list = linked_list.next_list
             if linked_list.next_list:
                 linked_list.next_list.prev_list = linked_list.prev_list
-  
 
     def delete_d0(self, key):
         if key not in self.keys:
@@ -173,11 +175,12 @@ class BmsspDataStructure:
         if linked_list.size > self.subset_size:
             self.split(linked_list)
 
-
     def split(self, linked_list):
         median_value = quicksplit([i.value for i in linked_list])["pivot"]
         current_head = self.D1.find(median_value)
-        existing_lower_head = current_head is not None and median_value != linked_list.upper_bound
+        existing_lower_head = (
+            current_head is not None and median_value != linked_list.upper_bound
+        )
         new_list = LinkedList()
         maximum_size = linked_list.size // 2
         # Move nodes with value < median_value to the new linked list to preserve original upper bound
@@ -223,7 +226,6 @@ class BmsspDataStructure:
             raise ValueError("Unexpected condition during split.")
         if linked_list.is_empty():
             raise ValueError("Linked list should not be empty after split.")
-        
 
     def batch_prepend(self, key_value_pairs: list[tuple[int, int | float]]):
         """

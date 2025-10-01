@@ -4,10 +4,12 @@
 
 
 NoneType = type(None)
+
+
 class BSNode:
     def __init__(self, key: any, value: any = None):
         """
-        Function: 
+        Function:
 
         - Initialize a binary search tree node with a key and a value.
 
@@ -28,9 +30,9 @@ class BSNode:
         """
         self.key: any = key
         self.val: any = value
-        self.parent: 'BSNode' | None = None
-        self.left: 'BSNode' | None = None
-        self.right: 'BSNode' | None = None
+        self.parent: "BSNode" | None = None
+        self.left: "BSNode" | None = None
+        self.right: "BSNode" | None = None
 
     def num_nodes(self) -> int:
         """
@@ -42,7 +44,12 @@ class BSNode:
 
         - int: The total number of nodes in the subtree.
         """
-        return 1 + (self.left.num_nodes() if self.left else 0) + (self.right.num_nodes() if self.right else 0)
+        return (
+            1
+            + (self.left.num_nodes() if self.left else 0)
+            + (self.right.num_nodes() if self.right else 0)
+        )
+
 
 class BSTree:
     def __init__(self):
@@ -71,7 +78,7 @@ class BSTree:
         """
         raise Exception("Not implemented")
 
-    def find(self, key: any, target: str = 'exact') -> BSNode:
+    def find(self, key: any, target: str = "exact") -> BSNode:
         """
         Function:
 
@@ -90,7 +97,7 @@ class BSTree:
             - What: A string indicating the search type.
             - Why: Determines how the search is conducted.
             - Default: 'exact'
-            - Options: 
+            - Options:
                 - 'exact': Find the node with the exact key.
                 - 'upper': Find the smallest node with a key greater than or equal to the specified key.
                 - 'lower': Find the largest node with a key less than or equal to the specified key.
@@ -103,12 +110,12 @@ class BSTree:
         if not self.root:
             return None
         node = self.__find_fuzzy__(self.root, key)
-        if target == 'exact':
+        if target == "exact":
             if node.key == key:
                 return node
             else:
                 return None
-        elif target == 'upper':
+        elif target == "upper":
             if node.key >= key:
                 return node
             while node.parent:
@@ -116,7 +123,7 @@ class BSTree:
                 if node.key >= key:
                     return node
             return None
-        elif target == 'lower':
+        elif target == "lower":
             if node.key <= key:
                 return node
             while node.parent:
@@ -125,7 +132,7 @@ class BSTree:
                     return node
             return None
         else:
-            raise Exception('Invalid target for find')
+            raise Exception("Invalid target for find")
 
     def get_max(self, node: BSNode) -> BSNode:
         """
@@ -262,6 +269,7 @@ class BSTree:
 
         - bool: True if the node was inserted, False if an existing node was updated.
         """
+
         def insert_internal(current_node):
             if to_insert.key < current_node.key:
                 if current_node.left:
@@ -288,7 +296,7 @@ class BSTree:
             return insert_internal(start)
 
     def __rotate_right__(self, y: BSNode) -> None:
-        '''
+        """
           T0   T0                         T0   T0
             \\ /                             \\ /
              y                               x
@@ -296,7 +304,7 @@ class BSTree:
            x   T3   - - - - - - - >        T1   y
           / \\       < - - - - - - -            / \\
          T1  T2     left Rotation            T2  T3
-        '''
+        """
         x = y.left
 
         # Attach T2 to y
@@ -322,7 +330,7 @@ class BSTree:
         x.right = y
 
     def __rotate_left__(self, x: BSNode) -> None:
-        '''
+        """
           T0   T0                         T0   T0
             \\ /                             \\ /
              y                               x
@@ -330,7 +338,7 @@ class BSTree:
            x   T3   - - - - - - - >        T1   y
           / \\       < - - - - - - -            / \\
          T1  T2     left Rotation            T2  T3
-        '''
+        """
 
         y = x.right
 
@@ -355,6 +363,7 @@ class BSTree:
         # Attach x to y
         x.parent = y
         y.left = x
+
 
 class RBNode(BSNode):
     def __init__(self, key: any, value: any, color: bool):
@@ -384,12 +393,14 @@ class RBNode(BSNode):
         super().__init__(key, value)
         self.colored = color
 
+
 class RBTreeRebalance:
     """
-    A class that provides rebalancing methods for a Red-Black Tree. 
+    A class that provides rebalancing methods for a Red-Black Tree.
 
     This is used primarily for code organization and clarity.
     """
+
     def __rebalance_ll__(self, gparent, parent):
         self.__rotate_right__(gparent)
         gparent.colored = not gparent.colored
@@ -423,16 +434,25 @@ class RBTreeRebalance:
         if not grandparent:
             return
 
-        dir_parent = self.left_idx if grandparent.left == parent else self.right_idx
-        uncle = grandparent.right if dir_parent == self.left_idx else grandparent.left
+        dir_parent = (
+            self.left_idx if grandparent.left == parent else self.right_idx
+        )
+        uncle = (
+            grandparent.right
+            if dir_parent == self.left_idx
+            else grandparent.left
+        )
 
         if uncle and not uncle.colored:
             uncle.colored = parent.colored = True
-            grandparent.colored = (grandparent == self.root)
+            grandparent.colored = grandparent == self.root
             self.__rebalance__(grandparent)
         else:
             dir_node = self.left_idx if parent.left == node else self.right_idx
-            self.__rebalance__(self.rotations[dir_parent][dir_node](grandparent, parent))
+            self.__rebalance__(
+                self.rotations[dir_parent][dir_node](grandparent, parent)
+            )
+
 
 class RBTreeFixup:
     """
@@ -441,7 +461,7 @@ class RBTreeFixup:
     """
 
     def __fixup_left_1__(self, node, parent, sibling):
-        '''
+        """
         Sibling is red
             b               r                 b
           /   \\           /   \\             /   \\
@@ -449,42 +469,42 @@ class RBTreeFixup:
              /   \\      /  \\              /  \\
             x     y   node  x           node  x
         Solution: rotate parent left. swap colors between parent and sibling and continue
-        '''
+        """
         sibling.colored = True
         parent.colored = False
         self.__rotate_left__(parent)
         self.__remove_fixup__(node)
 
     def __fixup_right_1__(self, node, parent, sibling):
-        ''' Mirror left case 1'''
+        """Mirror left case 1"""
         sibling.colored = True
         parent.colored = False
         self.__rotate_right__(parent)
         self.__remove_fixup__(node)
 
     def __fixup_left_2__(self, node, parent, sibling):
-        '''
+        """
             ?               b              ?
           /   \\           /   \\          /   \\
         node   b    =>   ?     r  =>    b     b
              /   \\      /  \\           /  \\
             x     r   node  x        node  x
         Solution: switch colors between parent and sibling then rotate parent left and color nephew black
-        '''
+        """
         sibling.colored = parent.colored
         parent.colored = True
         sibling.right.colored = True
         self.__rotate_left__(parent)
 
     def __fixup_right_2__(self, node, parent, sibling):
-        ''' Mirror of left case 2 '''
+        """Mirror of left case 2"""
         sibling.colored = parent.colored
         parent.colored = True
         sibling.left.colored = True
         self.__rotate_right__(parent)
 
     def __fixup_left_3__(self, node, parent, sibling):
-        '''
+        """
             ?                  ?
           /   \\              /   \\
         node   b    =>     node   b    =>
@@ -494,40 +514,40 @@ class RBTreeFixup:
                                        b
 
         Solution: convert to case 2 by rotating sibling to right and swapping color between niece and sibling
-        '''
+        """
         sibling.colored = False
         sibling.left.colored = True
         self.__rotate_right__(sibling)
         self.__remove_fixup__(node)
 
     def __fixup_right_3__(self, node, parent, sibling):
-        ''' Mirror of left case 3 '''
+        """Mirror of left case 3"""
         sibling.colored = False
         sibling.right.colored = True
         self.__rotate_left__(sibling)
         self.__remove_fixup__(node)
 
     def __fixup_right_4__(self, node, parent, sibling):
-        '''
+        """
             ?              ?
           /   \\          /   \\
         node   b    => node   r
              /   \\          /   \\
             b     b        b     b
         Color sibling red and continue from parent
-        '''
+        """
         sibling.colored = False
         self.__remove_fixup__(parent)
 
     def __fixup_left_4__(self, node, parent, sibling):
-        '''
+        """
             ?              ?
           /   \\          /   \\
         node   b    => node   r
              /   \\          /   \\
             b     b        b     b
         Color sibling red and continue from parent
-        '''
+        """
         sibling.colored = False
         self.__remove_fixup__(parent)
 
@@ -557,6 +577,7 @@ class RBTreeFixup:
         else:
             self.fixups[dir][3](node, parent, sibling)
 
+
 class RBTree(BSTree, RBTreeRebalance, RBTreeFixup):
     def __init__(self, initializer: dict | list | None = None):
         """
@@ -580,16 +601,26 @@ class RBTree(BSTree, RBTreeRebalance, RBTreeFixup):
                 - Custom objects used as keys should implement comparison methods.
         """
         super().__init__()
-        self.left_idx = 0 # Left Index for rotations and fixups
-        self.right_idx = 1 # Right Index for rotations and fixups
+        self.left_idx = 0  # Left Index for rotations and fixups
+        self.right_idx = 1  # Right Index for rotations and fixups
         self.rotations = [
-            [self.__rebalance_ll__, self.__rebalance_lr__], 
-            [self.__rebalance_rl__, self.__rebalance_rr__]
+            [self.__rebalance_ll__, self.__rebalance_lr__],
+            [self.__rebalance_rl__, self.__rebalance_rr__],
         ]
 
         self.fixups = [
-            [self.__fixup_left_1__, self.__fixup_left_2__, self.__fixup_left_3__, self.__fixup_left_4__], 
-            [self.__fixup_right_1__, self.__fixup_right_2__, self.__fixup_right_3__, self.__fixup_right_4__]
+            [
+                self.__fixup_left_1__,
+                self.__fixup_left_2__,
+                self.__fixup_left_3__,
+                self.__fixup_left_4__,
+            ],
+            [
+                self.__fixup_right_1__,
+                self.__fixup_right_2__,
+                self.__fixup_right_3__,
+                self.__fixup_right_4__,
+            ],
         ]
 
         if initializer:
@@ -641,7 +672,7 @@ class RBTree(BSTree, RBTreeRebalance, RBTreeFixup):
             - What: Any data type that supports comparison operations.
             - Why: Used to locate the node to be removed.
             - Example: An integer, string, or custom object with comparison methods.
-        
+
         """
         if not self.root:
             return
@@ -656,7 +687,8 @@ class RBTree(BSTree, RBTreeRebalance, RBTreeFixup):
                 leaf = self.get_max(node.left)
             elif node.right:
                 leaf = self.get_min(node.right)
-            else: break
+            else:
+                break
 
             node.key, leaf.key = leaf.key, node.key
             node.val, leaf.val = leaf.val, node.val
