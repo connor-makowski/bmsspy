@@ -2,7 +2,7 @@
 import random
 from pamda.pamda_timer import pamda_timer
 
-from bmsspy.quicksplit import quicksplit, sortsplit, quicksplit_dict
+from bmsspy.helpers.quicksplit import quicksplit, sortsplit, quicksplit_dict
 
 print("\n===============\nQuicksplit Tests:\n===============")
 

@@ -1,4 +1,5 @@
-from heapq import heappush, heappop, heapify
+
+from bmsspy.helpers.heapdict import heapdict
 
 inf = float("inf")
 class BmsspDataStructure:
@@ -11,34 +12,20 @@ class BmsspDataStructure:
         # subset_size: how many items to return per pull (must match Alg. 3 for level l -> Given as M)
         self.subset_size = max(1, subset_size)
         self.upper_bound = upper_bound
-        self.best = {}
-        self.heap = []
+        self.heap = heapdict()
 
     def insert_key_value(self, key: int, value: int | float):
         """
         Insert/refresh a key-value pair;
         """
-        if value < self.best.get(key, inf):
-            self.best[key] = value
-            heappush(self.heap, (value, key))
-
-    def pop_current(self):
-        """
-        Pop the current minimum key that matches self.best.
-        Returns None if heap is exhausted of current items.
-        """
-        while self.heap:
-            value, key = heappop(self.heap)
-            if self.best.get(key, inf) == value:
-                self.best.pop(key, None)  # Remove stale key
-                return key
-        return None
+        if value < self.heap.get(key, inf):
+            self.heap[key] = value
 
     def is_empty(self) -> bool:
         """
         Check for empty data structure.
         """
-        return len(self.best) == 0
+        return len(self.heap) == 0
 
     def pull(self):
         """
@@ -51,16 +38,17 @@ class BmsspDataStructure:
 
         # Take up to M distinct current keys
         while count < self.subset_size:
-            key = self.pop_current()
+            key = self.heap.popitem()[0] if self.heap else None
             if key is None:
                 break
             subset.add(key)
             count += 1
 
         # Compute lower bound for remaining
-        remaining_best = (
-            min(self.best.values()) if self.best else self.upper_bound
-        )
+        if self.heap:
+            remaining_best = self.heap.peekitem()[1]
+        else:
+            remaining_best = self.upper_bound
         return remaining_best, subset
 
     def batch_prepend(self, key_value_pairs: set[tuple[int, int | float]]):
@@ -68,19 +56,5 @@ class BmsspDataStructure:
         Insert/refresh multiple key-value pairs at once.
         """
         for key, value in key_value_pairs:
-            if value < self.best.get(key, inf):
-                self.best[key] = value
-                heappush(self.heap, (value, key))
-
-    # def batch_prepend_alt(self, key_value_pairs: set[tuple[int, int | float]]):
-    #     """
-    #     Insert/refresh multiple key-value pairs at once.
-    #     This only recalculates the invariant heap once at the end, which is faster for large batches.
-    #     - Note: In testing, this was found to be slower.
-    #     """
-    #     for key, value in key_value_pairs:
-    #         if value < self.best.get(key, inf):
-    #             self.best[key] = value
-    #             self.heap.append((value, key))
-    #     # Re-heapify after bulk insertion
-    #     heapify(self.heap)
+            if value < self.heap.get(key, inf):
+                self.heap[key] = value

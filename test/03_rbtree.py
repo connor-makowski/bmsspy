@@ -1,4 +1,4 @@
-from bmsspy.rbtree import RBTree
+from bmsspy.helpers.rbtree import RBTree
 
 print("\n===============\nRed Black Tree Tests:\n===============")
 

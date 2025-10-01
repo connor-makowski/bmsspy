@@ -1,7 +1,7 @@
 from heapq import heappush, heappop
 from math import ceil, log
 
-from .data_structure import BmsspDataStructure
+from .data_structures.data_structure import BmsspDataStructure
 
 inf = float("inf")
 
@@ -34,7 +34,7 @@ def cnt_reachable_nodes(root: int, forest: dict[int, set[int]]) -> int:
 
 
 class BmsspSolver:
-    def __init__(self, graph: list[dict[int, int | float]], origin_ids: set[int] | int):
+    def __init__(self, graph: list[dict[int, int | float]], origin_ids: set[int] | int, DataStructure=BmsspDataStructure):
         """
         Function:
 
@@ -61,6 +61,8 @@ class BmsspSolver:
         self.distance_matrix = [inf] * graph_len
         # Addition: Initialize Predecessor array for path reconstruction
         self.predecessor = [-1] * graph_len
+        # Allow for arbitrary data structures
+        self.DataStructure = DataStructure
         for origin_id in origin_ids:
             self.distance_matrix[origin_id] = 0
 
@@ -285,7 +287,7 @@ class BmsspSolver:
         # Step 5–6: initialize data_struct with pivots
         # subset_size = 2^((l-1) * t)
         subset_size = 2 ** ((recursion_depth - 1) * self.target_tree_depth)
-        data_struct = BmsspDataStructure(
+        data_struct = self.DataStructure(
             subset_size=subset_size, upper_bound=upper_bound
         )
         # if printing:

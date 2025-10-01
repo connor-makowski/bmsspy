@@ -50,17 +50,23 @@ for name, scgraph_object in graph_data:
     nxgraph = make_nxgraph(scgraph)
     igraph = make_igraph(scgraph)
 
+    # Warmup the GeoKDTree
+    try:
+        scgraph_object.warmup()
+    except:
+        pass
+
     if 'gridgraph' in name.lower():
         test_cases = [
-            ('bottomLeft', scgraph_object.get_idx(**{"x": 5, "y": 5})),
-            ('topRight', scgraph_object.get_idx(**{"x": scgraph_object.x_size-5, "y": scgraph_object.y_size-5})),
+            ('bottom_left', scgraph_object.get_idx(**{"x": 5, "y": 5})),
+            ('top_right', scgraph_object.get_idx(**{"x": scgraph_object.x_size-5, "y": scgraph_object.y_size-5})),
             ('center',scgraph_object.get_idx(**{"x": int(scgraph_object.x_size/2)-5, "y": int(scgraph_object.y_size/2)})),
         ]
     else:
         test_cases = [
-            ('case_1', 0), # This representes a node id in the geograph (chosen at random) to act as an origin
-            ('case_2', 100), # This representes a node id in the geograph (chosen at random) to act as an origin
-            ('case_3', 1000), # This representes a node id in the geograph (chosen at random) to act as an origin
+            ('los_angeles', scgraph_object.geokdtree.closest_idx([34.0522, -118.2437])), # Los Angeles
+            ('new_york', scgraph_object.geokdtree.closest_idx([40.7128, -74.0060])), # New York
+            ('seattle', scgraph_object.geokdtree.closest_idx([47.6062, -122.3321])), # Seattle
         ]
 
     graph_nodes = len(scgraph)
@@ -75,7 +81,8 @@ for name, scgraph_object in graph_data:
             nxgraph = nxgraph,
             igraph = igraph,
             test_vanilla_dijkstra = True,
-            print_console = True
+            print_console = True,
+            iterations = 3,
         ))
 
 pamda.write_csv(

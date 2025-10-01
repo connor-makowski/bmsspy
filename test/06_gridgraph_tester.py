@@ -20,9 +20,9 @@ def make_gridgraph(x_size, y_size):
 for gridgraph_size in [25,50,100]:
     gridgraph = make_gridgraph(gridgraph_size, gridgraph_size)
     test_cases = [
-        ('bottomLeft', {"x": 5, "y": 5}),
-        ('topRight  ', {"x": gridgraph.x_size-5, "y": gridgraph.y_size-5}),
-        ('center    ', {"x": int(gridgraph.x_size/2)-5, "y": int(gridgraph.y_size/2)}),
+        ('bottom_left', {"x": 5, "y": 5}),
+        ('top_right', {"x": gridgraph.x_size-5, "y": gridgraph.y_size-5}),
+        ('center', {"x": int(gridgraph.x_size/2)-5, "y": int(gridgraph.y_size/2)}),
     ]
     for case_name, origin_dict in test_cases:
         origin_idx = gridgraph.get_idx(**origin_dict)

@@ -1,5 +1,5 @@
 from .bmssp_solver import BmsspSolver
-from .utils import input_check, reconstruct_path
+from .helpers.utils import input_check, reconstruct_path
 
 
 def bmssp(
@@ -31,6 +31,16 @@ def bmssp(
     Optional Arguments:
 
     - None
+
+    Returns:
+
+    - A dictionary with the following keys
+        - `origin_id`: The id of the origin node
+        - `destination_id`: The id of the destination node (or None)
+        - `predecessor`: The predecessor list for path reconstruction
+        - `distance_matrix`: The distance matrix from the origin node to all other nodes
+        - `path`: The shortest path from origin_id to destination_id (or None)
+        - `length`: The length of the shortest path from origin_id to destination_id (or None)
     """
     # Input Validation
     input_check(graph=graph, origin_id=origin_id, destination_id=destination_id)

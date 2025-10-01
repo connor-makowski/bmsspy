@@ -25,8 +25,8 @@ for name, scgraph_object in graph_data:
     scgraph = scgraph_object.graph
 
     test_cases = [
-        ('bottomLeft', scgraph_object.get_idx(**{"x": 5, "y": 5})),
-        ('topRight', scgraph_object.get_idx(**{"x": scgraph_object.x_size-5, "y": scgraph_object.y_size-5})),
+        ('bottom_left', scgraph_object.get_idx(**{"x": 5, "y": 5})),
+        ('top_right', scgraph_object.get_idx(**{"x": scgraph_object.x_size-5, "y": scgraph_object.y_size-5})),
         ('center',scgraph_object.get_idx(**{"x": int(scgraph_object.x_size/2)-5, "y": int(scgraph_object.y_size/2)})),
     ]
 
@@ -38,7 +38,8 @@ for name, scgraph_object in graph_data:
             case_name = case_name,
             origin = origin,
             scgraph = scgraph,
-            print_console = True
+            print_console = True,
+            iterations = 3
         ))
 
 pamda.write_csv(

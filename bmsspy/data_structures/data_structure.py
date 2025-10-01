@@ -1,5 +1,5 @@
-from .rbtree import RBTree
-from .quicksplit import quicksplit, quicksplit_dict
+from ..helpers.rbtree import RBTree
+from ..helpers.quicksplit import quicksplit, quicksplit_dict
 
 inf = float("inf")
 
