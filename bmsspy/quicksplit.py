@@ -143,7 +143,7 @@ def quicksplit_dict(data:dict[Any, list[int|float]], lower_bucket_size:int=None)
     """
     Function:
 
-    - Splits a dictionary of values into two buckets using a variant of the Quickselect algorithm.
+    - Splits a dictionary of values into two dicts using a variant of the Quickselect algorithm.
 
     Required Arguments:
 
@@ -157,8 +157,8 @@ def quicksplit_dict(data:dict[Any, list[int|float]], lower_bucket_size:int=None)
     Returns:
 
     - A dictionary with three keys:
-        - 'lower': A list containing the keys of lower bucket of elements.
-        - 'higher': A list containing the keys of higher bucket of elements.
+        - 'lower': A dict of the lower bucket of elements.
+        - 'higher': A dict of the higher bucket of elements.
         - 'pivot': The max value in the lower bucket or None if the lower bucket is empty (i.e., lower_bucket_size is 0).
     """
     # If no lower bucket size is given, split in half or as close as possible
