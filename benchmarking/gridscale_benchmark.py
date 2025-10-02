@@ -39,7 +39,7 @@ for name, scgraph_object in graph_data:
             origin = origin,
             scgraph = scgraph,
             print_console = True,
-            iterations = 3
+            iterations = 10
         ))
 
 pamda.write_csv(
