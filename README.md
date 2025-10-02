@@ -22,10 +22,10 @@ pip install bmsspy
 from bmsspy.solvers import bmssp
 
 graph = [
-    {1: 1, 2: 1}, 
-    {2: 1, 3: 3}, 
-    {3: 1, 4: 2}, 
-    {4: 2}, 
+    {1: 1, 2: 1},
+    {2: 1, 3: 3},
+    {3: 1, 4: 2},
+    {4: 2},
     {}
 ]
 
