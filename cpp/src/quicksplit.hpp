@@ -5,23 +5,23 @@
 #include <map>
 
 struct QuickSplitResult {
-    std::vector<float> lower;
-    std::vector<float> higher;
-    float pivot;
+    std::vector<double> lower;
+    std::vector<double> higher;
+    double pivot;
 };
 
 struct QuickSplitDictResult {
-    std::map<int, float> lower;
-    std::map<int, float> higher;
-    float pivot;
+    std::map<int, double> lower;
+    std::map<int, double> higher;
+    double pivot;
 };
 
-float median(std::vector<float> arr, bool split = true);
+double median(std::vector<double> arr, bool split = true);
 
-float median_of_medians(std::vector<float> arr, int split_size = 5, bool split = true);
+double median_of_medians(std::vector<double> arr, int split_size = 5, bool split = true);
 
-QuickSplitResult quicksplit(std::vector<float> arr, int lower_bucket_size = -1);
+QuickSplitResult quicksplit(std::vector<double> arr, int lower_bucket_size = -1);
 
-QuickSplitDictResult quicksplit_dict(const std::map<int, float>& data, int lower_bucket_size = -1);
+QuickSplitDictResult quicksplit_dict(const std::map<int, double>& data, int lower_bucket_size = -1);
 
 #endif // QUICKSPLIT_HPP

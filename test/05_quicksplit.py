@@ -47,32 +47,32 @@ for data in tests:
         quicksplit_output["pivot"] == sortsplit_output["pivot"]
     ), f"Mismatch for pivot: {quicksplit_output['pivot']} != {sortsplit_output['pivot']}"
 
-    # if quicksplit_cpp:
-    #     assert (
-    #         sorted(quicksplit_cpp_output.lower) == sortsplit_output["lower"]
-    #     ), f"Mismatch for Quickselect C++ lower: {quicksplit_cpp_output.lower} != {sortsplit_output['lower']}"
-    #     assert (
-    #         sorted(quicksplit_cpp_output.higher) == sortsplit_output["higher"]
-    #     ), f"Mismatch for Quickselect C++ higher: {quicksplit_cpp_output.higher} != {sortsplit_output['higher']}"
-    #     assert (
-    #         quicksplit_cpp_output.pivot == sortsplit_output["pivot"]
-    #     ), f"Mismatch for C++ pivot: {quicksplit_cpp_output.pivot} != {sortsplit_output['pivot']}"
-    # if quicksplit_dict_cpp:
-    #     assert (
-    #         sorted(
-    #             [v for k, v in quicksplit_dict_cpp_output.lower.items()]
-    #         )
-    #         == sortsplit_output["lower"]
-    #     ), f"Mismatch for Quickselect Dict C++ lower: {quicksplit_dict_cpp_output.lower} != {sortsplit_output['lower']}"
-    #     assert (
-    #         sorted(
-    #             [v for k, v in quicksplit_dict_cpp_output.higher.items()]
-    #         )
-    #         == sortsplit_output["higher"]
-    #     ), f"Mismatch for Quickselect Dict C++ higher: {quicksplit_dict_cpp_output.higher} != {sortsplit_output['higher']}"
-    #     assert (
-    #         quicksplit_dict_cpp_output.pivot == sortsplit_output["pivot"]
-    #     ), f"Mismatch for C++ Dict pivot: {quicksplit_dict_cpp_output.pivot} != {sortsplit_output['pivot']}"
+    if quicksplit_cpp:
+        assert (
+            sorted(quicksplit_cpp_output.lower) == sortsplit_output["lower"]
+        ), f"Mismatch for Quickselect C++ lower: {quicksplit_cpp_output.lower} != {sortsplit_output['lower']}"
+        assert (
+            sorted(quicksplit_cpp_output.higher) == sortsplit_output["higher"]
+        ), f"Mismatch for Quickselect C++ higher: {quicksplit_cpp_output.higher} != {sortsplit_output['higher']}"
+        assert (
+            quicksplit_cpp_output.pivot == sortsplit_output["pivot"]
+        ), f"Mismatch for C++ pivot: {quicksplit_cpp_output.pivot} != {sortsplit_output['pivot']}"
+    if quicksplit_dict_cpp:
+        assert (
+            sorted(
+                [v for k, v in quicksplit_dict_cpp_output.lower.items()]
+            )
+            == sortsplit_output["lower"]
+        ), f"Mismatch for Quickselect Dict C++ lower: {quicksplit_dict_cpp_output.lower} != {sortsplit_output['lower']}"
+        assert (
+            sorted(
+                [v for k, v in quicksplit_dict_cpp_output.higher.items()]
+            )
+            == sortsplit_output["higher"]
+        ), f"Mismatch for Quickselect Dict C++ higher: {quicksplit_dict_cpp_output.higher} != {sortsplit_output['higher']}"
+        assert (
+            quicksplit_dict_cpp_output.pivot == sortsplit_output["pivot"]
+        ), f"Mismatch for C++ Dict pivot: {quicksplit_dict_cpp_output.pivot} != {sortsplit_output['pivot']}"
 
 
     # Benchmark performance

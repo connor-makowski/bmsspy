@@ -7,7 +7,7 @@
 #include <map>
 #include <limits>
 
-float median(std::vector<float> arr, bool split) {
+double median(std::vector<double> arr, bool split) {
     size_t len = arr.size();
     if (len == 0) throw std::invalid_argument("Cannot find median of empty array");
 
@@ -25,7 +25,7 @@ float median(std::vector<float> arr, bool split) {
     }
 }
 
-float median_of_medians(std::vector<float> arr, int split_size, bool split) {
+double median_of_medians(std::vector<double> arr, int split_size, bool split) {
     if (split_size % 2 == 0) {
         throw std::invalid_argument("split_size must be an odd number");
     }
@@ -38,17 +38,17 @@ float median_of_medians(std::vector<float> arr, int split_size, bool split) {
             return median(arr, split);
         }
 
-        std::vector<float> medians;
-        std::vector<float> extra;
+        std::vector<double> medians;
+        std::vector<double> extra;
 
         if (len % split_size != 0) {
-            std::vector<float> tail(arr.end() - (len % split_size), arr.end());
+            std::vector<double> tail(arr.end() - (len % split_size), arr.end());
             extra.push_back(median(tail));
             arr.resize(len - (len % split_size));
         }
 
         for (size_t i = 0; i < arr.size(); i += split_size) {
-            std::vector<float> chunk(arr.begin() + i, arr.begin() + i + split_size);
+            std::vector<double> chunk(arr.begin() + i, arr.begin() + i + split_size);
             std::sort(chunk.begin(), chunk.end());
             medians.push_back(chunk[split_median_idx]);
         }
@@ -58,7 +58,7 @@ float median_of_medians(std::vector<float> arr, int split_size, bool split) {
     }
 }
 
-QuickSplitResult quicksplit(std::vector<float> arr, int lower_bucket_size) {
+QuickSplitResult quicksplit(std::vector<double> arr, int lower_bucket_size) {
     if (lower_bucket_size == -1) {
         lower_bucket_size = static_cast<int>(std::ceil(arr.size() / 2.0));
     }
@@ -67,13 +67,13 @@ QuickSplitResult quicksplit(std::vector<float> arr, int lower_bucket_size) {
         throw std::invalid_argument("lower_bucket_size must be > 0 and <= arr size");
     }
 
-    std::vector<float> lower, higher;
+    std::vector<double> lower, higher;
 
     while (true) {
-        float pivot = median_of_medians(arr, 5, false);
+        double pivot = median_of_medians(arr, 5, false);
 
-        std::vector<float> below, above, pivots;
-        for (float x : arr) {
+        std::vector<double> below, above, pivots;
+        for (double x : arr) {
             if (x < pivot)
                 below.push_back(x);
             else if (x > pivot)
@@ -99,7 +99,7 @@ QuickSplitResult quicksplit(std::vector<float> arr, int lower_bucket_size) {
             higher.insert(higher.end(), pivots.begin() + pivot_split_idx, pivots.end());
             higher.insert(higher.end(), above.begin(), above.end());
 
-            float final_pivot;
+            double final_pivot;
             if (pivot_split_idx == 0 && !below.empty()) {
                 final_pivot = *std::max_element(below.begin(), below.end());
             } else {
@@ -111,7 +111,7 @@ QuickSplitResult quicksplit(std::vector<float> arr, int lower_bucket_size) {
     }
 }
 
-QuickSplitDictResult quicksplit_dict(const std::map<int, float>& data, int lower_bucket_size) {
+QuickSplitDictResult quicksplit_dict(const std::map<int, double>& data, int lower_bucket_size) {
     if (lower_bucket_size == -1) {
         lower_bucket_size = static_cast<int>(std::ceil(data.size() / 2.0));
     }
@@ -120,17 +120,17 @@ QuickSplitDictResult quicksplit_dict(const std::map<int, float>& data, int lower
         throw std::invalid_argument("lower_bucket_size must be > 0 and <= data size");
     }
 
-    using Pair = std::pair<int, float>;
+    using Pair = std::pair<int, double>;
     std::vector<Pair> lower, higher;
     std::vector<Pair> arr(data.begin(), data.end());
 
     while (true) {
-        std::vector<float> values;
+        std::vector<double> values;
         for (const auto& [key, val] : arr) {
             values.push_back(val);
         }
 
-        float pivot = median_of_medians(values, 5, false);
+        double pivot = median_of_medians(values, 5, false);
 
         std::vector<Pair> below, above, pivots;
         for (const auto& item : arr) {
@@ -159,7 +159,7 @@ QuickSplitDictResult quicksplit_dict(const std::map<int, float>& data, int lower
             higher.insert(higher.end(), pivots.begin() + pivot_split_idx, pivots.end());
             higher.insert(higher.end(), above.begin(), above.end());
 
-            float final_pivot;
+            double final_pivot;
             if (pivot_split_idx == 0 && !below.empty()) {
                 auto max_it = std::max_element(below.begin(), below.end(),
                     [](const Pair& a, const Pair& b) { return a.second < b.second; });
@@ -168,7 +168,7 @@ QuickSplitDictResult quicksplit_dict(const std::map<int, float>& data, int lower
                 final_pivot = pivot;
             }
 
-            std::map<int, float> lower_map, higher_map;
+            std::map<int, double> lower_map, higher_map;
             for (const auto& item : lower) lower_map[item.first] = item.second;
             for (const auto& item : higher) higher_map[item.first] = item.second;
 
