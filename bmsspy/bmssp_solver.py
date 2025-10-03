@@ -292,7 +292,7 @@ class BmsspSolver:
         # subset_size = 2^((l-1) * t)
         subset_size = 2 ** ((recursion_depth - 1) * self.target_tree_depth)
         data_struct = self.DataStructure(
-            subset_size=subset_size, upper_bound=upper_bound
+            subset_size, upper_bound
         )
         # if printing:
         #     print(f"{spacing}- Root Inserting: {pivots}")

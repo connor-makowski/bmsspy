@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <map>
+#include <unordered_map>
 
 struct QuickSplitResult {
     std::vector<double> lower;
@@ -11,8 +12,8 @@ struct QuickSplitResult {
 };
 
 struct QuickSplitDictResult {
-    std::map<int, double> lower;
-    std::map<int, double> higher;
+    std::unordered_map<int, double> lower;
+    std::unordered_map<int, double> higher;
     double pivot;
 };
 
@@ -22,6 +23,6 @@ double median_of_medians(std::vector<double> arr, int split_size = 5, bool split
 
 QuickSplitResult quicksplit(std::vector<double> arr, int lower_bucket_size = -1);
 
-QuickSplitDictResult quicksplit_dict(const std::map<int, double>& data, int lower_bucket_size = -1);
+QuickSplitDictResult quicksplit_dict(const std::unordered_map<int, double>& data, int lower_bucket_size = -1);
 
 #endif // QUICKSPLIT_HPP

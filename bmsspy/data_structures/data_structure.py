@@ -227,7 +227,7 @@ class BmsspDataStructure:
         if linked_list.is_empty():
             raise ValueError("Linked list should not be empty after split.")
 
-    def batch_prepend(self, key_value_pairs: list[tuple[int, int | float]]):
+    def batch_prepend(self, key_value_pairs: set[tuple[int, int | float]]):
         """
         Insert/refresh multiple key-value pairs at once.
         """

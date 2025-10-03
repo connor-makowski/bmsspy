@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(spanning_tree_cpp)
+project(bmsspy_cpp)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -15,5 +15,14 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(pybind11)
 
 # Add modules
+
 pybind11_add_module(rbtree_cpp bindings/rbtree_bindings.cpp src/rbtree.cpp)
 pybind11_add_module(quicksplit_cpp bindings/quicksplit_bindings.cpp src/quicksplit.cpp)
+
+pybind11_add_module(
+    bmssp_data_structure_cpp 
+    bindings/bmssp_data_structure_bindings.cpp 
+    src/bmssp_data_structure.cpp
+    src/quicksplit.cpp
+    src/rbtree.cpp
+)

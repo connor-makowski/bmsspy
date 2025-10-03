@@ -8,7 +8,7 @@ from bmsspy.solvers import bmssp
 from .graphs import get_nx_shortest_path, get_igraph_shortest_path
 from .vanilla_dijkstra import vanilla_dijkstra
 from .sc_dijkstra import pure_python_sc_dijkstra, pure_python_heapdict_sc_dijkstra
-from .bmssp_heap import bmssp_heap
+from .bmssp_alternatives import bmssp_heap, bmssp_cpp_ds
 
 
 def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None, test_vanilla_dijkstra:bool=False, print_console:bool=True, iterations:int=10):
@@ -37,6 +37,13 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
         print(f"BMSSP Heap time: {bmssp_heap_time_stats['avg']:.2f} ms (stdev: {bmssp_heap_time_stats['std']:.2f})")
     output['bmssp_heap_time_ms'] = bmssp_heap_time_stats['avg']
     output['bmssp_heap_stdev'] = bmssp_heap_time_stats['std']
+
+    # BMSSP C++ DS Timing
+    bmssp_cpp_ds_time_stats = pamda_timer(bmssp_cpp_ds, iterations = iterations).get_time_stats(graph=scgraph, node_id=origin)
+    if print_console:
+        print(f"BMSSP C++ DS time: {bmssp_cpp_ds_time_stats['avg']:.2f} ms (stdev: {bmssp_cpp_ds_time_stats['std']:.2f})")
+    output['bmssp_cpp_ds_time_ms'] = bmssp_cpp_ds_time_stats['avg']
+    output['bmssp_cpp_ds_stdev'] = bmssp_cpp_ds_time_stats['std']
 
     # Vanilla Dijkstra Timing
     if test_vanilla_dijkstra:

@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <cmath>
 #include <map>
+#include <unordered_map>
 #include <limits>
 
 double median(std::vector<double> arr, bool split) {
@@ -111,7 +112,7 @@ QuickSplitResult quicksplit(std::vector<double> arr, int lower_bucket_size) {
     }
 }
 
-QuickSplitDictResult quicksplit_dict(const std::map<int, double>& data, int lower_bucket_size) {
+QuickSplitDictResult quicksplit_dict(const std::unordered_map<int, double>& data, int lower_bucket_size) {
     if (lower_bucket_size == -1) {
         lower_bucket_size = static_cast<int>(std::ceil(data.size() / 2.0));
     }
@@ -168,7 +169,7 @@ QuickSplitDictResult quicksplit_dict(const std::map<int, double>& data, int lowe
                 final_pivot = pivot;
             }
 
-            std::map<int, double> lower_map, higher_map;
+            std::unordered_map<int, double> lower_map, higher_map;
             for (const auto& item : lower) lower_map[item.first] = item.second;
             for (const auto& item : higher) higher_map[item.first] = item.second;
 
