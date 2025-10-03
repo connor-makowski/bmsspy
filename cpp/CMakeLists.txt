@@ -14,5 +14,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(pybind11)
 
-# Add graph module
+# Add modules
 pybind11_add_module(rbtree_cpp bindings/rbtree_bindings.cpp src/rbtree.cpp)
+pybind11_add_module(quicksplit_cpp bindings/quicksplit_bindings.cpp src/quicksplit.cpp)
