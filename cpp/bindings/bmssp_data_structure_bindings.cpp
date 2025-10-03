@@ -5,27 +5,6 @@
 namespace py = pybind11;
 
 PYBIND11_MODULE(bmssp_data_structure_cpp, m) {
-    // Bind LinkedListNode class
-    py::class_<LinkedListNode>(m, "LinkedListNode")
-        .def(py::init<int, double, std::shared_ptr<LinkedList>>())
-        .def_readwrite("key", &LinkedListNode::key)
-        .def_readwrite("value", &LinkedListNode::value)
-        .def_readwrite("next", &LinkedListNode::next)
-        .def_readwrite("prev", &LinkedListNode::prev)
-        .def("to_string", &LinkedListNode::to_string);
-
-    // Bind LinkedList class
-    py::class_<LinkedList, std::shared_ptr<LinkedList>>(m, "LinkedList")
-        .def(py::init<>())
-        .def("append", &LinkedList::append)
-        .def("remove", &LinkedList::remove)
-        .def("is_empty", &LinkedList::is_empty)
-        .def("to_string", &LinkedList::to_string)
-        .def("__iter__", [](const LinkedList &list) {
-            return py::make_iterator(list.begin(), list.end());
-        }, py::keep_alive<0, 1>());
-
-    // Bind BmsspDataStructure class
     py::class_<BmsspDataStructure>(m, "BmsspDataStructure")
         .def(py::init<int, double>())
         .def("insert_key_value", &BmsspDataStructure::insert_key_value)

@@ -20,9 +20,6 @@ class BSTree;
 template<typename K, typename V>
 class RBTree;
 
-// ============================================================================
-// BSNode - Binary Search Tree Node
-// ============================================================================
 template<typename K, typename V>
 class BSNode {
 public:
@@ -32,12 +29,6 @@ public:
     BSNode* left;
     BSNode* right;
 
-    /**
-     * Initialize a binary search tree node with a key and a value.
-     * 
-     * @param key The key associated with the node
-     * @param value The value associated with the node (default constructed)
-     */
     BSNode(const K& key, const V& value = V())
         : key(key), val(value), parent(nullptr), left(nullptr), right(nullptr) {}
 
@@ -45,11 +36,6 @@ public:
         // Note: Does not delete children - tree handles deletion
     }
 
-    /**
-     * Count the number of nodes in the subtree rooted at this node.
-     * 
-     * @return The total number of nodes in the subtree
-     */
     int num_nodes() const {
         return 1 
             + (left ? left->num_nodes() : 0)
@@ -57,17 +43,10 @@ public:
     }
 };
 
-// ============================================================================
-// BSTree - Binary Search Tree
-// ============================================================================
 template<typename K, typename V>
 class BSTree {
 public:
     BSNode<K, V>* root;
-
-    /**
-     * A helper method to find an equivalent (or adjacent) node to the specified key.
-     */
     BSNode<K, V>* find_fuzzy(BSNode<K, V>* node, const K& key) const {
         if (key < node->key) {
             return node->left ? find_fuzzy(node->left, key) : node;
@@ -77,10 +56,6 @@ public:
         return node;
     }
 
-    /**
-     * Inserts a given node into the tree without any rebalancing.
-     * Returns true if was inserted, false if it was updated.
-     */
     bool insert_node(BSNode<K, V>* start, BSNode<K, V>* to_insert) {
         if (!root) {
             root = to_insert;
@@ -112,9 +87,6 @@ public:
         }
     }
 
-    /**
-     * Right rotation
-     */
     void rotate_right(BSNode<K, V>* y) {
         BSNode<K, V>* x = y->left;
         
@@ -144,9 +116,6 @@ public:
         x->right = y;
     }
 
-    /**
-     * Left rotation
-     */
     void rotate_left(BSNode<K, V>* x) {
         BSNode<K, V>* y = x->right;
 
@@ -176,9 +145,6 @@ public:
         y->left = x;
     }
 
-    /**
-     * Delete all nodes in the tree recursively
-     */
     void delete_tree(BSNode<K, V>* node) {
         if (!node) return;
         delete_tree(node->left);
@@ -192,27 +158,14 @@ public:
         delete_tree(root);
     }
 
-    /**
-     * Insert a key-value pair - to be overridden by subclasses
-     */
     virtual void insert(const K& key, const V& value = V()) {
         throw std::runtime_error("Not implemented");
     }
 
-    /**
-     * Remove a node with the specified key - to be overridden by subclasses
-     */
     virtual void remove(const K& key) {
         throw std::runtime_error("Not implemented");
     }
 
-    /**
-     * Find a node based on key and target type.
-     * 
-     * @param key The key to search for
-     * @param target "exact", "upper", or "lower"
-     * @return Pointer to found node or nullptr
-     */
     BSNode<K, V>* find(const K& key, const std::string& target = "exact") const {
         if (!root) return nullptr;
         
@@ -239,16 +192,10 @@ public:
         }
     }
 
-    /**
-     * Check if tree is empty
-     */
     bool empty() const {
         return root == nullptr;
     }
 
-    /**
-     * Get maximum node in subtree
-     */
     BSNode<K, V>* get_max(BSNode<K, V>* node) const {
         if (node->right) {
             return get_max(node->right);
@@ -256,9 +203,6 @@ public:
         return node;
     }
 
-    /**
-     * Get minimum node in subtree
-     */
     BSNode<K, V>* get_min(BSNode<K, V>* node) const {
         if (node->left) {
             return get_min(node->left);
@@ -266,24 +210,15 @@ public:
         return node;
     }
 
-    /**
-     * Get value by key (dictionary-like access)
-     */
     V get(const K& key, const V& default_val = V()) const {
         BSNode<K, V>* node = root ? find(key) : nullptr;
         return node ? node->val : default_val;
     }
 
-    /**
-     * Operator[] for getting values
-     */
     V operator[](const K& key) const {
         return get(key);
     }
 
-    /**
-     * Get the number of nodes in the tree
-     */
     int size() const {
         return root ? root->num_nodes() : 0;
     }
@@ -486,14 +421,6 @@ public:
         }
     }
 
-    /**
-     * Initialize a Red-Black Tree, optionally with an initializer.
-     * 
-     * Example usage:
-     *   RBTree<int, string> tree1;
-     *   RBTree<int, string> tree2({{1, "one"}, {2, "two"}});
-     *   RBTree<int, string> tree3({1, 2, 3});
-     */
     RBTree() : BSTree<K, V>() {}
 
     RBTree(std::initializer_list<std::pair<const K, V>> initializer) : BSTree<K, V>() {
@@ -526,10 +453,6 @@ public:
         }
     }
 
-    /**
-     * Insert a key-value pair into the Red-Black Tree.
-     * If a node with the same key exists, its value is updated.
-     */
     void insert(const K& key, const V& value = V()) override {
         RBNode<K, V>* node = new RBNode<K, V>(key, value, root ? false : true);
         if (insert_node(root, node)) {
@@ -539,10 +462,6 @@ public:
         }
     }
 
-    /**
-     * Remove a node with the specified key from the Red-Black Tree.
-     * If the key is not found, the tree remains unchanged.
-     */
     void remove(const K& key) override {
         if (!root) return;
 

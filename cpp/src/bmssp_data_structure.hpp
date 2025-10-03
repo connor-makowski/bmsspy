@@ -66,13 +66,8 @@ public:
     int pull_size;
     double upper_bound;
 
-    // keys maps key -> pair<node ptr, list_id (0 or 1)>
     unordered_map<int, pair<shared_ptr<LinkedListNode>, int>> keys;
-
-    // D0: linked list of linked lists, represented by pointer to first linked list
     shared_ptr<LinkedList> D0;
-
-    // D1: RBTree<double, shared_ptr<LinkedList>>
     RBTree<double, shared_ptr<LinkedList>> D1;
 
     BmsspDataStructure(int subset_size_, double upper_bound_);
