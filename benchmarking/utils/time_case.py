@@ -40,9 +40,9 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
 
     # Vanilla Dijkstra Timing
     if test_vanilla_dijkstra:
-        if len(scgraph) > 15000:
+        if len(scgraph) > 99999:
             if print_console:
-                print("Skipping Vanilla Dijkstra due to large graph size (> 15000 nodes).")
+                print("Skipping Vanilla Dijkstra due to large graph size (> 99999 nodes).")
             output['vanilla_dijkstra_time_ms'] = float('nan')
             output['vanilla_dijkstra_stdev'] = float('nan')
         else:
@@ -84,19 +84,26 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
 
     # iGraph Dijkstra Timing
     if igraph:
-        try:
-            ig_spantree_time_stats = pamda_timer(get_igraph_shortest_path, iterations = iterations).get_time_stats(graph=igraph, origin=origin)
+        if len(scgraph) > 99999:
             if print_console:
-                print(f"iGraph spantree time: {ig_spantree_time_stats['avg']:.2f} ms (stdev: {ig_spantree_time_stats['std']:.2f})")
-        except Exception as e:
-            ig_spantree_time_stats = {'avg': float('nan'), 'std': float('nan')}
-            if print_console:
-                print(f"iGraph spantree time: {ig_spantree_time_stats['avg']:.2f} ms (stdev: {ig_spantree_time_stats['std']:.2f})")
+                print("Skipping iGraph due to large graph size (> 99999 nodes).")
+            output['ig_spantree_time_ms'] = float('nan')
+            output['ig_spantree_stdev'] = float('nan')
+        else:
+            try:
 
-        if print_console:
-            print(f"Speed Ratio (BMSSP / SCGraph): {bmssp_spantree_time_stats['avg'] / sc_dijkstra_spantree_time_stats['avg']:.2f}")
-        output['ig_spantree_time_ms'] = ig_spantree_time_stats['avg']
-        output['ig_spantree_stdev'] = ig_spantree_time_stats['std']
+                ig_spantree_time_stats = pamda_timer(get_igraph_shortest_path, iterations = iterations).get_time_stats(graph=igraph, origin=origin)
+                if print_console:
+                    print(f"iGraph spantree time: {ig_spantree_time_stats['avg']:.2f} ms (stdev: {ig_spantree_time_stats['std']:.2f})")
+            except Exception as e:
+                ig_spantree_time_stats = {'avg': float('nan'), 'std': float('nan')}
+                if print_console:
+                    print(f"iGraph spantree time: {ig_spantree_time_stats['avg']:.2f} ms (stdev: {ig_spantree_time_stats['std']:.2f})")
+
+            if print_console:
+                print(f"Speed Ratio (BMSSP / SCGraph): {bmssp_spantree_time_stats['avg'] / sc_dijkstra_spantree_time_stats['avg']:.2f}")
+            output['ig_spantree_time_ms'] = ig_spantree_time_stats['avg']
+            output['ig_spantree_stdev'] = ig_spantree_time_stats['std']
     
 
     return output
