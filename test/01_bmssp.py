@@ -2,6 +2,13 @@ from bmsspy.solvers import bmssp
 
 print("\n===============\nBasic BMSSP Tests:\n===============")
 
+tiny_graph =[{0: 0}]
+output = bmssp(tiny_graph, 0)
+if output["distance_matrix"] != [0]:
+    print("BMSSP Tiny Test: FAIL")
+else:
+    print("BMSSP Tiny Test: PASS")
+
 graph = [{1: 1, 2: 1}, {2: 1, 3: 3}, {3: 1, 4: 2}, {4: 2}, {}]
 output = bmssp(graph, 0)
 if output["distance_matrix"] != [0, 1, 1, 2, 3]:

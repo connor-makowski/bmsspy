@@ -60,10 +60,12 @@ class BmsspSolver:
 
         - None
         """
+        graph_len = len(graph)
+        if graph_len < 1:
+            raise ValueError("Your provided graph must have at least 1 node")
         if isinstance(origin_ids, int):
             origin_ids = {origin_ids}
         self.graph = graph
-        graph_len = len(graph)
         self.distance_matrix = [inf] * graph_len
         # Addition: Initialize Predecessor array for path reconstruction
         self.predecessor = [-1] * graph_len
@@ -71,9 +73,6 @@ class BmsspSolver:
         self.DataStructure = DataStructure
         for origin_id in origin_ids:
             self.distance_matrix[origin_id] = 0
-
-        if graph_len <= 2:
-            raise ValueError("Your provided graph must have more than 2 nodes")
 
         # Practical choices (k and t) based on n
         # Modification: Use log base 2 to ensure everything is properly relaxed and round up k
