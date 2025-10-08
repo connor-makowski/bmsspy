@@ -40,9 +40,9 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
 
     # Vanilla Dijkstra Timing
     if test_vanilla_dijkstra:
-        if len(scgraph) > 99999:
+        if len(scgraph) > 80000:
             if print_console:
-                print("Skipping Vanilla Dijkstra due to large graph size (> 99999 nodes).")
+                print("Skipping Vanilla Dijkstra due to large graph size (> 80000 nodes).")
             output['vanilla_dijkstra_time_ms'] = float('nan')
             output['vanilla_dijkstra_stdev'] = float('nan')
         else:
@@ -67,12 +67,12 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
     output['pure_python_sc_dijkstra_time_ms'] = pure_python_sc_dijkstra_time_stats['avg']
     output['pure_python_sc_dijkstra_stdev'] = pure_python_sc_dijkstra_time_stats['std']
 
-    # # Pure Python SCGraph Dijkstra with HeapDict Timing to compare apples to apples with BMSSPy
-    # pure_python_heapdict_sc_dijkstra_time_stats = pamda_timer(pure_python_heapdict_sc_dijkstra, iterations = iterations).get_time_stats(graph=scgraph, node_id=origin)
-    # if print_console:
-    #     print(f"Pure Python SCGraph Dijkstra with HeapDict time: {pure_python_heapdict_sc_dijkstra_time_stats['avg']:.2f} ms (stdev: {pure_python_heapdict_sc_dijkstra_time_stats['std']:.2f})")
-    # output['pure_python_heapdict_sc_dijkstra_time_ms'] = pure_python_heapdict_sc_dijkstra_time_stats['avg']
-    # output['pure_python_heapdict_sc_dijkstra_stdev'] = pure_python_heapdict_sc_dijkstra_time_stats['std']
+    # Pure Python SCGraph Dijkstra with HeapDict Timing to compare apples to apples with BMSSPy
+    pure_python_heapdict_sc_dijkstra_time_stats = pamda_timer(pure_python_heapdict_sc_dijkstra, iterations = iterations).get_time_stats(graph=scgraph, node_id=origin)
+    if print_console:
+        print(f"Pure Python SCGraph Dijkstra with HeapDict time: {pure_python_heapdict_sc_dijkstra_time_stats['avg']:.2f} ms (stdev: {pure_python_heapdict_sc_dijkstra_time_stats['std']:.2f})")
+    output['pure_python_heapdict_sc_dijkstra_time_ms'] = pure_python_heapdict_sc_dijkstra_time_stats['avg']
+    output['pure_python_heapdict_sc_dijkstra_stdev'] = pure_python_heapdict_sc_dijkstra_time_stats['std']
 
     # NetworkX Dijkstra Timing
     if nxgraph:
@@ -84,9 +84,9 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
 
     # iGraph Dijkstra Timing
     if igraph:
-        if len(scgraph) > 99999:
+        if len(scgraph) > 80000:
             if print_console:
-                print("Skipping iGraph due to large graph size (> 99999 nodes).")
+                print("Skipping iGraph due to large graph size (> 80000 nodes).")
             output['ig_spantree_time_ms'] = float('nan')
             output['ig_spantree_stdev'] = float('nan')
         else:

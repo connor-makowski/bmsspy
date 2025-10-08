@@ -82,10 +82,19 @@ for name, scgraph_object in graph_data:
             igraph = igraph,
             test_vanilla_dijkstra = True,
             print_console = True,
-            iterations = 3,
+            iterations = 10,
         ))
 
-pamda.write_csv(
-    filename="benchmarking/outputs/algorithm_time_tests.csv",
-    data=output
-)
+import platform
+if platform.python_implementation() == 'PyPy':
+    print("Code is running under PyPy.")
+    pamda.write_csv(
+        filename="benchmarking/outputs/pypy_algorithm_time_tests.csv",
+        data=output
+    )
+else:
+    print(f"Code is running under {platform.python_implementation()}.")
+    pamda.write_csv(
+        filename="benchmarking/outputs/algorithm_time_tests.csv",
+        data=output
+    )
