@@ -10,7 +10,8 @@ echo "" >> bmsspy/__init__.py
 
 # Specify versions for documentation purposes
 VERSION="1.2.0"
-OLD_DOC_VERSIONS="1.1.0 1.0.0"
+# Note: Docs are broken in 1.1.0, do not include it here
+OLD_DOC_VERSIONS="1.0.0"
 export version_options="$VERSION $OLD_DOC_VERSIONS"
 
 # generate the docs for a version function:

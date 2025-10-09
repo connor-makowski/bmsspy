@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="pdoc 15.0.4"/>
-    <title>bmsspy.utils API documentation</title>
+    <title>bmsspy.solvers API documentation</title>
 
     <style>/*! * Bootstrap Reboot v5.0.0 (https://getbootstrap.com/) * Copyright 2011-2021 The Bootstrap Authors * Copyright 2011-2021 Twitter, Inc. * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE) * Forked from Normalize.css, licensed MIT (https://github.com/necolas/normalize.css/blob/master/LICENSE.md) */*,::after,::before{box-sizing:border-box}@media (prefers-reduced-motion:no-preference){:root{scroll-behavior:smooth}}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}hr{margin:1rem 0;color:inherit;background-color:currentColor;border:0;opacity:.25}hr:not([size]){height:1px}h1,h2,h3,h4,h5,h6{margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2}h1{font-size:calc(1.375rem + 1.5vw)}@media (min-width:1200px){h1{font-size:2.5rem}}h2{font-size:calc(1.325rem + .9vw)}@media (min-width:1200px){h2{font-size:2rem}}h3{font-size:calc(1.3rem + .6vw)}@media (min-width:1200px){h3{font-size:1.75rem}}h4{font-size:calc(1.275rem + .3vw)}@media (min-width:1200px){h4{font-size:1.5rem}}h5{font-size:1.25rem}h6{font-size:1rem}p{margin-top:0;margin-bottom:1rem}abbr[data-bs-original-title],abbr[title]{-webkit-text-decoration:underline dotted;text-decoration:underline dotted;cursor:help;-webkit-text-decoration-skip-ink:none;text-decoration-skip-ink:none}address{margin-bottom:1rem;font-style:normal;line-height:inherit}ol,ul{padding-left:2rem}dl,ol,ul{margin-top:0;margin-bottom:1rem}ol ol,ol ul,ul ol,ul ul{margin-bottom:0}dt{font-weight:700}dd{margin-bottom:.5rem;margin-left:0}blockquote{margin:0 0 1rem}b,strong{font-weight:bolder}small{font-size:.875em}mark{padding:.2em;background-color:#fcf8e3}sub,sup{position:relative;font-size:.75em;line-height:0;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}a{color:#0d6efd;text-decoration:underline}a:hover{color:#0a58ca}a:not([href]):not([class]),a:not([href]):not([class]):hover{color:inherit;text-decoration:none}code,kbd,pre,samp{font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:1em;direction:ltr;unicode-bidi:bidi-override}pre{display:block;margin-top:0;margin-bottom:1rem;overflow:auto;font-size:.875em}pre code{font-size:inherit;color:inherit;word-break:normal}code{font-size:.875em;color:#d63384;word-wrap:break-word}a>code{color:inherit}kbd{padding:.2rem .4rem;font-size:.875em;color:#fff;background-color:#212529;border-radius:.2rem}kbd kbd{padding:0;font-size:1em;font-weight:700}figure{margin:0 0 1rem}img,svg{vertical-align:middle}table{caption-side:bottom;border-collapse:collapse}caption{padding-top:.5rem;padding-bottom:.5rem;color:#6c757d;text-align:left}th{text-align:inherit;text-align:-webkit-match-parent}tbody,td,tfoot,th,thead,tr{border-color:inherit;border-style:solid;border-width:0}label{display:inline-block}button{border-radius:0}button:focus:not(:focus-visible){outline:0}button,input,optgroup,select,textarea{margin:0;font-family:inherit;font-size:inherit;line-height:inherit}button,select{text-transform:none}[role=button]{cursor:pointer}select{word-wrap:normal}select:disabled{opacity:1}[list]::-webkit-calendar-picker-indicator{display:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}[type=button]:not(:disabled),[type=reset]:not(:disabled),[type=submit]:not(:disabled),button:not(:disabled){cursor:pointer}::-moz-focus-inner{padding:0;border-style:none}textarea{resize:vertical}fieldset{min-width:0;padding:0;margin:0;border:0}legend{float:left;width:100%;padding:0;margin-bottom:.5rem;font-size:calc(1.275rem + .3vw);line-height:inherit}@media (min-width:1200px){legend{font-size:1.5rem}}legend+*{clear:left}::-webkit-datetime-edit-day-field,::-webkit-datetime-edit-fields-wrapper,::-webkit-datetime-edit-hour-field,::-webkit-datetime-edit-minute,::-webkit-datetime-edit-month-field,::-webkit-datetime-edit-text,::-webkit-datetime-edit-year-field{padding:0}::-webkit-inner-spin-button{height:auto}[type=search]{outline-offset:-2px;-webkit-appearance:textfield}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-color-swatch-wrapper{padding:0}::file-selector-button{font:inherit}::-webkit-file-upload-button{font:inherit;-webkit-appearance:button}output{display:inline-block}iframe{border:0}summary{display:list-item;cursor:pointer}progress{vertical-align:baseline}[hidden]{display:none!important}</style>
     <style>/*! syntax-highlighting.css */pre{line-height:125%;}span.linenos{color:inherit; background-color:transparent; padding-left:5px; padding-right:20px;}.pdoc-code .hll{background-color:#ffffcc}.pdoc-code{background:#f8f8f8;}.pdoc-code .c{color:#3D7B7B; font-style:italic}.pdoc-code .err{border:1px solid #FF0000}.pdoc-code .k{color:#008000; font-weight:bold}.pdoc-code .o{color:#666666}.pdoc-code .ch{color:#3D7B7B; font-style:italic}.pdoc-code .cm{color:#3D7B7B; font-style:italic}.pdoc-code .cp{color:#9C6500}.pdoc-code .cpf{color:#3D7B7B; font-style:italic}.pdoc-code .c1{color:#3D7B7B; font-style:italic}.pdoc-code .cs{color:#3D7B7B; font-style:italic}.pdoc-code .gd{color:#A00000}.pdoc-code .ge{font-style:italic}.pdoc-code .gr{color:#E40000}.pdoc-code .gh{color:#000080; font-weight:bold}.pdoc-code .gi{color:#008400}.pdoc-code .go{color:#717171}.pdoc-code .gp{color:#000080; font-weight:bold}.pdoc-code .gs{font-weight:bold}.pdoc-code .gu{color:#800080; font-weight:bold}.pdoc-code .gt{color:#0044DD}.pdoc-code .kc{color:#008000; font-weight:bold}.pdoc-code .kd{color:#008000; font-weight:bold}.pdoc-code .kn{color:#008000; font-weight:bold}.pdoc-code .kp{color:#008000}.pdoc-code .kr{color:#008000; font-weight:bold}.pdoc-code .kt{color:#B00040}.pdoc-code .m{color:#666666}.pdoc-code .s{color:#BA2121}.pdoc-code .na{color:#687822}.pdoc-code .nb{color:#008000}.pdoc-code .nc{color:#0000FF; font-weight:bold}.pdoc-code .no{color:#880000}.pdoc-code .nd{color:#AA22FF}.pdoc-code .ni{color:#717171; font-weight:bold}.pdoc-code .ne{color:#CB3F38; font-weight:bold}.pdoc-code .nf{color:#0000FF}.pdoc-code .nl{color:#767600}.pdoc-code .nn{color:#0000FF; font-weight:bold}.pdoc-code .nt{color:#008000; font-weight:bold}.pdoc-code .nv{color:#19177C}.pdoc-code .ow{color:#AA22FF; font-weight:bold}.pdoc-code .w{color:#bbbbbb}.pdoc-code .mb{color:#666666}.pdoc-code .mf{color:#666666}.pdoc-code .mh{color:#666666}.pdoc-code .mi{color:#666666}.pdoc-code .mo{color:#666666}.pdoc-code .sa{color:#BA2121}.pdoc-code .sb{color:#BA2121}.pdoc-code .sc{color:#BA2121}.pdoc-code .dl{color:#BA2121}.pdoc-code .sd{color:#BA2121; font-style:italic}.pdoc-code .s2{color:#BA2121}.pdoc-code .se{color:#AA5D1F; font-weight:bold}.pdoc-code .sh{color:#BA2121}.pdoc-code .si{color:#A45A77; font-weight:bold}.pdoc-code .sx{color:#008000}.pdoc-code .sr{color:#A45A77}.pdoc-code .s1{color:#BA2121}.pdoc-code .ss{color:#19177C}.pdoc-code .bp{color:#008000}.pdoc-code .fm{color:#0000FF}.pdoc-code .vc{color:#19177C}.pdoc-code .vg{color:#19177C}.pdoc-code .vi{color:#19177C}.pdoc-code .vm{color:#19177C}.pdoc-code .il{color:#666666}</style>
@@ -31,13 +31,7 @@
             <h2>API Documentation</h2>
                 <ul class="memberlist">
             <li>
-                    <a class="variable" href="#inf">inf</a>
-            </li>
-            <li>
-                    <a class="function" href="#input_check">input_check</a>
-            </li>
-            <li>
-                    <a class="function" href="#reconstruct_path">reconstruct_path</a>
+                    <a class="function" href="#bmssp">bmssp</a>
             </li>
     </ul>
 
@@ -45,7 +39,7 @@
 <footer>
 <select id="version-selector">
     <option value="latest">latest</option>
-        <option value="1.0.0">1.0.0</option>
+        <option value="1.2.0">1.2.0</option>
         <option value="1.0.0">1.0.0</option>
 </select>
 <script>
@@ -87,162 +81,202 @@
     <main class="pdoc">
             <section class="module-info">
                     <h1 class="modulename">
-<a href="./../bmsspy.html">bmsspy</a><wbr>.utils    </h1>
+<a href="./../bmsspy.html">bmsspy</a><wbr>.solvers    </h1>
 
                 
-                        <input id="mod-utils-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+                        <input id="mod-solvers-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 
-                        <label class="view-source-button" for="mod-utils-view-source"><span>View Source</span></label>
+                        <label class="view-source-button" for="mod-solvers-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="n">inf</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.bmssp_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">BmsspSolver</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.helpers.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">input_check</span><span class="p">,</span> <span class="n">reconstruct_path</span>
 </span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="k">def</span><span class="w"> </span><span class="nf">input_check</span><span class="p">(</span>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>    <span class="n">graph</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">origin_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">destination_id</span><span class="p">:</span> <span class="nb">int</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">    Function:</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">    - Check that the inputs passed to the shortest path algorithm are valid</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">    - Raises an exception if the inputs passed are not valid</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="k">def</span><span class="w"> </span><span class="nf">bmssp</span><span class="p">(</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>    <span class="n">graph</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]],</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>    <span class="n">origin_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>    <span class="n">destination_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="p">):</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">    Function:</span>
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">    Required Arguments:</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">    - `graph`:</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">        - Type: list of dictionaries</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">    - `origin_id`</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">        - Type: int</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">        - What: The id of the origin node from the graph dictionary to start the shortest path from</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">    - `destination_id`</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">        - Type: int</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="sd">        - What: The id of the destination node from the graph dictionary to end the shortest path at</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">    Optional Arguments:</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">    - None</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="k">if</span> <span class="p">(</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>        <span class="ow">and</span> <span class="n">origin_id</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>        <span class="ow">and</span> <span class="n">origin_id</span> <span class="o">&gt;=</span> <span class="mi">0</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>    <span class="p">):</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Origin node (</span><span class="si">{</span><span class="n">origin_id</span><span class="si">}</span><span class="s2">) is not in the graph&quot;</span><span class="p">)</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="k">if</span> <span class="n">destination_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>        <span class="k">pass</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="k">elif</span> <span class="p">(</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>        <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">destination_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>        <span class="ow">and</span> <span class="n">origin_id</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="ow">and</span> <span class="n">origin_id</span> <span class="o">&gt;=</span> <span class="mi">0</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="p">):</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>            <span class="sa">f</span><span class="s2">&quot;Destination node (</span><span class="si">{</span><span class="n">destination_id</span><span class="si">}</span><span class="s2">) is not in the graph&quot;</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>        <span class="p">)</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a><span class="k">def</span><span class="w"> </span><span class="nf">reconstruct_path</span><span class="p">(</span><span class="n">destination_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">predecessor</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="sd">    Function:</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a><span class="sd">    - Reconstruct the shortest path from the destination node to the origin node</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="sd">    - Return the reconstructed path in the correct order</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="sd">    - Given the predecessor list, this function reconstructs the path</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="sd">    Required Arguments:</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a><span class="sd">    - `destination_id`</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="sd">        - Type: int</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a><span class="sd">        - What: The id of the destination node from the graph dictionary to end the shortest path at</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a><span class="sd">    - `predecessor`</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a><span class="sd">        - Type: list[int]</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a><span class="sd">        - What: The predecessor list that was used to compute the shortest path</span>
-</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a><span class="sd">        - This list is used to reconstruct the path from the destination node to the origin node</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a><span class="sd">        - Note: Nodes with no predecessor should be -1</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>
-</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a><span class="sd">    Optional Arguments:</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>
-</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="sd">    - None</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>    <span class="n">output_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">destination_id</span><span class="p">]</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>    <span class="k">while</span> <span class="n">predecessor</span><span class="p">[</span><span class="n">destination_id</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>        <span class="n">destination_id</span> <span class="o">=</span> <span class="n">predecessor</span><span class="p">[</span><span class="n">destination_id</span><span class="p">]</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>        <span class="n">output_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">destination_id</span><span class="p">)</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>    <span class="n">output_path</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>    <span class="k">return</span> <span class="n">output_path</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">    - A Full BMSSP-style shortest path solver.</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">    - Return a dictionary of various path information including:</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">        - `id_path`: A list of node ids in the order they are visited</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">        - `path`: A list of node dictionaries (lat + long) in the order they are visited</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">    Required Arguments:</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">    - `graph`:</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">        - Type: list of dictionaries</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="sd">    - `origin_id`</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="sd">        - Type: int | set of int</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">        - What: The id of the origin node from the graph dictionary to start the shortest path from</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">        - Note: If you pass a set, only the first id in the set will be checked for input validation</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">    - `destination_id`</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">        - Type: int | None</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="sd">        - What: The id of the destination node from the graph dictionary to end the shortest path at</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">        - Note: If None, returns the distance matrix and predecessor list for the origin node</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">        - Note: If provided, returns the shortest path [origin_id, ..., destination_id] and its length</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">    Optional Arguments:</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">    - None</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">    Returns:</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="sd">    - A dictionary with the following keys</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="sd">        - `origin_id`: The id of the origin node or a list of ids if a set was provided</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="sd">        - `destination_id`: The id of the destination node (or None)</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="sd">        - `predecessor`: The predecessor list for path reconstruction</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="sd">        - `distance_matrix`: The distance matrix from the origin node to all other nodes</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="sd">        - `path`: The shortest path from origin_id to destination_id (or None)</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">        - `length`: The length of the shortest path from origin_id to destination_id (or None)</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin_id</span><span class="p">,</span> <span class="nb">set</span><span class="p">):</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">origin_id</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>                <span class="s2">&quot;Your provided origin_id set must have at least 1 node&quot;</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>            <span class="p">)</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>        <span class="n">origin_id_check</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">origin_id</span><span class="p">))</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>        <span class="n">origin_id_check</span> <span class="o">=</span> <span class="n">origin_id</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>    <span class="c1"># Input Validation</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>    <span class="n">input_check</span><span class="p">(</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>        <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span> <span class="n">origin_id</span><span class="o">=</span><span class="n">origin_id_check</span><span class="p">,</span> <span class="n">destination_id</span><span class="o">=</span><span class="n">destination_id</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>    <span class="p">)</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>    <span class="c1"># Run the BMSSP Algorithm to relax as many edges as possible.</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>    <span class="n">solver</span> <span class="o">=</span> <span class="n">BmsspSolver</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">origin_id</span><span class="p">)</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>    <span class="k">if</span> <span class="n">destination_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>        <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">distance_matrix</span><span class="p">[</span><span class="n">destination_id</span><span class="p">]</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">):</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>                <span class="s2">&quot;Something went wrong, the origin and destination nodes are not connected.&quot;</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>            <span class="p">)</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>
+</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>    <span class="k">return</span> <span class="p">{</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a>        <span class="s2">&quot;origin_id&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>            <span class="n">origin_id</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">origin_id</span><span class="p">)</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>        <span class="p">),</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>        <span class="s2">&quot;destination_id&quot;</span><span class="p">:</span> <span class="n">destination_id</span><span class="p">,</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>        <span class="s2">&quot;predecessor&quot;</span><span class="p">:</span> <span class="n">solver</span><span class="o">.</span><span class="n">predecessor</span><span class="p">,</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>        <span class="s2">&quot;distance_matrix&quot;</span><span class="p">:</span> <span class="n">solver</span><span class="o">.</span><span class="n">distance_matrix</span><span class="p">,</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>            <span class="n">reconstruct_path</span><span class="p">(</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>                <span class="n">destination_id</span><span class="o">=</span><span class="n">destination_id</span><span class="p">,</span> <span class="n">predecessor</span><span class="o">=</span><span class="n">solver</span><span class="o">.</span><span class="n">predecessor</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>            <span class="p">)</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>            <span class="k">if</span> <span class="n">destination_id</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>            <span class="k">else</span> <span class="kc">None</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a>        <span class="p">),</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a>        <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a>            <span class="n">solver</span><span class="o">.</span><span class="n">distance_matrix</span><span class="p">[</span><span class="n">destination_id</span><span class="p">]</span> <span class="k">if</span> <span class="n">destination_id</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a>        <span class="p">),</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a>    <span class="p">}</span>
 </span></pre></div>
 
 
             </section>
-                <section id="inf">
-                    <div class="attr variable">
-            <span class="name">inf</span>        =
-<span class="default_value">inf</span>
-
-        
-    </div>
-    <a class="headerlink" href="#inf"></a>
-    
-    
-
-                </section>
-                <section id="input_check">
-                            <input id="input_check-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+                <section id="bmssp">
+                            <input id="bmssp-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">input_check</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">graph</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]]</span>,</span><span class="param">	<span class="n">origin_id</span><span class="p">:</span> <span class="nb">int</span>,</span><span class="param">	<span class="n">destination_id</span><span class="p">:</span> <span class="nb">int</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
+        <span class="name">bmssp</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">graph</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]]</span>,</span><span class="param">	<span class="n">origin_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>,</span><span class="param">	<span class="n">destination_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">):</span></span>
 
-                <label class="view-source-button" for="input_check-view-source"><span>View Source</span></label>
+                <label class="view-source-button" for="bmssp-view-source"><span>View Source</span></label>
 
     </div>
-    <a class="headerlink" href="#input_check"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="input_check-5"><a href="#input_check-5"><span class="linenos"> 5</span></a><span class="k">def</span><span class="w"> </span><span class="nf">input_check</span><span class="p">(</span>
-</span><span id="input_check-6"><a href="#input_check-6"><span class="linenos"> 6</span></a>    <span class="n">graph</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">origin_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">destination_id</span><span class="p">:</span> <span class="nb">int</span>
-</span><span id="input_check-7"><a href="#input_check-7"><span class="linenos"> 7</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="input_check-8"><a href="#input_check-8"><span class="linenos"> 8</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="input_check-9"><a href="#input_check-9"><span class="linenos"> 9</span></a><span class="sd">    Function:</span>
-</span><span id="input_check-10"><a href="#input_check-10"><span class="linenos">10</span></a>
-</span><span id="input_check-11"><a href="#input_check-11"><span class="linenos">11</span></a><span class="sd">    - Check that the inputs passed to the shortest path algorithm are valid</span>
-</span><span id="input_check-12"><a href="#input_check-12"><span class="linenos">12</span></a><span class="sd">    - Raises an exception if the inputs passed are not valid</span>
-</span><span id="input_check-13"><a href="#input_check-13"><span class="linenos">13</span></a>
-</span><span id="input_check-14"><a href="#input_check-14"><span class="linenos">14</span></a><span class="sd">    Required Arguments:</span>
-</span><span id="input_check-15"><a href="#input_check-15"><span class="linenos">15</span></a>
-</span><span id="input_check-16"><a href="#input_check-16"><span class="linenos">16</span></a><span class="sd">    - `graph`:</span>
-</span><span id="input_check-17"><a href="#input_check-17"><span class="linenos">17</span></a><span class="sd">        - Type: list of dictionaries</span>
-</span><span id="input_check-18"><a href="#input_check-18"><span class="linenos">18</span></a><span class="sd">    - `origin_id`</span>
-</span><span id="input_check-19"><a href="#input_check-19"><span class="linenos">19</span></a><span class="sd">        - Type: int</span>
-</span><span id="input_check-20"><a href="#input_check-20"><span class="linenos">20</span></a><span class="sd">        - What: The id of the origin node from the graph dictionary to start the shortest path from</span>
-</span><span id="input_check-21"><a href="#input_check-21"><span class="linenos">21</span></a><span class="sd">    - `destination_id`</span>
-</span><span id="input_check-22"><a href="#input_check-22"><span class="linenos">22</span></a><span class="sd">        - Type: int</span>
-</span><span id="input_check-23"><a href="#input_check-23"><span class="linenos">23</span></a><span class="sd">        - What: The id of the destination node from the graph dictionary to end the shortest path at</span>
-</span><span id="input_check-24"><a href="#input_check-24"><span class="linenos">24</span></a>
-</span><span id="input_check-25"><a href="#input_check-25"><span class="linenos">25</span></a><span class="sd">    Optional Arguments:</span>
-</span><span id="input_check-26"><a href="#input_check-26"><span class="linenos">26</span></a>
-</span><span id="input_check-27"><a href="#input_check-27"><span class="linenos">27</span></a><span class="sd">    - None</span>
-</span><span id="input_check-28"><a href="#input_check-28"><span class="linenos">28</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="input_check-29"><a href="#input_check-29"><span class="linenos">29</span></a>    <span class="k">if</span> <span class="p">(</span>
-</span><span id="input_check-30"><a href="#input_check-30"><span class="linenos">30</span></a>        <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-</span><span id="input_check-31"><a href="#input_check-31"><span class="linenos">31</span></a>        <span class="ow">and</span> <span class="n">origin_id</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-</span><span id="input_check-32"><a href="#input_check-32"><span class="linenos">32</span></a>        <span class="ow">and</span> <span class="n">origin_id</span> <span class="o">&gt;=</span> <span class="mi">0</span>
-</span><span id="input_check-33"><a href="#input_check-33"><span class="linenos">33</span></a>    <span class="p">):</span>
-</span><span id="input_check-34"><a href="#input_check-34"><span class="linenos">34</span></a>        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Origin node (</span><span class="si">{</span><span class="n">origin_id</span><span class="si">}</span><span class="s2">) is not in the graph&quot;</span><span class="p">)</span>
-</span><span id="input_check-35"><a href="#input_check-35"><span class="linenos">35</span></a>    <span class="k">if</span> <span class="n">destination_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="input_check-36"><a href="#input_check-36"><span class="linenos">36</span></a>        <span class="k">pass</span>
-</span><span id="input_check-37"><a href="#input_check-37"><span class="linenos">37</span></a>    <span class="k">elif</span> <span class="p">(</span>
-</span><span id="input_check-38"><a href="#input_check-38"><span class="linenos">38</span></a>        <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">destination_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-</span><span id="input_check-39"><a href="#input_check-39"><span class="linenos">39</span></a>        <span class="ow">and</span> <span class="n">origin_id</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-</span><span id="input_check-40"><a href="#input_check-40"><span class="linenos">40</span></a>        <span class="ow">and</span> <span class="n">origin_id</span> <span class="o">&gt;=</span> <span class="mi">0</span>
-</span><span id="input_check-41"><a href="#input_check-41"><span class="linenos">41</span></a>    <span class="p">):</span>
-</span><span id="input_check-42"><a href="#input_check-42"><span class="linenos">42</span></a>        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-</span><span id="input_check-43"><a href="#input_check-43"><span class="linenos">43</span></a>            <span class="sa">f</span><span class="s2">&quot;Destination node (</span><span class="si">{</span><span class="n">destination_id</span><span class="si">}</span><span class="s2">) is not in the graph&quot;</span>
-</span><span id="input_check-44"><a href="#input_check-44"><span class="linenos">44</span></a>        <span class="p">)</span>
+    <a class="headerlink" href="#bmssp"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="bmssp-6"><a href="#bmssp-6"><span class="linenos"> 6</span></a><span class="k">def</span><span class="w"> </span><span class="nf">bmssp</span><span class="p">(</span>
+</span><span id="bmssp-7"><a href="#bmssp-7"><span class="linenos"> 7</span></a>    <span class="n">graph</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]],</span>
+</span><span id="bmssp-8"><a href="#bmssp-8"><span class="linenos"> 8</span></a>    <span class="n">origin_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+</span><span id="bmssp-9"><a href="#bmssp-9"><span class="linenos"> 9</span></a>    <span class="n">destination_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="bmssp-10"><a href="#bmssp-10"><span class="linenos">10</span></a><span class="p">):</span>
+</span><span id="bmssp-11"><a href="#bmssp-11"><span class="linenos">11</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="bmssp-12"><a href="#bmssp-12"><span class="linenos">12</span></a><span class="sd">    Function:</span>
+</span><span id="bmssp-13"><a href="#bmssp-13"><span class="linenos">13</span></a>
+</span><span id="bmssp-14"><a href="#bmssp-14"><span class="linenos">14</span></a><span class="sd">    - A Full BMSSP-style shortest path solver.</span>
+</span><span id="bmssp-15"><a href="#bmssp-15"><span class="linenos">15</span></a><span class="sd">    - Return a dictionary of various path information including:</span>
+</span><span id="bmssp-16"><a href="#bmssp-16"><span class="linenos">16</span></a><span class="sd">        - `id_path`: A list of node ids in the order they are visited</span>
+</span><span id="bmssp-17"><a href="#bmssp-17"><span class="linenos">17</span></a><span class="sd">        - `path`: A list of node dictionaries (lat + long) in the order they are visited</span>
+</span><span id="bmssp-18"><a href="#bmssp-18"><span class="linenos">18</span></a>
+</span><span id="bmssp-19"><a href="#bmssp-19"><span class="linenos">19</span></a><span class="sd">    Required Arguments:</span>
+</span><span id="bmssp-20"><a href="#bmssp-20"><span class="linenos">20</span></a>
+</span><span id="bmssp-21"><a href="#bmssp-21"><span class="linenos">21</span></a><span class="sd">    - `graph`:</span>
+</span><span id="bmssp-22"><a href="#bmssp-22"><span class="linenos">22</span></a><span class="sd">        - Type: list of dictionaries</span>
+</span><span id="bmssp-23"><a href="#bmssp-23"><span class="linenos">23</span></a><span class="sd">    - `origin_id`</span>
+</span><span id="bmssp-24"><a href="#bmssp-24"><span class="linenos">24</span></a><span class="sd">        - Type: int | set of int</span>
+</span><span id="bmssp-25"><a href="#bmssp-25"><span class="linenos">25</span></a><span class="sd">        - What: The id of the origin node from the graph dictionary to start the shortest path from</span>
+</span><span id="bmssp-26"><a href="#bmssp-26"><span class="linenos">26</span></a><span class="sd">        - Note: If you pass a set, only the first id in the set will be checked for input validation</span>
+</span><span id="bmssp-27"><a href="#bmssp-27"><span class="linenos">27</span></a><span class="sd">    - `destination_id`</span>
+</span><span id="bmssp-28"><a href="#bmssp-28"><span class="linenos">28</span></a><span class="sd">        - Type: int | None</span>
+</span><span id="bmssp-29"><a href="#bmssp-29"><span class="linenos">29</span></a><span class="sd">        - What: The id of the destination node from the graph dictionary to end the shortest path at</span>
+</span><span id="bmssp-30"><a href="#bmssp-30"><span class="linenos">30</span></a><span class="sd">        - Note: If None, returns the distance matrix and predecessor list for the origin node</span>
+</span><span id="bmssp-31"><a href="#bmssp-31"><span class="linenos">31</span></a><span class="sd">        - Note: If provided, returns the shortest path [origin_id, ..., destination_id] and its length</span>
+</span><span id="bmssp-32"><a href="#bmssp-32"><span class="linenos">32</span></a>
+</span><span id="bmssp-33"><a href="#bmssp-33"><span class="linenos">33</span></a><span class="sd">    Optional Arguments:</span>
+</span><span id="bmssp-34"><a href="#bmssp-34"><span class="linenos">34</span></a>
+</span><span id="bmssp-35"><a href="#bmssp-35"><span class="linenos">35</span></a><span class="sd">    - None</span>
+</span><span id="bmssp-36"><a href="#bmssp-36"><span class="linenos">36</span></a>
+</span><span id="bmssp-37"><a href="#bmssp-37"><span class="linenos">37</span></a><span class="sd">    Returns:</span>
+</span><span id="bmssp-38"><a href="#bmssp-38"><span class="linenos">38</span></a>
+</span><span id="bmssp-39"><a href="#bmssp-39"><span class="linenos">39</span></a><span class="sd">    - A dictionary with the following keys</span>
+</span><span id="bmssp-40"><a href="#bmssp-40"><span class="linenos">40</span></a><span class="sd">        - `origin_id`: The id of the origin node or a list of ids if a set was provided</span>
+</span><span id="bmssp-41"><a href="#bmssp-41"><span class="linenos">41</span></a><span class="sd">        - `destination_id`: The id of the destination node (or None)</span>
+</span><span id="bmssp-42"><a href="#bmssp-42"><span class="linenos">42</span></a><span class="sd">        - `predecessor`: The predecessor list for path reconstruction</span>
+</span><span id="bmssp-43"><a href="#bmssp-43"><span class="linenos">43</span></a><span class="sd">        - `distance_matrix`: The distance matrix from the origin node to all other nodes</span>
+</span><span id="bmssp-44"><a href="#bmssp-44"><span class="linenos">44</span></a><span class="sd">        - `path`: The shortest path from origin_id to destination_id (or None)</span>
+</span><span id="bmssp-45"><a href="#bmssp-45"><span class="linenos">45</span></a><span class="sd">        - `length`: The length of the shortest path from origin_id to destination_id (or None)</span>
+</span><span id="bmssp-46"><a href="#bmssp-46"><span class="linenos">46</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="bmssp-47"><a href="#bmssp-47"><span class="linenos">47</span></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin_id</span><span class="p">,</span> <span class="nb">set</span><span class="p">):</span>
+</span><span id="bmssp-48"><a href="#bmssp-48"><span class="linenos">48</span></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">origin_id</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="bmssp-49"><a href="#bmssp-49"><span class="linenos">49</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span id="bmssp-50"><a href="#bmssp-50"><span class="linenos">50</span></a>                <span class="s2">&quot;Your provided origin_id set must have at least 1 node&quot;</span>
+</span><span id="bmssp-51"><a href="#bmssp-51"><span class="linenos">51</span></a>            <span class="p">)</span>
+</span><span id="bmssp-52"><a href="#bmssp-52"><span class="linenos">52</span></a>        <span class="n">origin_id_check</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">origin_id</span><span class="p">))</span>
+</span><span id="bmssp-53"><a href="#bmssp-53"><span class="linenos">53</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="bmssp-54"><a href="#bmssp-54"><span class="linenos">54</span></a>        <span class="n">origin_id_check</span> <span class="o">=</span> <span class="n">origin_id</span>
+</span><span id="bmssp-55"><a href="#bmssp-55"><span class="linenos">55</span></a>    <span class="c1"># Input Validation</span>
+</span><span id="bmssp-56"><a href="#bmssp-56"><span class="linenos">56</span></a>    <span class="n">input_check</span><span class="p">(</span>
+</span><span id="bmssp-57"><a href="#bmssp-57"><span class="linenos">57</span></a>        <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span> <span class="n">origin_id</span><span class="o">=</span><span class="n">origin_id_check</span><span class="p">,</span> <span class="n">destination_id</span><span class="o">=</span><span class="n">destination_id</span>
+</span><span id="bmssp-58"><a href="#bmssp-58"><span class="linenos">58</span></a>    <span class="p">)</span>
+</span><span id="bmssp-59"><a href="#bmssp-59"><span class="linenos">59</span></a>    <span class="c1"># Run the BMSSP Algorithm to relax as many edges as possible.</span>
+</span><span id="bmssp-60"><a href="#bmssp-60"><span class="linenos">60</span></a>    <span class="n">solver</span> <span class="o">=</span> <span class="n">BmsspSolver</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">origin_id</span><span class="p">)</span>
+</span><span id="bmssp-61"><a href="#bmssp-61"><span class="linenos">61</span></a>    <span class="k">if</span> <span class="n">destination_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="bmssp-62"><a href="#bmssp-62"><span class="linenos">62</span></a>        <span class="k">if</span> <span class="n">solver</span><span class="o">.</span><span class="n">distance_matrix</span><span class="p">[</span><span class="n">destination_id</span><span class="p">]</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">):</span>
+</span><span id="bmssp-63"><a href="#bmssp-63"><span class="linenos">63</span></a>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+</span><span id="bmssp-64"><a href="#bmssp-64"><span class="linenos">64</span></a>                <span class="s2">&quot;Something went wrong, the origin and destination nodes are not connected.&quot;</span>
+</span><span id="bmssp-65"><a href="#bmssp-65"><span class="linenos">65</span></a>            <span class="p">)</span>
+</span><span id="bmssp-66"><a href="#bmssp-66"><span class="linenos">66</span></a>
+</span><span id="bmssp-67"><a href="#bmssp-67"><span class="linenos">67</span></a>    <span class="k">return</span> <span class="p">{</span>
+</span><span id="bmssp-68"><a href="#bmssp-68"><span class="linenos">68</span></a>        <span class="s2">&quot;origin_id&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="bmssp-69"><a href="#bmssp-69"><span class="linenos">69</span></a>            <span class="n">origin_id</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">origin_id</span><span class="p">)</span>
+</span><span id="bmssp-70"><a href="#bmssp-70"><span class="linenos">70</span></a>        <span class="p">),</span>
+</span><span id="bmssp-71"><a href="#bmssp-71"><span class="linenos">71</span></a>        <span class="s2">&quot;destination_id&quot;</span><span class="p">:</span> <span class="n">destination_id</span><span class="p">,</span>
+</span><span id="bmssp-72"><a href="#bmssp-72"><span class="linenos">72</span></a>        <span class="s2">&quot;predecessor&quot;</span><span class="p">:</span> <span class="n">solver</span><span class="o">.</span><span class="n">predecessor</span><span class="p">,</span>
+</span><span id="bmssp-73"><a href="#bmssp-73"><span class="linenos">73</span></a>        <span class="s2">&quot;distance_matrix&quot;</span><span class="p">:</span> <span class="n">solver</span><span class="o">.</span><span class="n">distance_matrix</span><span class="p">,</span>
+</span><span id="bmssp-74"><a href="#bmssp-74"><span class="linenos">74</span></a>        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="bmssp-75"><a href="#bmssp-75"><span class="linenos">75</span></a>            <span class="n">reconstruct_path</span><span class="p">(</span>
+</span><span id="bmssp-76"><a href="#bmssp-76"><span class="linenos">76</span></a>                <span class="n">destination_id</span><span class="o">=</span><span class="n">destination_id</span><span class="p">,</span> <span class="n">predecessor</span><span class="o">=</span><span class="n">solver</span><span class="o">.</span><span class="n">predecessor</span>
+</span><span id="bmssp-77"><a href="#bmssp-77"><span class="linenos">77</span></a>            <span class="p">)</span>
+</span><span id="bmssp-78"><a href="#bmssp-78"><span class="linenos">78</span></a>            <span class="k">if</span> <span class="n">destination_id</span>
+</span><span id="bmssp-79"><a href="#bmssp-79"><span class="linenos">79</span></a>            <span class="k">else</span> <span class="kc">None</span>
+</span><span id="bmssp-80"><a href="#bmssp-80"><span class="linenos">80</span></a>        <span class="p">),</span>
+</span><span id="bmssp-81"><a href="#bmssp-81"><span class="linenos">81</span></a>        <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="bmssp-82"><a href="#bmssp-82"><span class="linenos">82</span></a>            <span class="n">solver</span><span class="o">.</span><span class="n">distance_matrix</span><span class="p">[</span><span class="n">destination_id</span><span class="p">]</span> <span class="k">if</span> <span class="n">destination_id</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span id="bmssp-83"><a href="#bmssp-83"><span class="linenos">83</span></a>        <span class="p">),</span>
+</span><span id="bmssp-84"><a href="#bmssp-84"><span class="linenos">84</span></a>    <span class="p">}</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Function:</p>
 
 <ul>
-<li>Check that the inputs passed to the shortest path algorithm are valid</li>
-<li>Raises an exception if the inputs passed are not valid</li>
+<li>A Full BMSSP-style shortest path solver.</li>
+<li>Return a dictionary of various path information including:
+<ul>
+<li><code>id_path</code>: A list of node ids in the order they are visited</li>
+<li><code>path</code>: A list of node dictionaries (lat + long) in the order they are visited</li>
+</ul></li>
 </ul>
 
 <p>Required Arguments:</p>
@@ -254,13 +288,16 @@
 </ul></li>
 <li><code>origin_id</code>
 <ul>
-<li>Type: int</li>
+<li>Type: int | set of int</li>
 <li>What: The id of the origin node from the graph dictionary to start the shortest path from</li>
+<li>Note: If you pass a set, only the first id in the set will be checked for input validation</li>
 </ul></li>
 <li><code>destination_id</code>
 <ul>
-<li>Type: int</li>
+<li>Type: int | None</li>
 <li>What: The id of the destination node from the graph dictionary to end the shortest path at</li>
+<li>Note: If None, returns the distance matrix and predecessor list for the origin node</li>
+<li>Note: If provided, returns the shortest path [origin_id, ..., destination_id] and its length</li>
 </ul></li>
 </ul>
 
@@ -269,82 +306,19 @@
 <ul>
 <li>None</li>
 </ul>
-</div>
 
-
-                </section>
-                <section id="reconstruct_path">
-                            <input id="reconstruct_path-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">reconstruct_path</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">destination_id</span><span class="p">:</span> <span class="nb">int</span>, </span><span class="param"><span class="n">predecessor</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span></span><span class="return-annotation">) -> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>:</span></span>
-
-                <label class="view-source-button" for="reconstruct_path-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#reconstruct_path"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="reconstruct_path-47"><a href="#reconstruct_path-47"><span class="linenos">47</span></a><span class="k">def</span><span class="w"> </span><span class="nf">reconstruct_path</span><span class="p">(</span><span class="n">destination_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">predecessor</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-</span><span id="reconstruct_path-48"><a href="#reconstruct_path-48"><span class="linenos">48</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="reconstruct_path-49"><a href="#reconstruct_path-49"><span class="linenos">49</span></a><span class="sd">    Function:</span>
-</span><span id="reconstruct_path-50"><a href="#reconstruct_path-50"><span class="linenos">50</span></a>
-</span><span id="reconstruct_path-51"><a href="#reconstruct_path-51"><span class="linenos">51</span></a><span class="sd">    - Reconstruct the shortest path from the destination node to the origin node</span>
-</span><span id="reconstruct_path-52"><a href="#reconstruct_path-52"><span class="linenos">52</span></a><span class="sd">    - Return the reconstructed path in the correct order</span>
-</span><span id="reconstruct_path-53"><a href="#reconstruct_path-53"><span class="linenos">53</span></a><span class="sd">    - Given the predecessor list, this function reconstructs the path</span>
-</span><span id="reconstruct_path-54"><a href="#reconstruct_path-54"><span class="linenos">54</span></a>
-</span><span id="reconstruct_path-55"><a href="#reconstruct_path-55"><span class="linenos">55</span></a><span class="sd">    Required Arguments:</span>
-</span><span id="reconstruct_path-56"><a href="#reconstruct_path-56"><span class="linenos">56</span></a>
-</span><span id="reconstruct_path-57"><a href="#reconstruct_path-57"><span class="linenos">57</span></a><span class="sd">    - `destination_id`</span>
-</span><span id="reconstruct_path-58"><a href="#reconstruct_path-58"><span class="linenos">58</span></a><span class="sd">        - Type: int</span>
-</span><span id="reconstruct_path-59"><a href="#reconstruct_path-59"><span class="linenos">59</span></a><span class="sd">        - What: The id of the destination node from the graph dictionary to end the shortest path at</span>
-</span><span id="reconstruct_path-60"><a href="#reconstruct_path-60"><span class="linenos">60</span></a><span class="sd">    - `predecessor`</span>
-</span><span id="reconstruct_path-61"><a href="#reconstruct_path-61"><span class="linenos">61</span></a><span class="sd">        - Type: list[int]</span>
-</span><span id="reconstruct_path-62"><a href="#reconstruct_path-62"><span class="linenos">62</span></a><span class="sd">        - What: The predecessor list that was used to compute the shortest path</span>
-</span><span id="reconstruct_path-63"><a href="#reconstruct_path-63"><span class="linenos">63</span></a><span class="sd">        - This list is used to reconstruct the path from the destination node to the origin node</span>
-</span><span id="reconstruct_path-64"><a href="#reconstruct_path-64"><span class="linenos">64</span></a><span class="sd">        - Note: Nodes with no predecessor should be -1</span>
-</span><span id="reconstruct_path-65"><a href="#reconstruct_path-65"><span class="linenos">65</span></a>
-</span><span id="reconstruct_path-66"><a href="#reconstruct_path-66"><span class="linenos">66</span></a><span class="sd">    Optional Arguments:</span>
-</span><span id="reconstruct_path-67"><a href="#reconstruct_path-67"><span class="linenos">67</span></a>
-</span><span id="reconstruct_path-68"><a href="#reconstruct_path-68"><span class="linenos">68</span></a><span class="sd">    - None</span>
-</span><span id="reconstruct_path-69"><a href="#reconstruct_path-69"><span class="linenos">69</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="reconstruct_path-70"><a href="#reconstruct_path-70"><span class="linenos">70</span></a>    <span class="n">output_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">destination_id</span><span class="p">]</span>
-</span><span id="reconstruct_path-71"><a href="#reconstruct_path-71"><span class="linenos">71</span></a>    <span class="k">while</span> <span class="n">predecessor</span><span class="p">[</span><span class="n">destination_id</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-</span><span id="reconstruct_path-72"><a href="#reconstruct_path-72"><span class="linenos">72</span></a>        <span class="n">destination_id</span> <span class="o">=</span> <span class="n">predecessor</span><span class="p">[</span><span class="n">destination_id</span><span class="p">]</span>
-</span><span id="reconstruct_path-73"><a href="#reconstruct_path-73"><span class="linenos">73</span></a>        <span class="n">output_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">destination_id</span><span class="p">)</span>
-</span><span id="reconstruct_path-74"><a href="#reconstruct_path-74"><span class="linenos">74</span></a>    <span class="n">output_path</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
-</span><span id="reconstruct_path-75"><a href="#reconstruct_path-75"><span class="linenos">75</span></a>    <span class="k">return</span> <span class="n">output_path</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Function:</p>
+<p>Returns:</p>
 
 <ul>
-<li>Reconstruct the shortest path from the destination node to the origin node</li>
-<li>Return the reconstructed path in the correct order</li>
-<li>Given the predecessor list, this function reconstructs the path</li>
-</ul>
-
-<p>Required Arguments:</p>
-
+<li>A dictionary with the following keys
 <ul>
-<li><code>destination_id</code>
-<ul>
-<li>Type: int</li>
-<li>What: The id of the destination node from the graph dictionary to end the shortest path at</li>
+<li><code>origin_id</code>: The id of the origin node or a list of ids if a set was provided</li>
+<li><code>destination_id</code>: The id of the destination node (or None)</li>
+<li><code>predecessor</code>: The predecessor list for path reconstruction</li>
+<li><code>distance_matrix</code>: The distance matrix from the origin node to all other nodes</li>
+<li><code>path</code>: The shortest path from origin_id to destination_id (or None)</li>
+<li><code>length</code>: The length of the shortest path from origin_id to destination_id (or None)</li>
 </ul></li>
-<li><code>predecessor</code>
-<ul>
-<li>Type: list[int]</li>
-<li>What: The predecessor list that was used to compute the shortest path</li>
-<li>This list is used to reconstruct the path from the destination node to the origin node</li>
-<li>Note: Nodes with no predecessor should be -1</li>
-</ul></li>
-</ul>
-
-<p>Optional Arguments:</p>
-
-<ul>
-<li>None</li>
 </ul>
 </div>
 
