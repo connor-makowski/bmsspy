@@ -40,6 +40,8 @@ class BmsspSolver:
         graph: list[dict[int, int | float]],
         origin_ids: set[int] | int,
         DataStructure=BmsspDataStructure,
+        pivot_relaxation_steps: int | None = None,
+        target_tree_depth: int | None = None,
     ):
         """
         Function:
@@ -58,8 +60,22 @@ class BmsspSolver:
 
         Optional Arguments:
 
-        - None
+        - DataStructure:
+            - Type: class
+            - Default: BmsspDataStructure
+            - What: The data structure class to be used for managing the frontier during the BMSSP algorithm.
+        - pivot_relaxation_steps:
+            - Type: int | None
+            - Default: ceil(log(len(graph), 2) ** (1 / 3))
+            - What: The number of relaxation steps to perform when finding pivots (k). If None, it will be computed based on the graph size.
+        - target_tree_depth:
+            - Type: int | None
+            - Default: int(log(len(graph), 2) ** (2 / 3))
+            - What: The target depth of the search tree (t). If None, it will be computed based on the graph size.
         """
+        #################################
+        # Initial checks and data setup
+        #################################
         graph_len = len(graph)
         if graph_len < 2:
             raise ValueError("Your provided graph must have at least 2 nodes")
@@ -74,18 +90,37 @@ class BmsspSolver:
         for origin_id in origin_ids:
             self.distance_matrix[origin_id] = 0
 
+        
+        #####################################
         # Practical choices (k and t) based on n
+        #####################################
+        # Calculate k
         # Modification: Use log base 2 to ensure everything is properly relaxed and round up k
-        self.pivot_relaxation_steps = ceil(log(graph_len, 2) ** (1 / 3))  # k
-        self.target_tree_depth = int(log(graph_len, 2) ** (2 / 3))  # t
+        if pivot_relaxation_steps is not None:
+            self.pivot_relaxation_steps = pivot_relaxation_steps
+        else:
+            self.pivot_relaxation_steps = ceil(log(graph_len, 2) ** (1 / 3))  # k
+        assert isinstance(self.pivot_relaxation_steps, int) and self.pivot_relaxation_steps > 0, "pivot_relaxation_steps must be a positive integer"
+        # Calculate t
+        # Moddification: Use log base 2 to ensure everything is properly relaxed
+        if target_tree_depth is not None:
+            self.target_tree_depth = target_tree_depth
+        else:
+            self.target_tree_depth = int(log(graph_len, 2) ** (2 / 3))  # t
+        assert isinstance(self.target_tree_depth, int) and self.target_tree_depth > 0, "target_tree_depth must be a positive integer"
 
+        #################################
+        # Calculate l based on t
+        #################################
         # Compute max_recursion_depth based on t
+        # Modification: Use log base 2 to ensure everything is properly relaxed
         self.max_recursion_depth = ceil(
             log(graph_len, 2) / self.target_tree_depth
         )  # l
 
-        # print(f"Pivot relaxation steps (k): {self.pivot_relaxation_steps}, Target tree depth (t): {self.target_tree_depth}, Max recursion depth (l): {self.max_recursion_depth}")
-
+        #################################
+        # Run the algorithm
+        #################################
         # Run the solver algorithm
         upper_bound, frontier = self.recursive_bmssp(
             self.max_recursion_depth, inf, origin_ids
