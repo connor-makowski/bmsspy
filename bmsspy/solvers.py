@@ -45,12 +45,16 @@ def bmssp(
     """
     if isinstance(origin_id, set):
         if len(origin_id) < 1:
-            raise ValueError("Your provided origin_id set must have at least 1 node")
+            raise ValueError(
+                "Your provided origin_id set must have at least 1 node"
+            )
         origin_id_check = next(iter(origin_id))
     else:
         origin_id_check = origin_id
     # Input Validation
-    input_check(graph=graph, origin_id=origin_id_check, destination_id=destination_id)
+    input_check(
+        graph=graph, origin_id=origin_id_check, destination_id=destination_id
+    )
     # Run the BMSSP Algorithm to relax as many edges as possible.
     solver = BmsspSolver(graph, origin_id)
     if destination_id is not None:
@@ -60,7 +64,9 @@ def bmssp(
             )
 
     return {
-        "origin_id": origin_id if isinstance(origin_id, int) else list(origin_id),
+        "origin_id": (
+            origin_id if isinstance(origin_id, int) else list(origin_id)
+        ),
         "destination_id": destination_id,
         "predecessor": solver.predecessor,
         "distance_matrix": solver.distance_matrix,

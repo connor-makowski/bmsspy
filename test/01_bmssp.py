@@ -2,7 +2,7 @@ from bmsspy.solvers import bmssp
 
 print("\n===============\nBasic BMSSP Tests:\n===============")
 
-tiny_graph =[{1: 1}, {}]
+tiny_graph = [{1: 1}, {}]
 output = bmssp(tiny_graph, 0)
 if output["distance_matrix"] != [0, 1]:
     print("BMSSP Tiny Test: FAIL")

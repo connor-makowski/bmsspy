@@ -90,7 +90,6 @@ class BmsspSolver:
         for origin_id in origin_ids:
             self.distance_matrix[origin_id] = 0
 
-        
         #####################################
         # Practical choices (k and t) based on n
         #####################################
@@ -99,15 +98,23 @@ class BmsspSolver:
         if pivot_relaxation_steps is not None:
             self.pivot_relaxation_steps = pivot_relaxation_steps
         else:
-            self.pivot_relaxation_steps = ceil(log(graph_len, 2) ** (1 / 3))  # k
-        assert isinstance(self.pivot_relaxation_steps, int) and self.pivot_relaxation_steps > 0, "pivot_relaxation_steps must be a positive integer"
+            self.pivot_relaxation_steps = ceil(
+                log(graph_len, 2) ** (1 / 3)
+            )  # k
+        assert (
+            isinstance(self.pivot_relaxation_steps, int)
+            and self.pivot_relaxation_steps > 0
+        ), "pivot_relaxation_steps must be a positive integer"
         # Calculate t
         # Moddification: Use log base 2 to ensure everything is properly relaxed
         if target_tree_depth is not None:
             self.target_tree_depth = target_tree_depth
         else:
             self.target_tree_depth = int(log(graph_len, 2) ** (2 / 3))  # t
-        assert isinstance(self.target_tree_depth, int) and self.target_tree_depth > 0, "target_tree_depth must be a positive integer"
+        assert (
+            isinstance(self.target_tree_depth, int)
+            and self.target_tree_depth > 0
+        ), "target_tree_depth must be a positive integer"
 
         #################################
         # Calculate l based on t
