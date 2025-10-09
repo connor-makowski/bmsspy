@@ -1,21 +1,23 @@
 \begin{algorithm}[!htbp]
 \SingleSpacedXI
-\caption{Count Reachable Nodes (\texttt{cnt\_reachable\_nodes})}
-\label{alg:utils_cnt_reachable_nodes}
+\caption{{\color{Bittersweet}Is Pivot (\texttt{is\_pivot})}}
+\label{alg:utils_is_pivot}
 \SetAlgoLined
-\KwIn{root $r$, directed forest $F$ (adjacency list: $F[v]$ = children of $v$)}
-\KwOut{number of nodes reachable from $r$}
+\KwIn{root $r$, directed forest $F$ (adjacency list: $F[v]$ = children of $v$), threshold $t$}
+\KwOut{\textbf{True} if number of nodes reachable from $r$ is $\geq t$; \textbf{False} otherwise}
 
 \BlankLine
-$\textit{seen}\leftarrow\emptyset$; $\textit{stack}\leftarrow [\,r\,]$; $cnt \leftarrow 0$\;
+$\textit{seen} \leftarrow \emptyset$; $\textit{stack} \leftarrow [\,r\,]$; $cnt \leftarrow 0$\;
 
-\While{$\textit{stack}\neq\emptyset$}{
-  $x\leftarrow$\textsc{pop}(\textit{stack})\;
-  \If{$x\in\textit{seen}$}{\textbf{continue}}
-  $\textit{seen}\leftarrow \textit{seen}\cup\{x\}$; $cnt\leftarrow cnt+1$\;
-  \ForEach{$y\in F[x]$}{
-    \textsc{push}($\textit{stack}, y$)\;
+\While{$\textit{stack} \neq \emptyset$}{
+  $x \leftarrow$ \textsc{pop}(\textit{stack})\;
+  \If{$x \in \textit{seen}$}{\textbf{continue}}
+  $cnt \leftarrow cnt + 1$\;
+  \If{$cnt \geq t$}{\Return{\textbf{True}}}
+  $\textit{seen} \leftarrow \textit{seen} \cup \{x\}$\;
+  \ForEach{$y \in F[x]$}{
+    \textsc{push}(\textit{stack}, $y$)\;
   }
 }
-\Return{$cnt$}\;
+\Return{\textbf{False}}\;
 \end{algorithm}

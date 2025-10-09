@@ -38,10 +38,11 @@ $\text{indegreeF} \leftarrow \{u \mapsto 0 : u \in W\}$\tcp*{Create an empty $in
 }
 \BlankLine
 $P\leftarrow\emptyset$\;
-\ForEach{$u\in S$}{
-  \If{$\text{indegreeF}[u]=0$}{
-    \If{$\textsc{CountReachableNodes}(u,F)\ge k$}
-    {$P\leftarrow P\cup\{u\}$}
+\ForEach{$u \in S$}{
+  \If{$\text{indegreeF}[u] = 0$}{
+    \If{$\textsc{IsPivot}(u, F, k)$}{
+      $P \leftarrow P \cup \{u\}$
+    }
   }
 }
 }

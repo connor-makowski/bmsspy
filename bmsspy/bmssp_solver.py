@@ -6,11 +6,12 @@ from .data_structures.data_structure import BmsspDataStructure
 inf = float("inf")
 
 
-def cnt_reachable_nodes(root: int, forest: dict[int, set[int]]) -> int:
+def is_pivot(root: int, forest: dict[int, set[int]], threshold: int) -> bool:
     """
     Function:
 
-    - Return the number of nodes reachable from root in the directed forest defined by forest.
+    - Returns True if the number of reachable nodes meets or exceeds a given threshold.
+    - Returns False otherwise.
 
     Required Arguments:
 
@@ -20,6 +21,9 @@ def cnt_reachable_nodes(root: int, forest: dict[int, set[int]]) -> int:
     - `forest`
         - Type: dict[int, set[int]]
         - What: Adjacency list representing the directed forest.
+    - `threshold`
+        - Type: int
+        - What: The minimum number of reachable nodes required to return True.
     """
     seen = set()
     stack = [root]
@@ -28,10 +32,12 @@ def cnt_reachable_nodes(root: int, forest: dict[int, set[int]]) -> int:
         x = stack.pop()
         if x in seen:
             continue
-        seen.add(x)
         cnt += 1
+        if cnt >= threshold:
+            return True
+        seen.add(x)
         stack.extend(forest[x])
-    return cnt
+    return False
 
 
 class BmsspSolver:
@@ -210,8 +216,7 @@ class BmsspSolver:
         pivots = set()
         for frontier_idx in frontier:
             if indegree.get(frontier_idx, 0) == 0:
-                size = cnt_reachable_nodes(frontier_idx, forest=forest)
-                if size >= self.pivot_relaxation_steps:
+                if is_pivot(frontier_idx, forest=forest, threshold=self.pivot_relaxation_steps):
                     pivots.add(frontier_idx)
 
         return pivots, temp_frontier
