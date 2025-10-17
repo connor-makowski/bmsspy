@@ -112,7 +112,7 @@ class BmsspSolver:
             and self.pivot_relaxation_steps > 0
         ), "pivot_relaxation_steps must be a positive integer"
         # Calculate t
-        # Moddification: Use log base 2 to ensure everything is properly relaxed
+        # Modification: Use log base 2 to ensure everything is properly relaxed
         if target_tree_depth is not None:
             self.target_tree_depth = target_tree_depth
         else:
@@ -350,13 +350,10 @@ class BmsspSolver:
             (self.distance_matrix[p] for p in pivots), default=upper_bound
         )
 
-        # Work budget that scales with level: k^(2*l*t)
+        # Work budget that scales with level: k*2**(l*t)
         # k = self.pivot_relaxation_steps
         # t = self.target_tree_depth
-        work_budget = self.pivot_relaxation_steps ** (
-            2 * recursion_depth * self.target_tree_depth
-        )
-
+        work_budget = self.pivot_relaxation_steps * 2 ** (recursion_depth * self.target_tree_depth)
         # Main loop
         while len(new_frontier) < work_budget and not data_struct.is_empty():
             # Step 10: Pull from data_struct: get data_struct_frontier_temp and upper_bound_i

@@ -1,4 +1,5 @@
 inf = float("inf")
+from copy import deepcopy
 
 
 def input_check(
@@ -72,3 +73,72 @@ def reconstruct_path(destination_id: int, predecessor: list[int]) -> list[int]:
         output_path.append(destination_id)
     output_path.reverse()
     return output_path
+
+
+def convert_to_constant_degree(graph):
+    """
+    Convert a graph to a constant degree graph with no more than 2 incoming and 2 outgoing edges per node.
+    
+    Parameters:
+    graph (list of dict): The input graph represented as an adjacency list.
+    
+    Returns:
+    dict: A dictionary containing the converted constant degree graph and the output mapping.
+        - 'graph' (list of dict): The converted constant degree graph.
+        - 'idx_map' (dict): A mapping from all node indices to original node indices.
+            - Keys are node indices in the converted graph.
+            - Values are the corresponding original node indices.
+            - Note: All nodes below the original graph length map to themselves.
+    """
+    graph = deepcopy(graph)
+    in_graph = [{} for _ in range(len(graph))]
+    for node_idx, node_neighbors in enumerate(graph):
+        for neighbor, weight in node_neighbors.items():
+            in_graph[neighbor][node_idx] = weight
+    
+    nodes_to_partition = {}
+    for node_idx in range(len(graph)):
+        max_degree = max(len(graph[node_idx]), len(in_graph[node_idx]))
+        if max_degree > 2:
+            nodes_to_partition[node_idx] = max_degree
+
+    idx_map = {idx: idx for idx in range(len(graph))}
+
+    for node_idx, num_partitions in nodes_to_partition.items():
+        local_idx_mapping = [node_idx] + list(range(len(graph), len(graph) + num_partitions - 1))
+        graph.extend([{} for _ in range(num_partitions - 1)])
+        in_graph.extend([{} for _ in range(num_partitions - 1)])
+        for local_idx in local_idx_mapping:
+            idx_map[local_idx] = node_idx
+
+        out_dict = dict(graph[node_idx])
+        in_dict = dict(in_graph[node_idx])
+
+        graph[node_idx] = {}
+        in_graph[node_idx] = {}
+
+        # Break the node into partitions assigning one outgoing edge per node
+        for local_idx, (out_node_idx, out_node_weight) in enumerate(out_dict.items()):
+            new_idx = local_idx_mapping[local_idx]
+            graph[new_idx][out_node_idx] = out_node_weight
+            in_graph[out_node_idx].pop(node_idx, None)
+            in_graph[out_node_idx][new_idx] = out_node_weight
+
+        # Break the node into partitions assigning one incoming edge per node
+        for local_idx, (in_node_idx, in_node_weight) in enumerate(in_dict.items()):
+            new_idx = local_idx_mapping[local_idx]
+            in_graph[new_idx][in_node_idx] = in_node_weight
+            graph[in_node_idx].pop(node_idx, None)
+            graph[in_node_idx][new_idx] = in_node_weight
+
+        # Cycle connect all partitions with zero-weight edges
+        for item_idx in range(len(local_idx_mapping)):
+            from_idx = local_idx_mapping[item_idx]
+            to_idx = local_idx_mapping[(item_idx + 1) % len(local_idx_mapping)]
+            graph[from_idx][to_idx] = 1e-8
+            in_graph[to_idx][from_idx] = 1e-8
+
+    return {
+        "graph": graph,
+        "idx_map": idx_map
+    }
