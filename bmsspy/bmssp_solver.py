@@ -48,6 +48,7 @@ class BmsspSolver:
         DataStructure=BmsspDataStructure,
         pivot_relaxation_steps: int | None = None,
         target_tree_depth: int | None = None,
+        use_work_budget: bool = True,
     ):
         """
         Function:
@@ -78,6 +79,11 @@ class BmsspSolver:
             - Type: int | None
             - Default: int(log(len(graph), 2) ** (2 / 3))
             - What: The target depth of the search tree (t). If None, it will be computed based on the graph size.
+        - use_work_budget:
+            - Type: bool
+            - Default: True
+            - What: Whether to use a work budget to limit the number of nodes processed at each recursion level.
+            - Note: If False, the algorithm will assume an infinite work budget.
         """
         #################################
         # Initial checks and data setup
@@ -95,6 +101,7 @@ class BmsspSolver:
         self.DataStructure = DataStructure
         for origin_id in origin_ids:
             self.distance_matrix[origin_id] = 0
+        self.use_work_budget = use_work_budget
 
         #####################################
         # Practical choices (k and t) based on n
@@ -104,9 +111,7 @@ class BmsspSolver:
         if pivot_relaxation_steps is not None:
             self.pivot_relaxation_steps = pivot_relaxation_steps
         else:
-            self.pivot_relaxation_steps = ceil(
-                log(graph_len, 2) ** (1 / 3)
-            )  # k
+            self.pivot_relaxation_steps = ceil(log(graph_len, 2) ** (1 / 3)) # k
         assert (
             isinstance(self.pivot_relaxation_steps, int)
             and self.pivot_relaxation_steps > 0
@@ -116,7 +121,7 @@ class BmsspSolver:
         if target_tree_depth is not None:
             self.target_tree_depth = target_tree_depth
         else:
-            self.target_tree_depth = int(log(graph_len, 2) ** (2 / 3))  # t
+            self.target_tree_depth = int(log(graph_len, 2) ** (2 / 3))   # t
         assert (
             isinstance(self.target_tree_depth, int)
             and self.target_tree_depth > 0
@@ -127,9 +132,7 @@ class BmsspSolver:
         #################################
         # Compute max_recursion_depth based on t
         # Modification: Use log base 2 to ensure everything is properly relaxed
-        self.max_recursion_depth = ceil(
-            log(graph_len, 2) / self.target_tree_depth
-        )  # l
+        self.max_recursion_depth = ceil(log(graph_len, 2) / self.target_tree_depth) # l
 
         #################################
         # Run the algorithm
@@ -354,7 +357,7 @@ class BmsspSolver:
         # Work budget that scales with level: k*2**(l*t)
         # k = self.pivot_relaxation_steps
         # t = self.target_tree_depth
-        work_budget = self.pivot_relaxation_steps * 2 ** (recursion_depth * self.target_tree_depth)
+        work_budget = self.pivot_relaxation_steps * 2 ** (recursion_depth * self.target_tree_depth) if self.use_work_budget else inf
         # Main loop
         while len(new_frontier) < work_budget and not data_struct.is_empty():
             # Step 10: Pull from data_struct: get data_struct_frontier_temp and upper_bound_i

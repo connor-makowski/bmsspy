@@ -1,5 +1,5 @@
 from .bmssp_solver import BmsspSolver
-from .helpers.utils import input_check, reconstruct_path
+from .helpers.utils import input_check, reconstruct_path, convert_to_constant_degree
 
 
 def bmssp(
@@ -55,24 +55,44 @@ def bmssp(
     input_check(
         graph=graph, origin_id=origin_id_check, destination_id=destination_id
     )
+    
+    constant_degree_dict = convert_to_constant_degree(graph)
+
+    cd_graph = constant_degree_dict["graph"]
+    cd_idx_map = constant_degree_dict["idx_map"]
+
     # Run the BMSSP Algorithm to relax as many edges as possible.
-    solver = BmsspSolver(graph, origin_id)
+    solver = BmsspSolver(cd_graph, origin_id)
     if destination_id is not None:
         if solver.distance_matrix[destination_id] == float("inf"):
             raise Exception(
                 "Something went wrong, the origin and destination nodes are not connected."
             )
+        
+    predecessor_matrix = []
+    for loc_idx, node_idx in enumerate(solver.predecessor[:len(graph)]):
+        while True:
+            if node_idx == -1:
+                predecessor_matrix.append(node_idx)
+                break
+            else:
+                mapped_node_idx = cd_idx_map[node_idx]
+                if mapped_node_idx < len(graph) and mapped_node_idx != loc_idx:
+                    predecessor_matrix.append(mapped_node_idx)
+                    break
+                else:
+                    node_idx = solver.predecessor[node_idx]    
 
     return {
         "origin_id": (
             origin_id if isinstance(origin_id, int) else list(origin_id)
         ),
         "destination_id": destination_id,
-        "predecessor": solver.predecessor,
-        "distance_matrix": solver.distance_matrix,
+        "predecessor": predecessor_matrix,
+        "distance_matrix": solver.distance_matrix[:len(graph)],
         "path": (
             reconstruct_path(
-                destination_id=destination_id, predecessor=solver.predecessor
+                destination_id=destination_id, predecessor=predecessor_matrix
             )
             if destination_id
             else None

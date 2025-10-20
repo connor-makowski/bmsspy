@@ -85,11 +85,11 @@ def convert_to_constant_degree(graph):
     Returns:
     dict: A dictionary containing the converted constant degree graph and the output mapping.
         - 'graph' (list of dict): The converted constant degree graph.
-        - 'idx_map' (dict): A mapping from all node indices to original node indices.
-            - Keys are node indices in the converted graph.
-            - Values are the corresponding original node indices.
+        - 'idx_map' (list of int): A mapping from all node indices to original node indices.
+            - Eg: idx_map[5] = 2 means node 5 in the new graph corresponds to node 2 in the original graph.
             - Note: All nodes below the original graph length map to themselves.
     """
+    original_graph_len = len(graph)
     graph = deepcopy(graph)
     in_graph = [{} for _ in range(len(graph))]
     for node_idx, node_neighbors in enumerate(graph):
@@ -103,14 +103,13 @@ def convert_to_constant_degree(graph):
         if indegree > 2 or outdegree > 2 or (indegree + outdegree) > 3:
             nodes_to_partition[node_idx] = indegree + outdegree
 
-    idx_map = {idx: idx for idx in range(len(graph))}
+    idx_map = list(range(len(graph)))
 
     for node_idx, num_partitions in nodes_to_partition.items():
         local_idx_mapping = [node_idx] + list(range(len(graph), len(graph) + num_partitions - 1))
         graph.extend([{} for _ in range(num_partitions - 1)])
         in_graph.extend([{} for _ in range(num_partitions - 1)])
-        for local_idx in local_idx_mapping:
-            idx_map[local_idx] = node_idx
+        idx_map.extend([node_idx] * (num_partitions - 1))
 
         out_dict = dict(graph[node_idx])
         in_dict = dict(in_graph[node_idx])
@@ -140,10 +139,11 @@ def convert_to_constant_degree(graph):
         for item_idx in range(len(local_idx_mapping)):
             from_idx = local_idx_mapping[item_idx]
             to_idx = local_idx_mapping[(item_idx + 1) % len(local_idx_mapping)]
-            graph[from_idx][to_idx] = 1e-8
-            in_graph[to_idx][from_idx] = 1e-8
+            graph[from_idx][to_idx] = 0
+            in_graph[to_idx][from_idx] = 0
 
     return {
         "graph": graph,
-        "idx_map": idx_map
+        "idx_map": idx_map,
+        "original_graph_len": original_graph_len,
     }

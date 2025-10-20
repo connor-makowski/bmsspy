@@ -1,5 +1,4 @@
 from bmsspy.solvers import bmssp
-from bmsspy.helpers.utils import convert_to_constant_degree
 
 print("\n===============\nBasic BMSSP Tests:\n===============")
 
