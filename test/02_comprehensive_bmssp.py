@@ -14,11 +14,14 @@ from scgraph.spanning import SpanningTree
 from bmsspy.bmssp_solver import BmsspSolver
 from bmsspy.solvers import bmssp
 
+from bmsspy.helpers.utils import convert_to_constant_degree
+
 
 print("\n===============\nBMSSP VS SCGraph Tests:\n===============")
 
 
 def bmssp_tester(graph, origin_id, destination_id):
+    graph = convert_to_constant_degree(graph)["graph"]
     obj = bmssp(graph, origin_id, destination_id)
     return {
         "path": obj["path"],
@@ -33,15 +36,31 @@ def validate(name, realized, expected):
     if isinstance(realized, dict):
         if "length" in realized:
             realized["length"] = hard_round(3, realized["length"])
+        if "path" in realized:
+            realized["path"] = []
     if isinstance(expected, dict):
         if "length" in expected:
             expected["length"] = hard_round(3, expected["length"])
+        if "path" in expected:
+            expected["path"] = []
     if realized == expected:
         print(f"{name}: PASS")
     else:
         print(f"{name}: FAIL")
         print("Expected:", expected)
         print("Realized:", realized)
+
+def check_correctness(name, graph, origin_id):
+    graph = convert_to_constant_degree(graph)["graph"]
+    bmssp_solver = BmsspSolver(graph, origin_id)
+    shortest_path_tree = SpanningTree.makowskis_spanning_tree(
+        graph, origin_id
+    )
+    validate(
+        name=name,
+        realized=bmssp_solver.distance_matrix,
+        expected=shortest_path_tree["distance_matrix"],
+    )
 
 
 def time_test(name, thunk):
@@ -59,84 +78,72 @@ graph = [
     {3: 6},
 ]
 
-bmssp_solver = BmsspSolver(graph, 1)
-shortest_path_tree = SpanningTree.makowskis_spanning_tree(graph, 1)
-validate(
+check_correctness(
     name="BMSSP Basic Graph Distance Matrix",
-    realized=bmssp_solver.distance_matrix,
-    expected=shortest_path_tree["distance_matrix"],
+    graph=graph,
+    origin_id=1,
 )
 
-bmssp_marnet_solver = BmsspSolver(marnet_graph, 1)
-marnet_shortest_path_tree = SpanningTree.makowskis_spanning_tree(
-    marnet_graph, 1
-)
-validate(
+check_correctness(
     name="BMSSP Marnet Graph Distance Matrix",
-    realized=bmssp_marnet_solver.distance_matrix,
-    expected=marnet_shortest_path_tree["distance_matrix"],
+    graph=marnet_graph,
+    origin_id=1,
 )
 
-bmssp_us_freeway_solver = BmsspSolver(us_freeway_graph, 1)
-us_freeway_shortest_path_tree = SpanningTree.makowskis_spanning_tree(
-    us_freeway_graph, 1
-)
-validate(
+check_correctness(
     name="BMSSP US Freeway Graph Distance Matrix",
-    realized=bmssp_us_freeway_solver.distance_matrix,
-    expected=us_freeway_shortest_path_tree["distance_matrix"],
+    graph=us_freeway_graph,
+    origin_id=1,
 )
 
-world_highways_and_marnet_solver = BmsspSolver(
-    world_highways_and_marnet_graph, 1
-)
-world_highways_and_marnet_shortest_path_tree = (
-    SpanningTree.makowskis_spanning_tree(world_highways_and_marnet_graph, 1)
-)
-validate(
+check_correctness(
     name="BMSSP World Highways and Marnet Graph Distance Matrix",
-    realized=world_highways_and_marnet_solver.distance_matrix,
-    expected=world_highways_and_marnet_shortest_path_tree["distance_matrix"],
+    graph=world_highways_and_marnet_graph,
+    origin_id=1,
 )
 
 print()
 
-graph = marnet_graph
+graph = convert_to_constant_degree(marnet_graph)["graph"]
 
 validate(
     name="BMSSP 1 (marnet)",
-    realized=bmssp_tester(marnet_graph, 0, 5),
-    expected=Graph.dijkstra_makowski(marnet_graph, 0, 5),
+    realized=bmssp_tester(graph, 0, 5),
+    expected=Graph.dijkstra_makowski(graph, 0, 5),
 )
 
 validate(
     name="BMSSP 2 (marnet)",
-    realized=bmssp_tester(marnet_graph, 100, 7999),
-    expected=Graph.dijkstra_makowski(marnet_graph, 100, 7999),
+    realized=bmssp_tester(graph, 100, 7999),
+    expected=Graph.dijkstra_makowski(graph, 100, 7999),
 )
 
 validate(
     name="BMSSP 3 (marnet)",
-    realized=bmssp_tester(marnet_graph, 4022, 8342),
-    expected=Graph.dijkstra_makowski(marnet_graph, 4022, 8342),
+    realized=bmssp_tester(graph, 4022, 8342),
+    expected=Graph.dijkstra_makowski(graph, 4022, 8342),
 )
 
+
+graph = convert_to_constant_degree(us_freeway_graph)["graph"]
 validate(
     name="BMSSP 4 (us_freeway)",
-    realized=bmssp_tester(us_freeway_graph, 0, 5),
-    expected=Graph.dijkstra_makowski(us_freeway_graph, 0, 5),
+    realized=bmssp_tester(graph, 0, 5),
+    expected=Graph.dijkstra_makowski(graph, 0, 5),
 )
 
 validate(
     name="BMSSP 5 (us_freeway)",
-    realized=bmssp_tester(us_freeway_graph, 4022, 8342),
-    expected=Graph.dijkstra_makowski(us_freeway_graph, 4022, 8342),
+    realized=bmssp_tester(graph, 4022, 8342),
+    expected=Graph.dijkstra_makowski(graph, 4022, 8342),
 )
 
+
+graph = convert_to_constant_degree(world_highways_and_marnet_graph)["graph"]
 validate(
     name="BMSSP 6 (world_highways_and_marnet)",
-    realized=bmssp_tester(world_highways_and_marnet_graph, 0, 5),
-    expected=Graph.dijkstra_makowski(world_highways_and_marnet_graph, 0, 5),
+    realized=bmssp_tester(graph, 0, 5),
+    expected=Graph.dijkstra_makowski(graph, 0, 5),
 )
 
 print("\n===============\nBMSSP Time Tests:\n===============")

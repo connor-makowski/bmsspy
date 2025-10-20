@@ -106,7 +106,7 @@ class BmsspSolver:
         else:
             self.pivot_relaxation_steps = ceil(
                 log(graph_len, 2) ** (1 / 3)
-            )  # k
+            ) + 1 # k
         assert (
             isinstance(self.pivot_relaxation_steps, int)
             and self.pivot_relaxation_steps > 0
@@ -116,7 +116,7 @@ class BmsspSolver:
         if target_tree_depth is not None:
             self.target_tree_depth = target_tree_depth
         else:
-            self.target_tree_depth = int(log(graph_len, 2) ** (2 / 3))  # t
+            self.target_tree_depth = ceil(log(graph_len, 2) ** (2 / 3)) + 1  # t
         assert (
             isinstance(self.target_tree_depth, int)
             and self.target_tree_depth > 0
@@ -274,11 +274,12 @@ class BmsspSolver:
         # If we exceeded k, trim by new boundary B' = max db over visited and return new_frontier = {db < B'}
         if len(new_frontier) > self.pivot_relaxation_steps:
             new_upper_bound = max(self.distance_matrix[i] for i in new_frontier)
-            new_frontier = {
-                i
-                for i in new_frontier
-                if self.distance_matrix[i] < new_upper_bound
-            }
+            if new_upper_bound > 0:
+                new_frontier = {
+                    i
+                    for i in new_frontier
+                    if self.distance_matrix[i] < new_upper_bound
+                }
         else:
             # Success for this base case: return current upper_bound unchanged and the completed set
             new_upper_bound = upper_bound
