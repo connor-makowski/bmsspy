@@ -98,9 +98,10 @@ def convert_to_constant_degree(graph):
     
     nodes_to_partition = {}
     for node_idx in range(len(graph)):
-        max_degree = max(len(graph[node_idx]), len(in_graph[node_idx]))
-        if max_degree > 2:
-            nodes_to_partition[node_idx] = max_degree
+        indegree = len(in_graph[node_idx])
+        outdegree = len(graph[node_idx])
+        if indegree > 2 or outdegree > 2 or (indegree + outdegree) > 3:
+            nodes_to_partition[node_idx] = indegree + outdegree
 
     idx_map = {idx: idx for idx in range(len(graph))}
 
@@ -117,19 +118,23 @@ def convert_to_constant_degree(graph):
         graph[node_idx] = {}
         in_graph[node_idx] = {}
 
+        local_idx = 0
+
         # Break the node into partitions assigning one outgoing edge per node
-        for local_idx, (out_node_idx, out_node_weight) in enumerate(out_dict.items()):
+        for out_node_idx, out_node_weight in out_dict.items():
             new_idx = local_idx_mapping[local_idx]
             graph[new_idx][out_node_idx] = out_node_weight
             in_graph[out_node_idx].pop(node_idx, None)
             in_graph[out_node_idx][new_idx] = out_node_weight
+            local_idx += 1
 
         # Break the node into partitions assigning one incoming edge per node
-        for local_idx, (in_node_idx, in_node_weight) in enumerate(in_dict.items()):
+        for in_node_idx, in_node_weight in in_dict.items():
             new_idx = local_idx_mapping[local_idx]
             in_graph[new_idx][in_node_idx] = in_node_weight
             graph[in_node_idx].pop(node_idx, None)
             graph[in_node_idx][new_idx] = in_node_weight
+            local_idx += 1
 
         # Cycle connect all partitions with zero-weight edges
         for item_idx in range(len(local_idx_mapping)):
