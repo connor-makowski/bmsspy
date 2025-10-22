@@ -111,7 +111,7 @@ class BmsspSolver:
         if pivot_relaxation_steps is not None:
             self.pivot_relaxation_steps = pivot_relaxation_steps
         else:
-            self.pivot_relaxation_steps = ceil(log(graph_len, 2) ** (1 / 3)) # k
+            self.pivot_relaxation_steps = int(log(graph_len, 2) ** (1 / 3)) # k
         assert (
             isinstance(self.pivot_relaxation_steps, int)
             and self.pivot_relaxation_steps > 0
@@ -133,6 +133,13 @@ class BmsspSolver:
         # Compute max_recursion_depth based on t
         # Modification: Use log base 2 to ensure everything is properly relaxed
         self.max_recursion_depth = ceil(log(graph_len, 2) / self.target_tree_depth) # l
+
+        # print("#################")
+        # print("Graph Length:", graph_len)
+        # print("Pivot Relaxation Steps (k):", self.pivot_relaxation_steps)
+        # print("Target Tree Depth (t):", self.target_tree_depth)
+        # print("Max Recursion Depth (l):", self.max_recursion_depth)
+        # print("TL Work Budget:", self.pivot_relaxation_steps * 2 ** (self.max_recursion_depth * self.target_tree_depth))
 
         #################################
         # Run the algorithm
@@ -254,7 +261,8 @@ class BmsspSolver:
         heap = []
         heappush(heap, (self.distance_matrix[first_frontier], first_frontier))
         # Grow until we exceed pivot_relaxation_steps (practical limit), as in Algorithm 2
-        while heap and len(new_frontier) < self.pivot_relaxation_steps + 1:
+        # Modification: Use <= to ensure we relax enough nodes instead of < x + 1 for clarity on steps
+        while heap and len(new_frontier) <= self.pivot_relaxation_steps:
             frontier_distance, frontier_idx = heappop(heap)
             # Addition: Add check to ensure that we do not get caught in a relaxation loop
             if frontier_idx in new_frontier:
@@ -277,12 +285,11 @@ class BmsspSolver:
         # If we exceeded k, trim by new boundary B' = max db over visited and return new_frontier = {db < B'}
         if len(new_frontier) > self.pivot_relaxation_steps:
             new_upper_bound = max(self.distance_matrix[i] for i in new_frontier)
-            if new_upper_bound > upper_bound:
-                new_frontier = {
-                    i
-                    for i in new_frontier
-                    if self.distance_matrix[i] < new_upper_bound
-                }
+            new_frontier = {
+                i
+                for i in new_frontier
+                if self.distance_matrix[i] < new_upper_bound
+            }
         else:
             # Success for this base case: return current upper_bound unchanged and the completed set
             new_upper_bound = upper_bound
@@ -435,21 +442,7 @@ class BmsspSolver:
             )
 
         # Step 22: Final return
-        # TODO: Verify this is necessary. Completion bound should always be <= upper_bound
-        # new_bound = min(completion_bound, upper_bound)
-        # if completion_bound > upper_bound:
-        #     print(f"----Warning: completion_bound {completion_bound} > upper_bound {upper_bound}")
-
-        # new_frontier = new_frontier | {
-        #     v
-        #     for v in temp_frontier
-        #     if self.distance_matrix[v] < new_bound
-        # }
-        # if printing:
-        #     print(f"{spacing}- Finished: New Bound: {new_bound}, New Frontier: {new_frontier}")
-
-        # return new_bound, new_frontier
-
+        # Modification: No need to use min(completion_bound, upper_bound) as completion_bound is always <= upper_bound
         new_frontier = new_frontier | {
             v
             for v in temp_frontier

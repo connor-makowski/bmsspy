@@ -6,6 +6,9 @@ def bmssp(
     graph: list[dict[int, int | float]],
     origin_id: int | set[int],
     destination_id: int = None,
+    pivot_relaxation_steps: int | None = None,
+    target_tree_depth: int | None = None,
+    use_work_budget: bool = True,
 ):
     """
     Function:
@@ -31,7 +34,19 @@ def bmssp(
 
     Optional Arguments:
 
-    - None
+    - pivot_relaxation_steps:
+        - Type: int | None
+        - Default: ceil(log(len(graph), 2) ** (1 / 3))
+        - What: The number of relaxation steps to perform when finding pivots (k). If None, it will be computed based on the graph size.
+    - target_tree_depth:
+        - Type: int | None
+        - Default: int(log(len(graph), 2) ** (2 / 3))
+        - What: The target depth of the search tree (t). If None, it will be computed based on the graph size.
+    - use_work_budget:
+        - Type: bool
+        - Default: True
+        - What: Whether to use a work budget to limit the number of nodes processed at each recursion level.
+        - Note: If False, the algorithm will assume an infinite work budget.
 
     Returns:
 
@@ -62,7 +77,13 @@ def bmssp(
     cd_idx_map = constant_degree_dict["idx_map"]
 
     # Run the BMSSP Algorithm to relax as many edges as possible.
-    solver = BmsspSolver(cd_graph, origin_id)
+    solver = BmsspSolver(
+        cd_graph, 
+        origin_id, 
+        pivot_relaxation_steps=pivot_relaxation_steps, 
+        target_tree_depth=target_tree_depth, 
+        use_work_budget=use_work_budget
+    )
     if destination_id is not None:
         if solver.distance_matrix[destination_id] == float("inf"):
             raise Exception(
@@ -81,7 +102,13 @@ def bmssp(
                     predecessor_matrix.append(mapped_node_idx)
                     break
                 else:
-                    node_idx = solver.predecessor[node_idx]    
+                    node_idx = solver.predecessor[node_idx]
+
+    # test_idx = 815
+    # for new_idx, idx in enumerate(cd_idx_map):
+    #     if idx == test_idx:
+    #         print("New IDX: ", new_idx, "Distance: ", solver.distance_matrix[new_idx], "Predecessor: ", solver.predecessor[new_idx])
+    # print(solver.graph[13931])
 
     return {
         "origin_id": (

@@ -21,7 +21,6 @@ print("\n===============\nBMSSP VS SCGraph Tests:\n===============")
 
 
 def bmssp_tester(graph, origin_id, destination_id):
-    graph = convert_to_constant_degree(graph)["graph"]
     obj = bmssp(graph, origin_id, destination_id)
     return {
         "path": obj["path"],

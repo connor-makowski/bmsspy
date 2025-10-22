@@ -39,19 +39,22 @@ for gridgraph_size in [25, 50, 100]:
         scspan_output = SpanningTree.makowskis_spanning_tree(
             graph, origin_idx
         )
-        bmssp_output = bmssp(graph, origin_idx)
+        bmssp_output = bmssp(gridgraph.graph, origin_idx)
 
         output_text = f"Gridgraph ({case_name}, {origin_dict}) on {gridgraph.x_size}x{gridgraph.y_size} matrix: "
         if bmssp_output["distance_matrix"] == scspan_output["distance_matrix"]:
             print(f"{output_text}PASS")
         else:
-            print(f"{output_text}FAIL")
-            for idx in range(len(graph)):
+            success = True
+            for idx in range(len(gridgraph.graph)):
                 if (
-                    abs(bmssp_output["distance_matrix"][idx] - scspan_output["distance_matrix"][idx])>1e-6
+                    abs(bmssp_output['distance_matrix'][idx] - scspan_output['distance_matrix'][idx]) > 1e-6
                 ):
-                    print(
-                        f"  Node {idx}: BMSSP={bmssp_output['distance_matrix'][idx]}, SCSpan={scspan_output['distance_matrix'][idx]}"
-                    )
+                    print(f"{output_text}FAIL")
+                    # print(
+                    #     f"  Node {idx}: BMSSP={bmssp_output['distance_matrix'][idx]}, SCSpan={scspan_output['distance_matrix'][idx]}"
+                    # )
+                    success=False
                     break
-
+            if success:
+                print(f"{output_text}PASS")
