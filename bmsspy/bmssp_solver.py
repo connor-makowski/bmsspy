@@ -45,10 +45,9 @@ class BmsspSolver:
         self,
         graph: list[dict[int, int | float]],
         origin_ids: set[int] | int,
-        DataStructure=BmsspDataStructure,
+        data_structure=BmsspDataStructure,
         pivot_relaxation_steps: int | None = None,
         target_tree_depth: int | None = None,
-        use_work_budget: bool = True,
     ):
         """
         Function:
@@ -67,7 +66,7 @@ class BmsspSolver:
 
         Optional Arguments:
 
-        - DataStructure:
+        - data_structure:
             - Type: class
             - Default: BmsspDataStructure
             - What: The data structure class to be used for managing the frontier during the BMSSP algorithm.
@@ -79,11 +78,6 @@ class BmsspSolver:
             - Type: int | None
             - Default: int(log(len(graph), 2) ** (2 / 3))
             - What: The target depth of the search tree (t). If None, it will be computed based on the graph size.
-        - use_work_budget:
-            - Type: bool
-            - Default: True
-            - What: Whether to use a work budget to limit the number of nodes processed at each recursion level.
-            - Note: If False, the algorithm will assume an infinite work budget.
         """
         #################################
         # Initial checks and data setup
@@ -98,16 +92,15 @@ class BmsspSolver:
         # Addition: Initialize Predecessor array for path reconstruction
         self.predecessor = [-1] * graph_len
         # Allow for arbitrary data structures
-        self.DataStructure = DataStructure
+        self.data_structure = data_structure
         for origin_id in origin_ids:
             self.distance_matrix[origin_id] = 0
-        self.use_work_budget = use_work_budget
 
         #####################################
         # Practical choices (k and t) based on n
         #####################################
         # Calculate k
-        # Modification: Use log base 2 to ensure everything is properly relaxed and round up k
+        # Modification: Use log base 2 to ensure everything is properly relaxed
         if pivot_relaxation_steps is not None:
             self.pivot_relaxation_steps = pivot_relaxation_steps
         else:
@@ -133,13 +126,6 @@ class BmsspSolver:
         # Compute max_recursion_depth based on t
         # Modification: Use log base 2 to ensure everything is properly relaxed
         self.max_recursion_depth = ceil(log(graph_len, 2) / self.target_tree_depth) # l
-
-        # print("#################")
-        # print("Graph Length:", graph_len)
-        # print("Pivot Relaxation Steps (k):", self.pivot_relaxation_steps)
-        # print("Target Tree Depth (t):", self.target_tree_depth)
-        # print("Max Recursion Depth (l):", self.max_recursion_depth)
-        # print("TL Work Budget:", self.pivot_relaxation_steps * 2 ** (self.max_recursion_depth * self.target_tree_depth))
 
         #################################
         # Run the algorithm
@@ -261,7 +247,7 @@ class BmsspSolver:
         heap = []
         heappush(heap, (self.distance_matrix[first_frontier], first_frontier))
         # Grow until we exceed pivot_relaxation_steps (practical limit), as in Algorithm 2
-        # Modification: Use <= to ensure we relax enough nodes instead of < x + 1 for clarity on steps
+        # Modification: Use <= instead of < + 1 for clarity on steps
         while heap and len(new_frontier) <= self.pivot_relaxation_steps:
             frontier_distance, frontier_idx = heappop(heap)
             # Addition: Add check to ensure that we do not get caught in a relaxation loop
@@ -324,33 +310,22 @@ class BmsspSolver:
             - Type: set[int]
             - What: Set of vertices v such that distance_matrix[v] < new_upper_bound
         """
-        # printing = True
-        # spacing = f"{recursion_depth}: "+"    " * (self.max_recursion_depth - recursion_depth)
-        # if printing:
-        #     print(f"{spacing}* Starting: Recursion depth: {recursion_depth}, Frontier: {frontier}, Upper bound: {upper_bound}")
-
         # Base case
         if recursion_depth == 0:
             new_upper_bound, new_frontier = self.base_case(
                 upper_bound, frontier
             )
-            # if printing:
-            #     print(f"{spacing}Base case reached: Upper Bound: {new_upper_bound}, Frontier: {new_frontier}")
             return new_upper_bound, new_frontier
 
         # Step 4: Find pivots and temporary frontier
         pivots, temp_frontier = self.find_pivots(upper_bound, frontier)
-        # if printing:
-        #     print(f"{spacing}- Pivots: {pivots}, Temp Frontier: {temp_frontier}")
 
         # Step 5–6: initialize data_struct with pivots
         # subset_size = 2^((l-1) * t)
         subset_size = 2 ** ((recursion_depth - 1) * self.target_tree_depth)
-        data_struct = self.DataStructure(
+        data_struct = self.data_structure(
             subset_size=subset_size, upper_bound=upper_bound
         )
-        # if printing:
-        #     print(f"{spacing}- Root Inserting: {pivots}")
         for p in pivots:
             data_struct.insert_key_value(p, self.distance_matrix[p])
 
@@ -364,19 +339,15 @@ class BmsspSolver:
         # Work budget that scales with level: k*2**(l*t)
         # k = self.pivot_relaxation_steps
         # t = self.target_tree_depth
-        work_budget = self.pivot_relaxation_steps * 2 ** (recursion_depth * self.target_tree_depth) if self.use_work_budget else inf
+        work_budget = self.pivot_relaxation_steps * 2 ** (recursion_depth * self.target_tree_depth)
         # Main loop
         while len(new_frontier) < work_budget and not data_struct.is_empty():
             # Step 10: Pull from data_struct: get data_struct_frontier_temp and upper_bound_i
             data_struct_frontier_bound_temp, data_struct_frontier_temp = (
                 data_struct.pull()
             )
-            # if printing:
-            #     print(f"{spacing}- DS Pulled: Bound: {data_struct_frontier_bound_temp}, Frontier Temp: {data_struct_frontier_temp}")
 
             # Step 11: Recurse on (l-1, data_struct_frontier_bound_temp, data_struct_frontier_temp)
-            # if printing:
-            #     print(f"{spacing}- Recursing:")
             completion_bound, new_frontier_temp = self.recursive_bmssp(
                 recursion_depth - 1,
                 data_struct_frontier_bound_temp,
@@ -385,8 +356,6 @@ class BmsspSolver:
 
             # Track results
             new_frontier.update(new_frontier_temp)
-            # if printing:
-            #     print(f"{spacing}- Recursed: Updated Completion Bound: {completion_bound}, New Frontier Temp: {new_frontier_temp}")
 
             # Step 13: Initialize intermediate_frontier to batch-prepend
             intermediate_frontier = set()
@@ -412,8 +381,6 @@ class BmsspSolver:
                             <= new_distance
                             < upper_bound
                         ):
-                            # if printing:
-                            #     print(f"{spacing}- Relax Inserting: {connection_idx}")
                             data_struct.insert_key_value(
                                 connection_idx, new_distance
                             )
@@ -435,8 +402,6 @@ class BmsspSolver:
                 < data_struct_frontier_bound_temp
             }
 
-            # if printing:
-            #     print(f"{spacing}- Batch Inserting {intermediate_frontier | data_struct_frontier_temp_filtered}")
             data_struct.batch_prepend(
                 intermediate_frontier | data_struct_frontier_temp_filtered
             )
@@ -448,7 +413,5 @@ class BmsspSolver:
             for v in temp_frontier
             if self.distance_matrix[v] < completion_bound
         }
-        # if printing:
-        #     print(f"{spacing}- Finished: Completion Bound: {completion_bound}, New Frontier: {new_frontier}")
 
         return completion_bound, new_frontier

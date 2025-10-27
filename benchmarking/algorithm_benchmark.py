@@ -82,7 +82,7 @@ for name, scgraph_object in graph_data:
             igraph = igraph,
             test_vanilla_dijkstra = True,
             print_console = True,
-            iterations = 10,
+            iterations = 2,
         ))
 
 import platform

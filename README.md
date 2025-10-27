@@ -19,7 +19,7 @@ pip install bmsspy
 ### Use
 
 ```python
-from bmsspy.solvers import bmssp
+from bmsspy.solvers import Bmssp
 
 graph = [
     {1: 1, 2: 1},
@@ -29,7 +29,9 @@ graph = [
     {}
 ]
 
-bmssp(graph, 0) #=>
+bmssp_graph = (graph) 
+
+bmssp_graph.solve(origin_id=0) #=>
 # {
 #     'origin_id': 0,
 #     'destination_id': None,
@@ -39,7 +41,7 @@ bmssp(graph, 0) #=>
 #     'length': None
 # }
 
-bmssp(graph, 0, 4) #=>
+bmssp_graph.solve(origin_id=0, destination_id=4) #=>
 # {
 #     'origin_id': 0,
 #     'destination_id': 4,

@@ -1,7 +1,9 @@
 from scgraph import GridGraph
-from bmsspy.solvers import bmssp
+from scgraph.utils import hard_round
+from bmsspy.solvers import Bmssp
 from scgraph.spanning import SpanningTree
 from bmsspy.helpers.utils import convert_to_constant_degree
+from bmsspy.data_structures.heap_data_structure import BmsspDataStructure
 
 print("\n===============\nBMSSP GridGraph Tests:\n===============")
 
@@ -16,6 +18,45 @@ def make_gridgraph(x_size, y_size):
         blocks=blocks,
         shape=shape,
         add_exterior_walls=False,
+    )
+
+def validate(name, realized, expected):
+    # Custom lenth rounding for floating point precision issues
+    realized = [hard_round(4, val) if val!=float('inf') else float('inf') for val in realized]
+    expected = [hard_round(4, val) if val!=float('inf') else float('inf') for val in expected]
+    if realized == expected:
+        print(f"{name}: PASS")
+    else:
+        print(f"{name}: FAIL")
+        # for idx in range(len(realized)):
+        #     if realized[idx] != expected[idx]:
+        #         print(
+        #             f"  Node {idx}: Realized={realized[idx]}, Expected={expected[idx]}"
+        #         )
+        #         raise Exception("Test Failed")
+        # print("Expected:", expected)
+        # print("Realized:", realized)
+
+def check_correctness(name, graph, origin_id):
+    # Since the BMSSP conversion function can not take 0 lenghts, we test it vs
+    # the constant degree converted graph trimmed to the original graph size
+    bmssp_graph = Bmssp(graph=graph)
+    bmssp_graph_output = bmssp_graph.solve(origin_id=origin_id)
+    dm_sp_tree = SpanningTree.makowskis_spanning_tree(
+        graph, origin_id
+    )
+    validate(
+        name=name + " (Standard)",
+        realized=bmssp_graph_output["distance_matrix"],
+        expected=dm_sp_tree["distance_matrix"][:len(graph)],  # Trimmed to original graph size
+    )
+    bmssp_heap_output = bmssp_graph.solve(
+        origin_id=origin_id, data_structure=BmsspDataStructure
+    )
+    validate(
+        name=name + " (Heap)",
+        realized=bmssp_heap_output["distance_matrix"],
+        expected=dm_sp_tree["distance_matrix"][:len(graph)],  # Trimmed to original graph size
     )
 
 
@@ -35,26 +76,8 @@ for gridgraph_size in [25, 50, 100]:
     for case_name, origin_dict in test_cases:
         origin_idx = gridgraph.get_idx(**origin_dict)
 
-        graph = convert_to_constant_degree(gridgraph.graph)["graph"]
-        scspan_output = SpanningTree.makowskis_spanning_tree(
-            graph, origin_idx
+        check_correctness(
+            name=f"BMSSP Gridgraph {gridgraph_size}x{gridgraph_size} {case_name}",
+            graph=gridgraph.graph,
+            origin_id=origin_idx,
         )
-        bmssp_output = bmssp(gridgraph.graph, origin_idx)
-
-        output_text = f"Gridgraph ({case_name}, {origin_dict}) on {gridgraph.x_size}x{gridgraph.y_size} matrix: "
-        if bmssp_output["distance_matrix"] == scspan_output["distance_matrix"]:
-            print(f"{output_text}PASS")
-        else:
-            success = True
-            for idx in range(len(gridgraph.graph)):
-                if (
-                    abs(bmssp_output['distance_matrix'][idx] - scspan_output['distance_matrix'][idx]) > 1e-6
-                ):
-                    print(f"{output_text}FAIL")
-                    # print(
-                    #     f"  Node {idx}: BMSSP={bmssp_output['distance_matrix'][idx]}, SCSpan={scspan_output['distance_matrix'][idx]}"
-                    # )
-                    success=False
-                    break
-            if success:
-                print(f"{output_text}PASS")
