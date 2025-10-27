@@ -13,9 +13,9 @@ graph_data = [
     ('100x100 GridGraph', make_gridgraph(100, 100)),
     ('200x200 GridGraph', make_gridgraph(200, 200)),
     ('400x400 GridGraph', make_gridgraph(400, 400)),
-    # ('800x800 GridGraph', make_gridgraph(800, 800)),
-    # ('1600x1600 GridGraph', make_gridgraph(1600, 1600)),
-    # ('3200x3200 GridGraph', make_gridgraph(3200, 3200)),
+    ('800x800 GridGraph', make_gridgraph(800, 800)),
+    ('1600x1600 GridGraph', make_gridgraph(1600, 1600)),
+    ('3200x3200 GridGraph', make_gridgraph(3200, 3200)),
 ]
 
 output = []

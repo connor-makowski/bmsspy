@@ -12,10 +12,9 @@ from bmsspy.helpers.utils import convert_to_constant_degree
 from bmsspy.data_structures.heap_data_structure import BmsspDataStructure as BmsspHeapDataStructure
 
 
-cd_graph_limit = 1000000
 vanilla_limit = 80000
 nx_limit = 1000000
-ig_limit = 150000
+ig_limit = 1000000
 
 def run_algo(algo_key:str, algo_func, algo_kwargs:dict, output:dict, do_run:bool=True, iterations:int=10, print_console:bool=True):
     if do_run:
@@ -28,14 +27,13 @@ def run_algo(algo_key:str, algo_func, algo_kwargs:dict, output:dict, do_run:bool
     else:
         output[algo_key+"_time_ms"] = float('nan')
         output[algo_key+"_stdev"] = float('nan')
+        output['raw'][algo_key] = []
 
 def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None, test_vanilla_dijkstra:bool=False, print_console:bool=True, iterations:int=10):
 
-    if len(scgraph) < cd_graph_limit:
-        bmssp_graph = Bmssp(graph = scgraph)
-        constant_degree_scgraph = bmssp_graph.constant_degree_dict['graph']
-    else:
-        constant_degree_scgraph = []
+
+    bmssp_graph = Bmssp(graph = scgraph)
+    constant_degree_scgraph = bmssp_graph.constant_degree_dict['graph']
 
     output = {
         'graph_name': graph_name,
@@ -59,7 +57,7 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
         algo_func = bmssp_graph.solve,
         algo_kwargs = {'origin_id': origin},
         output = output,
-        do_run = len(scgraph) < cd_graph_limit,
+        do_run = True,
         iterations = iterations,
         print_console = print_console
     )
@@ -69,7 +67,7 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
         algo_func = bmssp_graph.solve,
         algo_kwargs = {'origin_id': origin, 'data_structure': BmsspHeapDataStructure},
         output = output,
-        do_run = len(scgraph) < cd_graph_limit,
+        do_run = True,
         iterations = iterations,
         print_console = print_console
     )
@@ -79,7 +77,7 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
         algo_func = SCSpanning.makowskis_spanning_tree,
         algo_kwargs = {'graph': constant_degree_scgraph, 'node_id': origin},
         output = output,
-        do_run = len(scgraph) < cd_graph_limit,
+        do_run = True,
         iterations = iterations,
         print_console = print_console
     )
