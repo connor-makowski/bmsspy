@@ -1,9 +1,11 @@
+# General Imports
 from scgraph import GridGraph
 from scgraph.utils import hard_round
-from bmsspy.solvers import Bmssp
+
+# Local Imports
+from bmsspy.entrypoint import Bmssp
 from scgraph.spanning import SpanningTree
-from bmsspy.helpers.utils import convert_to_constant_degree
-from bmsspy.data_structures.heap_data_structure import BmsspDataStructure
+from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 
 print("\n===============\nBMSSP GridGraph Tests:\n===============")
 
@@ -51,7 +53,7 @@ def check_correctness(name, graph, origin_id):
         expected=dm_sp_tree["distance_matrix"][:len(graph)],  # Trimmed to original graph size
     )
     bmssp_heap_output = bmssp_graph.solve(
-        origin_id=origin_id, data_structure=BmsspDataStructure
+        origin_id=origin_id, data_structure=BmsspHeapDataStructure
     )
     validate(
         name=name + " (Heap)",

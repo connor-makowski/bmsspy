@@ -1,7 +1,7 @@
-from .bmssp_solver import BmsspSolver
+from .core import BmsspCore
 from .helpers.utils import input_check, reconstruct_path, convert_to_constant_degree, convert_from_constant_degree
 
-from bmsspy.data_structures.heap_data_structure import BmsspDataStructure
+from bmsspy.data_structures.data_structure import BmsspDataStructure
 
 class Bmssp:
     def __init__(self, graph: list[dict[int, int | float]]):
@@ -82,7 +82,7 @@ class Bmssp:
         )
 
         # Run the BMSSP Algorithm to relax as many edges as possible.
-        solver = BmsspSolver(
+        solver = BmsspCore(
             self.constant_degree_dict["graph"], 
             origin_id, 
             data_structure=data_structure,

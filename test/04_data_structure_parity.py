@@ -1,18 +1,16 @@
+# General Imports
 import random
 
-from bmsspy.data_structures.heap_data_structure import (
-    BmsspDataStructure as BmsspDataStructureHeap,
-)
-from bmsspy.data_structures.data_structure import (
-    BmsspDataStructure as BmsspDataStructureAlgo,
-)
+# Local Imports
+from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
+from bmsspy.data_structures.data_structure import BmsspDataStructure
 
 
 def basic_test():
     """
     Basic sanity test for BmsspDataStructure implementations.
     """
-    ds = BmsspDataStructureAlgo(subset_size=3, upper_bound=100)
+    ds = BmsspDataStructure(subset_size=3, upper_bound=100)
     assert ds.is_empty()
 
     ds.insert_key_value(1, 50)
@@ -50,8 +48,8 @@ def test_data_structure_parity(seed):
     subset_size = random.randint(1, 10)
     upper_bound = random.randint(100, 2000)
 
-    ds_heap = BmsspDataStructureHeap(subset_size, upper_bound)
-    ds_algo = BmsspDataStructureAlgo(subset_size, upper_bound)
+    ds_heap = BmsspHeapDataStructure(subset_size, upper_bound)
+    ds_algo = BmsspDataStructure(subset_size, upper_bound)
     key_values = {}
     # Test insert_key_value
     for _ in range(100):

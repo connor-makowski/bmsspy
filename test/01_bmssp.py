@@ -1,4 +1,5 @@
-from bmsspy.solvers import Bmssp
+# Local Imports
+from bmsspy import Bmssp
 
 print("\n===============\nBasic BMSSP Tests:\n===============")
 

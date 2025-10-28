@@ -1,20 +1,19 @@
+# General Imports
 import time
 from pamda import pamda
-from scgraph import Graph
 from scgraph.utils import hard_round
+from scgraph.spanning import SpanningTree
+
+# Geographs
 from scgraph.geographs.marnet import graph as marnet_graph
 from scgraph.geographs.us_freeway import graph as us_freeway_graph
-
 from scgraph_data.world_highways_and_marnet import (
     graph as world_highways_and_marnet_graph,
 )
 
-from scgraph.spanning import SpanningTree
-
-from bmsspy.data_structures.heap_data_structure import BmsspDataStructure
-from bmsspy.solvers import Bmssp
-
-from bmsspy.helpers.utils import convert_to_constant_degree
+# Local Imports
+from bmsspy import Bmssp
+from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 
 
 print("\n===============\nBMSSP VS SCGraph Tests:\n===============")
@@ -48,7 +47,7 @@ def check_correctness(name, graph, origin_id):
         expected=dm_sp_tree["distance_matrix"],  # Trimmed to original graph size
     )
     bmssp_heap_function = bmssp_graph.solve(
-        origin_id=origin_id, data_structure=BmsspDataStructure
+        origin_id=origin_id, data_structure=BmsspHeapDataStructure
     )
     validate(
         name=name + " (Heap)",
@@ -145,7 +144,7 @@ time_test(
 time_test(
     "BMSSP 7 (heap) (world_highways_and_marnet)",
     pamda.thunkify(world_highways_and_marnet_graph_bmssp.solve)(
-        origin_id=0, destination_id=5, data_structure=BmsspDataStructure
+        origin_id=0, destination_id=5, data_structure=BmsspHeapDataStructure
     ),
 )
 

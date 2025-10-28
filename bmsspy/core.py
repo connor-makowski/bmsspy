@@ -1,7 +1,7 @@
 from heapq import heappush, heappop
 from math import ceil, log
 
-from .data_structures.data_structure import BmsspDataStructure
+from bmsspy.data_structures.data_structure import BmsspDataStructure
 
 inf = float("inf")
 
@@ -40,7 +40,7 @@ def is_pivot(root: int, forest: dict[int, set[int]], threshold: int) -> bool:
     return False
 
 
-class BmsspSolver:
+class BmsspCore:
     def __init__(
         self,
         graph: list[dict[int, int | float]],

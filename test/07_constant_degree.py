@@ -1,5 +1,8 @@
-from bmsspy.helpers.utils import convert_to_constant_degree
+# General Imports
 from decimal import Decimal
+
+# Local Imports
+from bmsspy.helpers.utils import convert_to_constant_degree
 
 graph = [
     {1:1, 2:1, 3:1},

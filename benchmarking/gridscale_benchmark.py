@@ -4,7 +4,6 @@ from pamda import pamda
 # Local Imports and Utils
 from utils.graphs import make_gridgraph
 from utils.time_case import time_case
-from bmsspy.helpers.utils import convert_to_constant_degree
 
 
 graph_data = [

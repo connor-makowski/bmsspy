@@ -51,4 +51,4 @@ bmssp(graph, 0, 4) #=>
 # }
 ```
 """
-
+from .entrypoint import Bmssp

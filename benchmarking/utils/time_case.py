@@ -4,12 +4,11 @@ from scgraph.spanning import SpanningTree as SCSpanning
 from pamda.pamda_timer import pamda_timer
 
 # Local Imports and Utils
-from bmsspy.solvers import Bmssp
+from bmsspy.entrypoint import Bmssp
 from .graphs import get_nx_shortest_path, get_igraph_shortest_path
 from .vanilla_dijkstra import vanilla_dijkstra
 from .sc_dijkstra import pure_python_sc_dijkstra, pure_python_heapdict_sc_dijkstra
-from bmsspy.helpers.utils import convert_to_constant_degree
-from bmsspy.data_structures.heap_data_structure import BmsspDataStructure as BmsspHeapDataStructure
+from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 
 
 vanilla_limit = 80000
