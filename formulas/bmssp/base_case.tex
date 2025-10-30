@@ -5,23 +5,22 @@
 \SetAlgoLined
 \KwIn{upper bound $B$, singleton frontier $S$}
 \KwOut{new bound $B'$, new frontier $S'$}
-$Heap \leftarrow \textsc{BinaryHeap}((\textit{dist}[x],x))$; $S' \leftarrow \emptyset$\;
-\While{$Heap\neq\emptyset$ \textbf{and} $|S'|<k+1$}{
-  $(u,d) \leftarrow Heap.ExtractMin()$\;
+$Heap \leftarrow \textsc{BinaryHeap}((\textit{dist}[x],x))$; $S' \leftarrow \emptyset$; $B' \leftarrow B$\;
+\While{$Heap\neq\emptyset$}{
+  $(d,u) \leftarrow Heap.ExtractMin()$\;
+  {\color{Fuchsia} \If{$|S'| \geq k$}{
+    $B' \leftarrow d$; \textbf{break}\tcp*{Early termination}\label{alg:bmssp_base_case_early_break}
+  }}
   $S'\leftarrow S'\cup\{u\}$\;
   \ForEach{$(v,w)\in G[u]$}{
-    $d'\leftarrow d+w$\;
+    {\color{ForestGreen}$d'\leftarrow \textit{cdist}[u] + w + counter\_value + \textit{edge\_adj}[u][v]$\tcp*{Unique distance}\label{alg:bmssp_base_case_modified_distance}}
     \If{$d'\le \textit{dist}[v]$ \textbf{and} $d'<B$}{
-      {\color{ForestGreen}\If{$d'<\textit{dist}[v]$}{
-        $\textit{dist}[v]\leftarrow d'$; $\textit{pred}[v]\leftarrow u$\tcp*{Update tracking arrays}\label{alg:bmssp_base_case_pred}
-      }}
+      $\textit{dist}[v]\leftarrow d'$\;
+      {\color{ForestGreen}$\textit{pred}[v]\leftarrow u$\tcp*{Update predecessor}\label{alg:bmssp_base_case_pred}}
+      {\color{ForestGreen}$\textit{cdist}[v]\leftarrow \textit{cdist}[u] + w + counter\_value$\tcp*{Update counter distance}\label{alg:bmssp_base_case_counter_dist_update}}
       $Heap.InsertOrDecreaseKey(v,d')$\;\label{alg:bmssp_base_case_push}
     }
   }
 }
-\eIf{$|S'| \le k$}{
-  \Return{$(B'\leftarrow B,S')$}\;
-}{
-  \Return{$(B'\leftarrow \max\{\textit{dist}[v]: v\in S'\},S'\leftarrow \{v\in S': \textit{dist}[v]<B'\})$}\;
-}
+\Return{$(B',S')$}\;
 \end{algorithm}

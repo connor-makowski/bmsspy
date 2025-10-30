@@ -270,7 +270,7 @@ class BmsspCore:
         while heap:
             frontier_distance, frontier_idx = heappop(heap)
             # Modification: instead of the post process, just break early
-            if len(new_frontier)+1 > self.pivot_relaxation_steps:
+            if len(new_frontier) >= self.pivot_relaxation_steps:
                 new_upper_bound = frontier_distance
                 break
             new_frontier.add(frontier_idx)

@@ -12,11 +12,11 @@
 
 $(P,W) \leftarrow$ \textsc{FindPivots}($B,S$)\;
 $D \leftarrow$ new \textsc{BmsspDataStructure}($M,B$) with $M=2^{(l-1)t}$\;
-\ForEach{$p \in P$}{$D.\textsc{Insert}(p, dist[p])$}
+\ForEach{$p \in P$}{$D.\textsc{Insert}(p, \textit{dist}[p])$}
 
 {\color{Fuchsia}$B_{\mathrm{comp}}$} $\leftarrow \min(\{\textit{dist}[p] : p \in P\}\cup\{B\})$; $U \leftarrow \emptyset$\;
 
-\While{$|U| < k^{2lt}$ and $\neg D.\textsc{IsEmpty}()$}{
+\While{$|U| < k \cdot 2^{lt}$ and $\neg D.\textsc{IsEmpty}()$}{
   ({\color{Fuchsia}$B_{\mathrm{curr}}$},{\color{Fuchsia}$S_{\mathrm{curr}}$}) $\leftarrow D.\textsc{Pull}()$\;
   ({\color{Fuchsia}$B_{\mathrm{comp}}$},{\color{Fuchsia}$U_{\mathrm{curr}}$}) $\leftarrow$ \textsc{RecursiveBMSSP}($l-1$,{\color{Fuchsia}$B_{\mathrm{curr}}$},{\color{Fuchsia}$S_{\mathrm{curr}}$})\;
   $U \leftarrow U \cup$ {\color{Fuchsia}$U_{\mathrm{curr}}$}\;
@@ -24,20 +24,19 @@ $D \leftarrow$ new \textsc{BmsspDataStructure}($M,B$) with $M=2^{(l-1)t}$\;
 
   \ForEach{$u \in$ {\color{Fuchsia}$U_{\mathrm{curr}}$}}{
     \ForEach{$(v,w) \in G[u]$}{
-      {\color{blue}\If{$v=u$}{ continue \tcp*{Avoid $\infty$ self-loops if they exist in $G$}}}\label{alg:bmssp_recursive_bmssp_self_loop_break}
-      $d' \leftarrow dist[u]+w$\;
-      \If{$d' \leq dist[v]$}{
-        {\color{ForestGreen}\If{$d'<\textit{dist}[v]$}{
-          $\textit{dist}[v]\leftarrow d'$; $\textit{pred}[v]\leftarrow u$\tcp*{Update tracking arrays}\label{alg:bmssp_recursive_bmssp_pred}
-        }}
+      {\color{ForestGreen}$d' \leftarrow \textit{cdist}[u]+w+counter\_value+\textit{edge\_adj}[u][v]$\tcp*{Unique distance}}
+      \If{$d' \leq \textit{dist}[v]$}{
+        $\textit{dist}[v]\leftarrow d'$\;
+        {\color{ForestGreen}$\textit{pred}[v]\leftarrow u$\tcp*{Update predecessor}\label{alg:bmssp_recursive_bmssp_pred}}
+        {\color{ForestGreen}$\textit{cdist}[v]\leftarrow \textit{cdist}[u]+w+counter\_value$\tcp*{Update counter distance}}
         \uIf{{\color{Fuchsia}$B_{\mathrm{curr}}$}$ \leq d' < B$}{ $D.\textsc{Insert}(v,d')$ }
         \ElseIf{{\color{Fuchsia}$B_{\mathrm{comp}}$}$ \leq d' < $ {\color{Fuchsia}$B_{\mathrm{curr}}$}}{ $K \leftarrow K \cup \{(v,d')\}$ }
       }
     }
   }
 
-  $D.\textsc{BatchPrepend}(K \cup \{(x,dist[x]) : x \in$ {\color{Fuchsia}$S_{\mathrm{curr}}$}$, ${\color{Fuchsia}$B_{\mathrm{comp}}$}$ \leq dist[x] < $ {\color{Fuchsia}$B_{\mathrm{curr}}$}$\})$\;
+  $D.\textsc{BatchPrepend}(K \cup \{(x,\textit{dist}[x]) : x \in$ {\color{Fuchsia}$S_{\mathrm{curr}}$}$, ${\color{Fuchsia}$B_{\mathrm{comp}}$}$ \leq \textit{dist}[x] < $ {\color{Fuchsia}$B_{\mathrm{curr}}$}$\})$\;
 }
-\Return $({\color{Fuchsia}B_{\mathrm{comp}}},U \leftarrow U \cup \{x \in W : dist[x] < {\color{Fuchsia}B_{\mathrm{comp}}}\})${\color{Fuchsia}\tcp*{Unnecessary $\min$ omitted}}\label{alg:bmssp_recursive_bmssp_return}
+\Return $({\color{Fuchsia}B_{\mathrm{comp}}},U \leftarrow U \cup \{x \in W : \textit{dist}[x] < {\color{Fuchsia}B_{\mathrm{comp}}}\})${\color{Fuchsia}\tcp*{Unnecessary $\min$ omitted}}\label{alg:bmssp_recursive_bmssp_return}
 
 \end{algorithm}
