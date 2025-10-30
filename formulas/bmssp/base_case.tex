@@ -8,7 +8,6 @@
 $Heap \leftarrow \textsc{BinaryHeap}((\textit{dist}[x],x))$; $S' \leftarrow \emptyset$\;
 \While{$Heap\neq\emptyset$ \textbf{and} $|S'|<k+1$}{
   $(u,d) \leftarrow Heap.ExtractMin()$\;
-  {\color{blue}\If{$u\in S'$}{continue \tcp*{Avoid $\infty$ loops due to the $\le$ relaxation}}}\label{alg:bmssp_base_case_loop_break}
   $S'\leftarrow S'\cup\{u\}$\;
   \ForEach{$(v,w)\in G[u]$}{
     $d'\leftarrow d+w$\;

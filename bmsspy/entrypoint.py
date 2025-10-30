@@ -1,10 +1,12 @@
 from .core import BmsspCore
-from .helpers.utils import input_check, reconstruct_path, convert_to_constant_degree, convert_from_constant_degree
+from .helpers.utils import input_check, reconstruct_path, convert_to_constant_degree, convert_from_constant_degree, inf
 
 from bmsspy.data_structures.data_structure import BmsspDataStructure
+from decimal import Decimal
+from math import ceil, log
 
 class Bmssp:
-    def __init__(self, graph: list[dict[int, int | float]]):
+    def __init__(self, graph: list[dict[int, int | float]], precision: int = 6, use_constant_degree_graph: bool = True):
         """
         Function:
 
@@ -14,9 +16,55 @@ class Bmssp:
 
         - `graph`:
             - Type: list of dictionaries
+
+        Optional Arguments:
+
+        - `precision`:
+            - Type: int
+            - Default: 6
+            - What: The decimal precision to round edge weights to for calculations
+                - Note: This is necessary to ensure that the unique values added to each edge weight do not cause issues with expected returned path lengths.
+        - `use_constant_degree_graph`:
+            - Type: bool
+            - Default: True
+            - What: Whether to convert the input graph to a constant degree graph to match the original BMSSP algorithm requirements.
+            - Note: It appears that this is not necessary for solving the algorithm, but is used to achieve big O complexity targets.
+                    This is default to True even though it appears to be slower in practice for all the graphs we have tested thus far.
         """
-        self.graph = graph
-        self.constant_degree_dict = convert_to_constant_degree(graph)
+        self.graph = [{k: round(Decimal(v), precision) for k, v in i.items()} for i in graph]
+        self.precision = precision
+        self.use_constant_degree_graph = use_constant_degree_graph
+
+        if self.use_constant_degree_graph:
+            self.constant_degree_dict = convert_to_constant_degree(self.graph)
+            self.used_graph = self.constant_degree_dict["graph"]
+        else:
+            self.used_graph = self.graph
+
+        self.unique_path_variables = self.get_unique_path_variables()
+
+
+    def get_unique_path_variables(self) -> dict:
+        # Create an adjustment graph to allow for guaranteed unique path lengths
+        # This essentially adds a combination of small increments to each edge weight
+        #   to ensure that no two paths are measured as the same length
+        num_edges = sum(len(neighbors) for neighbors in self.used_graph)
+        counter_magnitude_adjustment = -ceil(log((Decimal(num_edges*2+1))/(Decimal(10)**Decimal(-self.precision-1)),10))
+        counter_adjustment_value = Decimal(10)**Decimal(counter_magnitude_adjustment)
+        edge_id_magnitude_adjustment = -ceil(log(((Decimal(num_edges*2+1))/(counter_adjustment_value)),10))
+        edge_id_adjustment_value = Decimal(10)**Decimal(edge_id_magnitude_adjustment)
+
+        # Store a set of adjustment values to be used during BMSSP solving
+        edge_id_value = Decimal(0.0)
+        self.edge_adj_graph = [{} for _ in range(len(self.used_graph))]
+        for node_idx, node_neighbors in enumerate(self.used_graph):
+            for neighbor in node_neighbors:
+                edge_id_value += edge_id_adjustment_value
+                self.edge_adj_graph[node_idx][neighbor] = edge_id_value
+        return {
+            'edge_adj_graph': self.edge_adj_graph,
+            'counter_value': counter_adjustment_value,
+        }
 
 
     def solve(
@@ -76,46 +124,57 @@ class Bmssp:
             origin_id_check = next(iter(origin_id))
         else:
             origin_id_check = origin_id
-        # Input Validation
+        # Input Validation (Uses original graph and not used_graph to ensure validity)
         input_check(
             graph=self.graph, origin_id=origin_id_check, destination_id=destination_id
         )
 
         # Run the BMSSP Algorithm to relax as many edges as possible.
         solver = BmsspCore(
-            self.constant_degree_dict["graph"], 
-            origin_id, 
+            graph = self.used_graph,
+            origin_ids = origin_id,
+            counter_value=self.unique_path_variables["counter_value"],
+            edge_adj_graph=self.unique_path_variables["edge_adj_graph"],
             data_structure=data_structure,
             pivot_relaxation_steps=pivot_relaxation_steps, 
             target_tree_depth=target_tree_depth
         )
         if destination_id is not None:
-            if solver.distance_matrix[destination_id] == float("inf"):
+            if solver.counter_distance_matrix[destination_id] == float("inf"):
                 raise Exception(
                     "Something went wrong, the origin and destination nodes are not connected."
                 )
-            
-        outputs = convert_from_constant_degree(
-            distance_matrix=solver.distance_matrix,
-            predecessor_matrix=solver.predecessor,
-            constant_degree_dict=self.constant_degree_dict,
-        )
+        
+        if self.use_constant_degree_graph:
+            converted_outputs = convert_from_constant_degree(
+                distance_matrix=solver.counter_distance_matrix,
+                predecessor_matrix=solver.predecessor,
+                constant_degree_dict=self.constant_degree_dict,
+            )
+            predecessor = converted_outputs["predecessor_matrix"]
+            distance_matrix = converted_outputs["distance_matrix"]
+        else:
+            predecessor = solver.predecessor
+            distance_matrix = solver.counter_distance_matrix
+
+        # Remove counter values from distance matrix
+        distance_matrix = [round(i, self.precision) if i != inf else i for i in distance_matrix]
 
         return {
             "origin_id": (
                 origin_id if isinstance(origin_id, int) else list(origin_id)
             ),
             "destination_id": destination_id,
-            "predecessor": outputs["predecessor_matrix"],
-            "distance_matrix": outputs["distance_matrix"],
+            "predecessor": predecessor,
+            "distance_matrix": distance_matrix,
             "path": (
                 reconstruct_path(
-                    destination_id=destination_id, predecessor=outputs["predecessor_matrix"]
+                    destination_id=destination_id, predecessor=predecessor
                 )
                 if destination_id
                 else None
             ),
             "length": (
-                outputs["distance_matrix"][destination_id] if destination_id else None
+                distance_matrix[destination_id] if destination_id else None
             ),
         }

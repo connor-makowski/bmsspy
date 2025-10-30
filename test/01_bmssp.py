@@ -31,3 +31,12 @@ if output["distance_matrix"] != [0,0,0,0,0]:
     print("BMSSP Zero-Weight Test: FAIL")
 else:
     print("BMSSP Zero-Weight Test: PASS")
+
+
+zero_weight_graph2 = Bmssp([{1:0, 2:0, 3:0, 4:0}, {2:0, 3:0}, {3:0, 4:0}, {4:0, 0:0}, {0:0, 1:0}])
+
+output = zero_weight_graph2.solve(0)
+if output["distance_matrix"] != [0,0,0,0,0]:
+    print("BMSSP Zero-Weight 2 Test: FAIL")
+else:
+    print("BMSSP Zero-Weight 2 Test: PASS")

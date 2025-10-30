@@ -1,7 +1,6 @@
-inf = float("inf")
 from copy import deepcopy
-from math import log, ceil
 from decimal import Decimal
+inf = Decimal('Infinity')
 
 
 def input_check(
@@ -76,26 +75,8 @@ def reconstruct_path(destination_id: int, predecessor: list[int]) -> list[int]:
     output_path.reverse()
     return output_path
 
-def truncate_number(number: float, decimal_place: int) -> float:
-    """
-    Truncate a positive floating-point number to a specified decimal place without rounding.
 
-    Args:
-    
-    - number (float): The number to be truncated.
-    - decimal_place (int): The decimal place to which the number should be truncated.
-        - For example, if decimal_place is 2, the number will be truncated to two decimal places.
-
-    Returns:
-    float: The truncated number.
-    """
-    if number == inf:
-        return number
-    factor = 10 ** decimal_place
-    return int(number * factor) / factor
-
-
-def convert_to_constant_degree(graph, precision=6) -> dict:
+def convert_to_constant_degree(graph: list[dict[int, int | float]]) -> dict:
     """
     Convert a graph to a guaranteed unique path length based constant degree graph with no more than 2 incoming and 2 outgoing edges per node.
 
@@ -104,11 +85,6 @@ def convert_to_constant_degree(graph, precision=6) -> dict:
     Args:
 
     - graph (list of dict): The input graph represented as an adjacency list.
-
-    Optional Args:
-
-    - precision (int): The number of decimal places to maintain.
-        - Default: 6
     
     Returns:
 
@@ -118,9 +94,6 @@ def convert_to_constant_degree(graph, precision=6) -> dict:
             - Eg: idx_map[5] = 2 means node 5 in the new graph corresponds to node 2 in the original graph.
             - Note: All nodes below the original graph length map to themselves.
         - 'original_graph_len' (int): The length of the original graph.
-        - 'graph_multiplier' (float): The multiplier used to adjust edge weights.
-        - 'precision' (int): The decimal place level used for truncating weights.
-            - Note: This should be applied after undoing the `graph_multiplier`. 
     """
     # Determine if the graph needs to be converted to constant degree 
     #   - (two in / two out)
@@ -132,12 +105,9 @@ def convert_to_constant_degree(graph, precision=6) -> dict:
     in_graph = [{} for _ in range(len(graph))]
     for node_idx, node_neighbors in enumerate(graph):
         for neighbor, weight in node_neighbors.items():
-            weight = round(Decimal(weight), precision)
+            weight = Decimal(weight)
             graph[node_idx][neighbor] = weight
             in_graph[neighbor][node_idx] = weight
-
-    # A small enough value to replace zero-weight edges without causing floating point issues
-    # very_small_value = Decimal(1e-12)
 
     nodes_to_partition = {}
     for node_idx in range(len(graph)):
@@ -190,26 +160,10 @@ def convert_to_constant_degree(graph, precision=6) -> dict:
             graph[from_idx][to_idx] = Decimal(0)
             in_graph[to_idx][from_idx] = Decimal(0)
 
-    # Adjust weights to ensure unique path lengths
-    num_edges = sum(len(neighbors) for neighbors in graph)
-    magnitude_adjustment = -ceil(log((num_edges * (num_edges +1))/(2*(Decimal(10)**Decimal(-precision-1))),10))
-    magnitude_adjustment_value = Decimal(10)**Decimal(magnitude_adjustment)
-    # magnitude_adjustment_unique = -ceil(log((num_edges)/(magnitude_adjustment_value),10))
-    # magnitude_adjustment_unique_value = Decimal(10)**Decimal(magnitude_adjustment_unique)
-
-
-    # Adjust the weights to ensure unique lengths for all paths without affecting the shortest path
-    irrelevant_incrementor = Decimal(0.0)
-    for node_idx, node_neighbors in enumerate(graph):
-        for neighbor in node_neighbors:
-            irrelevant_incrementor += magnitude_adjustment_value
-            graph[node_idx][neighbor] = graph[node_idx][neighbor] + irrelevant_incrementor #+ magnitude_adjustment_unique_value
-
     return {
         "graph": graph,
         "idx_map": idx_map,
         "original_graph_len": original_graph_len,
-        "precision": precision
     }
 
 def convert_from_constant_degree(distance_matrix, predecessor_matrix, constant_degree_dict):
@@ -230,7 +184,6 @@ def convert_from_constant_degree(distance_matrix, predecessor_matrix, constant_d
     """
     cd_idx_map = constant_degree_dict["idx_map"]
     cd_original_graph_len = constant_degree_dict["original_graph_len"]
-    cd_precision = constant_degree_dict["precision"]
 
     predecessor_matrix_converted = []
     for loc_idx, node_idx in enumerate(predecessor_matrix[:cd_original_graph_len]):
@@ -246,9 +199,7 @@ def convert_from_constant_degree(distance_matrix, predecessor_matrix, constant_d
                 else:
                     node_idx = predecessor_matrix[node_idx]
 
-    distance_matrix_converted = [truncate_number(weight, cd_precision) for weight in distance_matrix[:cd_original_graph_len]]
-
     return {
-        "distance_matrix": distance_matrix_converted,
+        "distance_matrix": distance_matrix[:cd_original_graph_len],
         "predecessor_matrix": predecessor_matrix_converted,
     }

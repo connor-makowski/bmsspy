@@ -6,6 +6,7 @@ cp README.md bmsspy/__init__.py
 sed -i '1s/^/\"\"\"\n/' bmsspy/__init__.py
 echo "\"\"\"" >> bmsspy/__init__.py
 echo "" >> bmsspy/__init__.py
+echo "from bmsspy.entrypoint import Bmssp" >> bmsspy/__init__.py
 
 
 # Specify versions for documentation purposes

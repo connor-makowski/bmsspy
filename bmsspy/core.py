@@ -2,8 +2,9 @@ from heapq import heappush, heappop
 from math import ceil, log
 
 from bmsspy.data_structures.data_structure import BmsspDataStructure
+from bmsspy.helpers.utils import inf
 
-inf = float("inf")
+from decimal import Decimal
 
 
 def is_pivot(root: int, forest: dict[int, set[int]], threshold: int) -> bool:
@@ -45,6 +46,8 @@ class BmsspCore:
         self,
         graph: list[dict[int, int | float]],
         origin_ids: set[int] | int,
+        counter_value: int,
+        edge_adj_graph: list[dict[int, int | float]],
         data_structure=BmsspDataStructure,
         pivot_relaxation_steps: int | None = None,
         target_tree_depth: int | None = None,
@@ -59,10 +62,20 @@ class BmsspCore:
         - graph:
             - Type: list[dict[int, int | float]]
             - Description: The graph is represented as an adjacency list, where each node points to a dictionary of its neighbors and their edge weights.
+            - Note: This graph should be in a max degree 2 (no more than two in connections and/or no more than two out connections per node) to function correctly.
         - origin_ids:
             - Type: set[int] | int
             - What: The IDs of the starting nodes for the BMSSP algorithm.
             - Note: Can be a single integer or a set of integers.
+        - counter_value:
+            - Type: int
+            - What: The increment value (counter) added to the distance matrix to track how many edges have been traversed (used for unique path lengths).
+                - Note: This should be set such that the maximum possible path length multiplied by counter_value is less than half of a single decimal place at the precision level.
+        - edge_adj_graph:
+            - Type: list[dict[int, int | float]]
+            - What: The adjustment graph used to ensure unique path lengths.
+                - Note: This should include edge id based adjustments.
+                - Note: The largest edge id based adjustment should be less than half of the counter_value
 
         Optional Arguments:
 
@@ -88,13 +101,20 @@ class BmsspCore:
         if isinstance(origin_ids, int):
             origin_ids = {origin_ids}
         self.graph = graph
-        self.distance_matrix = [inf] * graph_len
+        self.counter_and_edge_distance_matrix = [inf] * graph_len
+        self.counter_distance_matrix = [inf] * graph_len
+
+        # Addition: Unique Path Adjustment Setup
+        self.edge_adj_graph = edge_adj_graph
+        self.counter_value = counter_value
+
         # Addition: Initialize Predecessor array for path reconstruction
         self.predecessor = [-1] * graph_len
         # Allow for arbitrary data structures
         self.data_structure = data_structure
         for origin_id in origin_ids:
-            self.distance_matrix[origin_id] = 0
+            self.counter_and_edge_distance_matrix[origin_id] = Decimal(0)
+            self.counter_distance_matrix[origin_id] = Decimal(0)
 
         #####################################
         # Practical choices (k and t) based on n
@@ -172,38 +192,37 @@ class BmsspCore:
         for _ in range(self.pivot_relaxation_steps):
             curr_frontier = set()
             for prev_frontier_idx in prev_frontier:
-                prev_frontier_distance = self.distance_matrix[prev_frontier_idx]
-                for connection_idx, connection_distance in self.graph[
-                    prev_frontier_idx
-                ].items():
-                    new_distance = prev_frontier_distance + connection_distance
+                prev_distance = self.counter_distance_matrix[prev_frontier_idx]
+                for connection_idx, connection_distance in self.graph[prev_frontier_idx].items():
+                    # Modification: Use a new get distance function to ensure unique lengths
+                    new_distance = prev_distance + connection_distance + self.counter_value + self.edge_adj_graph[prev_frontier_idx][connection_idx]
                     # Important: Allow equality on relaxations
-                    if new_distance <= self.distance_matrix[connection_idx]:
+                    if new_distance <= self.counter_and_edge_distance_matrix[connection_idx]:
                         # Addition: Add predecessor tracking
-                        if new_distance < self.distance_matrix[connection_idx]:
+                        if new_distance < self.counter_and_edge_distance_matrix[connection_idx]:
                             self.predecessor[connection_idx] = prev_frontier_idx
-                            self.distance_matrix[connection_idx] = new_distance
+                            self.counter_and_edge_distance_matrix[connection_idx] = new_distance
+                            self.counter_distance_matrix[connection_idx] = prev_distance + connection_distance + self.counter_value
                         if new_distance < upper_bound:
                             curr_frontier.add(connection_idx)
             temp_frontier.update(curr_frontier)
+            prev_frontier = curr_frontier
             # If the search balloons, take the current frontier as pivots
             if len(temp_frontier) > self.pivot_relaxation_steps * len(frontier):
                 pivots = set(frontier)
                 return pivots, temp_frontier
-            prev_frontier = curr_frontier
 
         # Build tight-edge forest F on temp_frontier: edges (u -> v) with db[u] + w == db[v]
         forest = {i: set() for i in temp_frontier}
         indegree = {i: 0 for i in temp_frontier}
         for frontier_idx in temp_frontier:
-            frontier_distance = self.distance_matrix[frontier_idx]
-            for connection_idx, connection_distance in self.graph[
-                frontier_idx
-            ].items():
+            prev_distance = self.counter_distance_matrix[frontier_idx]
+            for connection_idx, connection_distance in self.graph[frontier_idx].items():
+                # Modification: Use a new get distance function to ensure unique lengths
+                new_distance = prev_distance + connection_distance + self.counter_value + self.edge_adj_graph[frontier_idx][connection_idx]
                 if (
                     connection_idx in temp_frontier
-                    and (frontier_distance + connection_distance)
-                    == self.distance_matrix[connection_idx]
+                    and new_distance == self.counter_and_edge_distance_matrix[connection_idx]
                 ):
                     # direction is frontier_idx -> connection_idx (parent to child)
                     forest[frontier_idx].add(connection_idx)
@@ -245,40 +264,31 @@ class BmsspCore:
 
         new_frontier = set()
         heap = []
-        heappush(heap, (self.distance_matrix[first_frontier], first_frontier))
+        heappush(heap, (self.counter_and_edge_distance_matrix[first_frontier], first_frontier))
+        new_upper_bound = upper_bound
         # Grow until we exceed pivot_relaxation_steps (practical limit), as in Algorithm 2
-        # Modification: Use <= instead of < + 1 for clarity on steps
-        while heap and len(new_frontier) <= self.pivot_relaxation_steps:
+        while heap:
             frontier_distance, frontier_idx = heappop(heap)
-            # Addition: Add check to ensure that we do not get caught in a relaxation loop
-            if frontier_idx in new_frontier:
-                continue
+            # Modification: instead of the post process, just break early
+            if len(new_frontier)+1 > self.pivot_relaxation_steps:
+                new_upper_bound = frontier_distance
+                break
             new_frontier.add(frontier_idx)
-            for connection_idx, connection_distance in self.graph[
-                frontier_idx
-            ].items():
-                new_distance = frontier_distance + connection_distance
+            prev_distance = self.counter_distance_matrix[frontier_idx]
+            for connection_idx, connection_distance in self.graph[frontier_idx].items():
+                # Modification: 
+                new_distance = prev_distance + connection_distance + self.counter_value + self.edge_adj_graph[frontier_idx][connection_idx]
                 if (
-                    new_distance <= self.distance_matrix[connection_idx]
+                    new_distance <= self.counter_and_edge_distance_matrix[connection_idx]
                     and new_distance < upper_bound
                 ):
                     # Addition: Add predecessor tracking
-                    if new_distance < self.distance_matrix[connection_idx]:
+                    if new_distance < self.counter_and_edge_distance_matrix[connection_idx]:
                         self.predecessor[connection_idx] = frontier_idx
-                        self.distance_matrix[connection_idx] = new_distance
+                        self.counter_and_edge_distance_matrix[connection_idx] = new_distance
+                        self.counter_distance_matrix[connection_idx] = prev_distance + connection_distance + self.counter_value
                     heappush(heap, (new_distance, connection_idx))
 
-        # If we exceeded k, trim by new boundary B' = max db over visited and return new_frontier = {db < B'}
-        if len(new_frontier) > self.pivot_relaxation_steps:
-            new_upper_bound = max(self.distance_matrix[i] for i in new_frontier)
-            new_frontier = {
-                i
-                for i in new_frontier
-                if self.distance_matrix[i] < new_upper_bound
-            }
-        else:
-            # Success for this base case: return current upper_bound unchanged and the completed set
-            new_upper_bound = upper_bound
         return new_upper_bound, new_frontier
 
     def recursive_bmssp(
@@ -327,13 +337,13 @@ class BmsspCore:
             subset_size=subset_size, upper_bound=upper_bound
         )
         for p in pivots:
-            data_struct.insert_key_value(p, self.distance_matrix[p])
+            data_struct.insert_key_value(p, self.counter_and_edge_distance_matrix[p])
 
         # Track new_frontier and B' according to Algorithm 3
         new_frontier = set()
         # Store the completion_bound for use if the frontier is empty and we break early
         completion_bound = min(
-            (self.distance_matrix[p] for p in pivots), default=upper_bound
+            (self.counter_and_edge_distance_matrix[p] for p in pivots), default=upper_bound
         )
 
         # Work budget that scales with level: k*2**(l*t)
@@ -343,9 +353,7 @@ class BmsspCore:
         # Main loop
         while len(new_frontier) < work_budget and not data_struct.is_empty():
             # Step 10: Pull from data_struct: get data_struct_frontier_temp and upper_bound_i
-            data_struct_frontier_bound_temp, data_struct_frontier_temp = (
-                data_struct.pull()
-            )
+            data_struct_frontier_bound_temp, data_struct_frontier_temp = data_struct.pull()
 
             # Step 11: Recurse on (l-1, data_struct_frontier_bound_temp, data_struct_frontier_temp)
             completion_bound, new_frontier_temp = self.recursive_bmssp(
@@ -362,19 +370,15 @@ class BmsspCore:
 
             # Step 14–20: relax edges from new_frontier_temp and enqueue into D or intermediate_frontier per their interval
             for new_frontier_idx in new_frontier_temp:
-                new_frontier_distance = self.distance_matrix[new_frontier_idx]
-                for connection_idx, connection_distance in self.graph[
-                    new_frontier_idx
-                ].items():
-                    # Addition: Avoid self-loops
-                    if connection_idx == new_frontier_idx:
-                        continue
-                    new_distance = new_frontier_distance + connection_distance
-                    if new_distance <= self.distance_matrix[connection_idx]:
-                        # Addition: Add predecessor tracking
-                        if new_distance < self.distance_matrix[connection_idx]:
+                prev_distance = self.counter_distance_matrix[new_frontier_idx]
+                for connection_idx, connection_distance in self.graph[new_frontier_idx].items():
+                    new_distance = prev_distance + connection_distance + self.counter_value + self.edge_adj_graph[new_frontier_idx][connection_idx]
+                    if new_distance <= self.counter_and_edge_distance_matrix[connection_idx]:
+                        # Addition: Add predecessor tracking and
+                        if new_distance < self.counter_and_edge_distance_matrix[connection_idx]:
                             self.predecessor[connection_idx] = new_frontier_idx
-                            self.distance_matrix[connection_idx] = new_distance
+                            self.counter_and_edge_distance_matrix[connection_idx] = new_distance
+                            self.counter_distance_matrix[connection_idx] = prev_distance + connection_distance + self.counter_value
                         # Insert based on which interval the new distance falls into
                         if (
                             data_struct_frontier_bound_temp
@@ -395,23 +399,26 @@ class BmsspCore:
 
             # Step 21: Batch prepend intermediate_frontier plus filtered data_struct_frontier_temp in completion_bound, data_struct_frontier_bound_temp)
             data_struct_frontier_temp_filtered = {
-                (x, self.distance_matrix[x])
+                (x, self.counter_and_edge_distance_matrix[x])
                 for x in data_struct_frontier_temp
                 if completion_bound
-                <= self.distance_matrix[x]
+                <= self.counter_and_edge_distance_matrix[x]
                 < data_struct_frontier_bound_temp
             }
 
             data_struct.batch_prepend(
                 intermediate_frontier | data_struct_frontier_temp_filtered
             )
+        # Optional code if you do not have guaranteed unique lengths.
+        # if len(new_frontier) > work_budget:
+        #     completion_bound = pivot_completion_bound
 
         # Step 22: Final return
         # Modification: No need to use min(completion_bound, upper_bound) as completion_bound is always <= upper_bound
         new_frontier = new_frontier | {
             v
             for v in temp_frontier
-            if self.distance_matrix[v] < completion_bound
+            if self.counter_and_edge_distance_matrix[v] < completion_bound
         }
 
         return completion_bound, new_frontier

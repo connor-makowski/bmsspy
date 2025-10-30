@@ -23,9 +23,8 @@ def make_gridgraph(x_size, y_size):
     )
 
 def validate(name, realized, expected):
-    # Custom lenth rounding for floating point precision issues
-    realized = [hard_round(4, val) if val!=float('inf') else float('inf') for val in realized]
-    expected = [hard_round(4, val) if val!=float('inf') else float('inf') for val in expected]
+    realized = [hard_round(6, float(val)) if float(val)!=float('inf') else float('inf') for val in realized]
+    expected = [hard_round(6, float(val)) if float(val)!=float('inf') else float('inf') for val in expected]
     if realized == expected:
         print(f"{name}: PASS")
     else:

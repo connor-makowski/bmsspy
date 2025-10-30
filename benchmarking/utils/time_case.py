@@ -14,6 +14,7 @@ from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 vanilla_limit = 80000
 nx_limit = 1000000
 ig_limit = 1000000
+cd_bmssp_limit = 1000000
 
 def run_algo(algo_key:str, algo_func, algo_kwargs:dict, output:dict, do_run:bool=True, iterations:int=10, print_console:bool=True):
     if do_run:
@@ -31,7 +32,9 @@ def run_algo(algo_key:str, algo_func, algo_kwargs:dict, output:dict, do_run:bool
 def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None, test_vanilla_dijkstra:bool=False, print_console:bool=True, iterations:int=10):
 
 
+
     bmssp_graph = Bmssp(graph = scgraph)
+    bmssp_graph_no_cd = Bmssp(graph = scgraph, use_constant_degree_graph = False)
     constant_degree_scgraph = bmssp_graph.constant_degree_dict['graph']
 
     output = {
@@ -52,24 +55,24 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
     # Constant Degree Graph Conversion Timing
     # BMSSP Timing
     run_algo(
-        algo_key = 'bmssp_solve',
+        algo_key = 'bmssp_constant_degree_solve',
         algo_func = bmssp_graph.solve,
         algo_kwargs = {'origin_id': origin},
         output = output,
-        do_run = True,
+        do_run = len(scgraph) <= cd_bmssp_limit,
         iterations = iterations,
         print_console = print_console
     )
     # BMSSP with Heap Timing
-    run_algo(
-        algo_key = 'bmssp_heap_solve',
-        algo_func = bmssp_graph.solve,
-        algo_kwargs = {'origin_id': origin, 'data_structure': BmsspHeapDataStructure},
-        output = output,
-        do_run = True,
-        iterations = iterations,
-        print_console = print_console
-    )
+    # run_algo(
+    #     algo_key = 'bmssp_heap_solve',
+    #     algo_func = bmssp_graph.solve,
+    #     algo_kwargs = {'origin_id': origin, 'data_structure': BmsspHeapDataStructure},
+    #     output = output,
+    #     do_run = len(scgraph) <= cd_bmssp_limit,
+    #     iterations = iterations,
+    #     print_console = print_console
+    # )
     # SCGraph Dijkstra on Constant Degree Graph Timing
     run_algo(
         algo_key = 'sc_dijkstra_constant_degree',
@@ -80,9 +83,19 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
         iterations = iterations,
         print_console = print_console
     )
-
-
     # Regular Graph Timing for Comparison
+
+    # BMSSP without Constant Degree Graph Timing
+    run_algo(
+        algo_key = 'bmssp_solve',
+        algo_func = bmssp_graph_no_cd.solve,
+        algo_kwargs = {'origin_id': origin},
+        output = output,
+        do_run = True,
+        iterations = iterations,
+        print_console = print_console
+    )
+
     # Vanilla Dijkstra Timing
     run_algo(
         algo_key = 'vanilla_dijkstra',
