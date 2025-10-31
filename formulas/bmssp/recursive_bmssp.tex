@@ -1,6 +1,6 @@
 \begin{algorithm}[!htbp]
 \SingleSpacedXI
-\caption{Recursive BMSSP (\texttt{BmsspSolver.recursive\_bmssp})}
+\caption{Recursive BMSSP (\texttt{BmsspCore.recursive\_bmssp})}
 \label{alg:bmssp_recursive_bmssp}
 \SetAlgoLined
 \KwIn{depth $l$, bound $B$, frontier $S$}
@@ -24,11 +24,11 @@ $D \leftarrow$ new \textsc{BmsspDataStructure}($M,B$) with $M=2^{(l-1)t}$\;
 
   \ForEach{$u \in$ {\color{Fuchsia}$U_{\mathrm{curr}}$}}{
     \ForEach{$(v,w) \in G[u]$}{
-      {\color{ForestGreen}$d' \leftarrow \textit{cdist}[u]+w+counter\_value+\textit{edge\_adj}[u][v]$\tcp*{Unique distance}}
+      {\color{Sepia}$d' \leftarrow \textit{cdist}[u]+w+counter+G_{edge}[u][v]$\tcp*{Unique distance}}
       \If{$d' \leq \textit{dist}[v]$}{
         $\textit{dist}[v]\leftarrow d'$\;
         {\color{ForestGreen}$\textit{pred}[v]\leftarrow u$\tcp*{Update predecessor}\label{alg:bmssp_recursive_bmssp_pred}}
-        {\color{ForestGreen}$\textit{cdist}[v]\leftarrow \textit{cdist}[u]+w+counter\_value$\tcp*{Update counter distance}}
+        {\color{Sepia}$\textit{cdist}[v]\leftarrow \textit{cdist}[u]+w+counter$\tcp*{Update counter distance}}
         \uIf{{\color{Fuchsia}$B_{\mathrm{curr}}$}$ \leq d' < B$}{ $D.\textsc{Insert}(v,d')$ }
         \ElseIf{{\color{Fuchsia}$B_{\mathrm{comp}}$}$ \leq d' < $ {\color{Fuchsia}$B_{\mathrm{curr}}$}}{ $K \leftarrow K \cup \{(v,d')\}$ }
       }
@@ -37,6 +37,8 @@ $D \leftarrow$ new \textsc{BmsspDataStructure}($M,B$) with $M=2^{(l-1)t}$\;
 
   $D.\textsc{BatchPrepend}(K \cup \{(x,\textit{dist}[x]) : x \in$ {\color{Fuchsia}$S_{\mathrm{curr}}$}$, ${\color{Fuchsia}$B_{\mathrm{comp}}$}$ \leq \textit{dist}[x] < $ {\color{Fuchsia}$B_{\mathrm{curr}}$}$\})$\;
 }
-\Return $({\color{Fuchsia}B_{\mathrm{comp}}},U \leftarrow U \cup \{x \in W : \textit{dist}[x] < {\color{Fuchsia}B_{\mathrm{comp}}}\})${\color{Fuchsia}\tcp*{Unnecessary $\min$ omitted}}\label{alg:bmssp_recursive_bmssp_return}
+$B_{\mathrm{comp}} \leftarrow \min(B_{\mathrm{comp}}, B)$\;
+\Return $(B_{\mathrm{comp}},U \leftarrow U \cup \{x \in W : \textit{dist}[x] < B_{\mathrm{comp}}\})$\;
+
 
 \end{algorithm}

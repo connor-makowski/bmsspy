@@ -218,15 +218,22 @@ class BmsspCore:
         for frontier_idx in temp_frontier:
             prev_distance = self.counter_distance_matrix[frontier_idx]
             for connection_idx, connection_distance in self.graph[frontier_idx].items():
+                # Old code:
                 # Modification: Use a new get distance function to ensure unique lengths
-                new_distance = prev_distance + connection_distance + self.counter_value + self.edge_adj_graph[frontier_idx][connection_idx]
-                if (
-                    connection_idx in temp_frontier
-                    and new_distance == self.counter_and_edge_distance_matrix[connection_idx]
-                ):
-                    # direction is frontier_idx -> connection_idx (parent to child)
-                    forest[frontier_idx].add(connection_idx)
-                    indegree[connection_idx] += 1
+                # new_distance = prev_distance + connection_distance + self.counter_value + self.edge_adj_graph[frontier_idx][connection_idx]
+                # if (
+                #     connection_idx in temp_frontier
+                #     and new_distance == self.counter_and_edge_distance_matrix[connection_idx]
+                # ):
+                #     # direction is frontier_idx -> connection_idx (parent to child)
+                #     forest[frontier_idx].add(connection_idx)
+                #     indegree[connection_idx] += 1
+                # TODO: Confirm if this new code is correct
+                if self.predecessor[connection_idx] == frontier_idx:
+                    if (connection_idx in temp_frontier):
+                        # direction is frontier_idx -> connection_idx (parent to child)
+                        forest[frontier_idx].add(connection_idx)
+                        indegree[connection_idx] += 1
 
         pivots = set()
         for frontier_idx in frontier:
@@ -414,7 +421,7 @@ class BmsspCore:
         #     completion_bound = pivot_completion_bound
 
         # Step 22: Final return
-        # Modification: No need to use min(completion_bound, upper_bound) as completion_bound is always <= upper_bound
+        completion_bound = min(completion_bound, upper_bound)
         new_frontier = new_frontier | {
             v
             for v in temp_frontier

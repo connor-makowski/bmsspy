@@ -10,12 +10,16 @@ class Bmssp:
         """
         Function:
 
-        - Initialize a BMSSP-style shortest path object and calculate the constant degree graph and related info.
+        - Initialize a BMSSP-style shortest path object that can execute a bmssp solve method.
+        - Calculates and stores necessary variables for unique path length adjustments.
+        - Optionally calculate the constant degree graph and related info.
 
         Required Arguments:
 
         - `graph`:
             - Type: list of dictionaries
+            - What: The input graph represented as a list of dictionaries where each index represents a node id.
+                    Each dictionary contains neighboring node ids as keys and edge weights as values.
 
         Optional Arguments:
 
@@ -41,17 +45,17 @@ class Bmssp:
         else:
             self.used_graph = self.graph
 
-        self.unique_path_variables = self.get_unique_path_variables()
-
-
-    def get_unique_path_variables(self) -> dict:
+        ######################
+        # Unique Path Length Adjustment Setup
+        ######################
         # Create an adjustment graph to allow for guaranteed unique path lengths
         # This essentially adds a combination of small increments to each edge weight
         #   to ensure that no two paths are measured as the same length
         num_edges = sum(len(neighbors) for neighbors in self.used_graph)
-        counter_magnitude_adjustment = -ceil(log((Decimal(num_edges*2+1))/(Decimal(10)**Decimal(-self.precision-1)),10))
-        counter_adjustment_value = Decimal(10)**Decimal(counter_magnitude_adjustment)
-        edge_id_magnitude_adjustment = -ceil(log(((Decimal(num_edges*2+1))/(counter_adjustment_value)),10))
+        num_nodes = len(self.used_graph)
+        counter_magnitude_adjustment = -ceil(log((Decimal(num_nodes*2+1))/(Decimal(10)**Decimal(-self.precision-1)),10))
+        self.counter_value = Decimal(10)**Decimal(counter_magnitude_adjustment)
+        edge_id_magnitude_adjustment = -ceil(log(((Decimal(num_edges*2+1))/(self.counter_value)),10))
         edge_id_adjustment_value = Decimal(10)**Decimal(edge_id_magnitude_adjustment)
 
         # Store a set of adjustment values to be used during BMSSP solving
@@ -61,10 +65,6 @@ class Bmssp:
             for neighbor in node_neighbors:
                 edge_id_value += edge_id_adjustment_value
                 self.edge_adj_graph[node_idx][neighbor] = edge_id_value
-        return {
-            'edge_adj_graph': self.edge_adj_graph,
-            'counter_value': counter_adjustment_value,
-        }
 
 
     def solve(
@@ -133,8 +133,8 @@ class Bmssp:
         solver = BmsspCore(
             graph = self.used_graph,
             origin_ids = origin_id,
-            counter_value=self.unique_path_variables["counter_value"],
-            edge_adj_graph=self.unique_path_variables["edge_adj_graph"],
+            counter_value=self.counter_value,
+            edge_adj_graph=self.edge_adj_graph,
             data_structure=data_structure,
             pivot_relaxation_steps=pivot_relaxation_steps, 
             target_tree_depth=target_tree_depth

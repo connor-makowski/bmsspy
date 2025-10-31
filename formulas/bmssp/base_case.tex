@@ -1,6 +1,6 @@
 \begin{algorithm}[!htbp]
 \SingleSpacedXI
-\caption{Base Case (\texttt{BmsspSolver.base\_case})}
+\caption{Base Case (\texttt{BmsspCore.base\_case})}
 \label{alg:bmssp_base_case}
 \SetAlgoLined
 \KwIn{upper bound $B$, singleton frontier $S$}
@@ -13,11 +13,11 @@ $Heap \leftarrow \textsc{BinaryHeap}((\textit{dist}[x],x))$; $S' \leftarrow \emp
   }}
   $S'\leftarrow S'\cup\{u\}$\;
   \ForEach{$(v,w)\in G[u]$}{
-    {\color{ForestGreen}$d'\leftarrow \textit{cdist}[u] + w + counter\_value + \textit{edge\_adj}[u][v]$\tcp*{Unique distance}\label{alg:bmssp_base_case_modified_distance}}
+    {\color{Sepia}$d'\leftarrow \textit{cdist}[u] + w + counter + G_{edge}[u][v]$\tcp*{Unique distance}\label{alg:bmssp_base_case_modified_distance}}
     \If{$d'\le \textit{dist}[v]$ \textbf{and} $d'<B$}{
       $\textit{dist}[v]\leftarrow d'$\;
       {\color{ForestGreen}$\textit{pred}[v]\leftarrow u$\tcp*{Update predecessor}\label{alg:bmssp_base_case_pred}}
-      {\color{ForestGreen}$\textit{cdist}[v]\leftarrow \textit{cdist}[u] + w + counter\_value$\tcp*{Update counter distance}\label{alg:bmssp_base_case_counter_dist_update}}
+      {\color{Sepia}$\textit{cdist}[v]\leftarrow \textit{cdist}[u] + w + counter$\tcp*{Update counter distance}\label{alg:bmssp_base_case_counter_dist_update}}
       $Heap.InsertOrDecreaseKey(v,d')$\;\label{alg:bmssp_base_case_push}
     }
   }

@@ -1,6 +1,6 @@
 \begin{algorithm}[!htbp]
 \SingleSpacedXI
-\caption{Find Pivots (\texttt{BmsspSolver.find\_pivots})}
+\caption{Find Pivots (\texttt{BmsspCore.find\_pivots})}
 \label{alg:bmssp_find_pivots}
 \SetAlgoLined
 \KwIn{upper bound $B$, frontier $S$}
@@ -10,11 +10,11 @@ $W\leftarrow S$; {\color{Fuchsia}$W_{\mathrm{prev}}$}$\leftarrow S$\;
   {\color{Fuchsia}$W_{\mathrm{curr}}$}$\leftarrow\emptyset$\;
   \ForEach{$u\in$ {\color{Fuchsia}$W_{\mathrm{prev}}$}}{
     \ForEach{$(v,w)\in G[u]$}{
-      {\color{ForestGreen}$d'\leftarrow \textit{cdist}[u] + w + counter\_value + \textit{edge\_adj}[u][v]$\tcp*{Unique distance}}
+      {\color{Sepia}$d'\leftarrow \textit{cdist}[u] + w + counter + G_{edge}[u][v]$\tcp*{Unique distance}}
       \If{$d'\le \textit{dist}[v]$}{
           $\textit{dist}[v]\leftarrow d'$\;
           {\color{ForestGreen}$\textit{pred}[v]\leftarrow u$\tcp*{Update predecessor}\label{alg:bmssp_find_pivots_pred}}
-          {\color{ForestGreen} $\textit{cdist}[v]\leftarrow \textit{cdist}[u] + w + counter\_value$\tcp*{Update counter distance}\label{alg:bmssp_find_pivots_counter_dist_update}}
+          {\color{Sepia} $\textit{cdist}[v]\leftarrow \textit{cdist}[u] + w + counter$\tcp*{Update counter distance}\label{alg:bmssp_find_pivots_counter_dist_update}}
         \If{$d'<B$}{{\color{Fuchsia}$W_{\mathrm{curr}}$}$\leftarrow$ {\color{Fuchsia}$W_{\mathrm{curr}}$}$\cup\{v\}$}
       }
     }
@@ -30,10 +30,9 @@ $\text{indegreeF} \leftarrow \{u \mapsto 0 : u \in W\}$\tcp*{Create an empty $in
 
 \ForEach{$u\in W$}{
   \ForEach{$(v,w)\in G[u]$}{
-    {\color{ForestGreen}$d'\leftarrow \textit{cdist}[u] + w + counter\_value + \textit{edge\_adj}[u][v]$\tcp*{Unique Distance}}
-    \If{$v\in W$ \textbf{and} $d'=\textit{dist}[v]$}{
-      $F[u]\leftarrow F[u]\cup\{v\}$\;
-      $\text{indegreeF}[v]\leftarrow \text{indegreeF}[v]+1$\;
+    \If{$v\in W$ \textbf {and} {\color{blue}$\textit{pred}[v] = u$}}{
+        $F[u]\leftarrow F[u]\cup\{v\}$\;
+        $\text{indegreeF}[v]\leftarrow \text{indegreeF}[v]+1$\;
     }
   }
 }
