@@ -26,9 +26,9 @@ $(B, U) \leftarrow$ \textsc{RecursiveBMSSP}($l, \infty, O$)\;
 
 \BlankLine
 {\color{Sepia}
-  \ForEach{$i \in \textit{cdist}$}{
-    \If{$\textit{cdist}[i] \neq \infty$}{
-      $\textit{cdist}[i] \leftarrow \text{round}(\textit{cdist}[i], p)$\tcp*{Convert back to original precision}\label{alg:bmssp_solve_precision_adjustment}
+  \ForEach{$i \in \textit{dist}$}{
+    \If{$\textit{dist}[i] \neq \infty$}{
+      $\textit{dist}[i] \leftarrow \text{round}(\textit{dist}[i], p)$\tcp*{Convert back to original precision}\label{alg:bmssp_solve_precision_adjustment}
     }
   }
 }
