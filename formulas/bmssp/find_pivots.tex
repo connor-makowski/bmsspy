@@ -5,23 +5,23 @@
 \SetAlgoLined
 \KwIn{upper bound $B$, frontier $S$}
 \KwOut{pivot set $P$, temporary frontier $W$}
-$W\leftarrow S$; {\color{Fuchsia}$W_{\mathrm{prev}}$}$\leftarrow S$\;
+$W\leftarrow S$; {\color{Blue}$W_{\mathrm{prev}}$}$\leftarrow S$\;
 \For{$1$ \KwTo $k$ iterations}{
-  {\color{Fuchsia}$W_{\mathrm{curr}}$}$\leftarrow\emptyset$\;
-  \ForEach{$u\in$ {\color{Fuchsia}$W_{\mathrm{prev}}$}}{
+  {\color{Blue}$W_{\mathrm{curr}}$}$\leftarrow\emptyset$\;
+  \ForEach{$u\in$ {\color{Blue}$W_{\mathrm{prev}}$}}{
     \ForEach{$(v,w)\in G[u]$}{
       {\color{Sepia}$d'\leftarrow \textit{cdist}[u] + w + counter + G_{edge}[u][v]$\tcp*{Unique distance}}
       \If{$d'\le \textit{dist}[v]$}{
           $\textit{dist}[v]\leftarrow d'$\;
           {\color{ForestGreen}$\textit{pred}[v]\leftarrow u$\tcp*{Update predecessor}\label{alg:bmssp_find_pivots_pred}}
           {\color{Sepia} $\textit{cdist}[v]\leftarrow \textit{cdist}[u] + w + counter$\tcp*{Update counter distance}\label{alg:bmssp_find_pivots_counter_dist_update}}
-        \If{$d'<B$}{{\color{Fuchsia}$W_{\mathrm{curr}}$}$\leftarrow$ {\color{Fuchsia}$W_{\mathrm{curr}}$}$\cup\{v\}$}
+        \If{$d'<B$}{{\color{Blue}$W_{\mathrm{curr}}$}$\leftarrow$ {\color{Blue}$W_{\mathrm{curr}}$}$\cup\{v\}$}
       }
     }
   }
-  $W\leftarrow W\cup$ {\color{Fuchsia}$W_{\mathrm{curr}}$}\;
+  $W\leftarrow W\cup$ {\color{Blue}$W_{\mathrm{curr}}$}\;
   \If{$|W|>k|S|$}{\Return{$(S,W)$}}
-  {\color{Fuchsia}$W_{\mathrm{prev}}$}$\leftarrow$ {\color{Fuchsia}$W_{\mathrm{curr}}$}\;
+  {\color{Blue}$W_{\mathrm{prev}}$}$\leftarrow$ {\color{Blue}$W_{\mathrm{curr}}$}\;
 }
 \BlankLine
 {\color{Bittersweet}
@@ -30,7 +30,7 @@ $\text{indegreeF} \leftarrow \{u \mapsto 0 : u \in W\}$\tcp*{Create an empty $in
 
 \ForEach{$u\in W$}{
   \ForEach{$(v,w)\in G[u]$}{
-    \If{$v\in W$ \textbf {and} {\color{blue}$\textit{pred}[v] = u$}}{
+    \If{$v\in W$ \textbf {and} {\color{Blue}$\textit{pred}[v] = u$}\label{alg:bmssp_find_pivots_pred_not_dist}}{
         $F[u]\leftarrow F[u]\cup\{v\}$\;
         $\text{indegreeF}[v]\leftarrow \text{indegreeF}[v]+1$\;
     }

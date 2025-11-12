@@ -216,7 +216,7 @@ class BmsspCore:
         forest = {i: set() for i in temp_frontier}
         indegree = {i: 0 for i in temp_frontier}
         for frontier_idx in temp_frontier:
-            prev_distance = self.counter_distance_matrix[frontier_idx]
+            # prev_distance = self.counter_distance_matrix[frontier_idx]
             for connection_idx, connection_distance in self.graph[frontier_idx].items():
                 # Old code:
                 # Modification: Use a new get distance function to ensure unique lengths
@@ -381,7 +381,7 @@ class BmsspCore:
                 for connection_idx, connection_distance in self.graph[new_frontier_idx].items():
                     new_distance = prev_distance + connection_distance + self.counter_value + self.edge_adj_graph[new_frontier_idx][connection_idx]
                     if new_distance <= self.counter_and_edge_distance_matrix[connection_idx]:
-                        # Addition: Add predecessor tracking and
+                        # Addition: Add predecessor tracking
                         if new_distance < self.counter_and_edge_distance_matrix[connection_idx]:
                             self.predecessor[connection_idx] = new_frontier_idx
                             self.counter_and_edge_distance_matrix[connection_idx] = new_distance

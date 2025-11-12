@@ -29,7 +29,7 @@ graph = [
     {}
 ]
 
-bmssp_graph = (graph) 
+bmssp_graph = Bmssp(graph) 
 
 bmssp_graph.solve(origin_id=0) #=>
 # {

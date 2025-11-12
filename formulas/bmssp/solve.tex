@@ -1,14 +1,14 @@
 \begin{algorithm}[!htbp]
 \SingleSpacedXI
-\caption{{\color{Bittersweet}BMSSP Solve (\texttt{BmsspCore.\_\_init\_\_} \& \texttt{Bmssp.solve})}}
-\label{alg:bmssp_init}
+\caption{{\color{Red}BMSSP Solve (E2E) (\texttt{BmsspCore.\_\_init\_\_} \& \texttt{Bmssp.solve})}}
+\label{alg:bmssp_solve}
 \SetAlgoLined
 \KwIn{origin set $O$, destination id $dest$ (optional)}
 \KwOut{dictionary with path, length, distance matrix, and predecessor}
 
 $\textit{dist}[0..|G|-1] \leftarrow \infty$\;
-{\color{Sepia}$\textit{cdist}[0..|G|-1] \leftarrow \infty$ \tcp*{Counter distance matrix}\label{alg:bmssp_init_cdist}}
-{\color{ForestGreen}$\textit{pred}[0..|G|-1] \leftarrow -1$ \tcp*{Track predecessors for path reconstruction}\label{alg:bmssp_init_pred}}
+{\color{Sepia}$\textit{cdist}[0..|G|-1] \leftarrow \infty$ \tcp*{Counter distance matrix}\label{alg:bmssp_solve_cdist}}
+{\color{ForestGreen}$\textit{pred}[0..|G|-1] \leftarrow -1$ \tcp*{Track predecessors for path reconstruction}\label{alg:bmssp_solve_pred}}
 
 \ForEach{$o \in O$}{
   $\textit{dist}[o] \leftarrow 0$\;
@@ -16,13 +16,13 @@ $\textit{dist}[0..|G|-1] \leftarrow \infty$\;
 }
 
 \BlankLine
-{\color{blue}$k \leftarrow \lfloor \log_2(|G|)^{1/3} \rfloor$ \tcp*{Use $log_2$}\label{alg:bmssp_init_k}}
+{\color{blue}$k \leftarrow \lfloor \log_2(|G|)^{1/3} \rfloor$ \tcp*{Use $log_2$}\label{alg:bmssp_solve_k}}
 
-{\color{blue}$t \leftarrow \lfloor \log_2(|G|)^{2/3} \rfloor$ \tcp*{Use $log_2$}\label{alg:bmssp_init_t}}
-{\color{blue}$l \leftarrow \left\lceil \dfrac{\log_2(|G|)}{t} \right\rceil$\  \tcp*{Use $log_2$}\label{alg:bmssp_init_l}}
+{\color{blue}$t \leftarrow \lfloor \log_2(|G|)^{2/3} \rfloor$ \tcp*{Use $log_2$}\label{alg:bmssp_solve_t}}
+{\color{blue}$l \leftarrow \left\lceil \dfrac{\log_2(|G|)}{t} \right\rceil$\  \tcp*{Use $log_2$}\label{alg:bmssp_solve_l}}
 
 \BlankLine
-$(B, U) \leftarrow$ \textsc{RecursiveBMSSP}($l, \infty, O$)\;
+$(B, U) \leftarrow$ \textsc{RecursiveBMSSP}($l, \infty, O$) \tcp*{Algorithm \ref{alg:bmssp_recursive_bmssp}}
 
 \BlankLine
 {\color{Sepia}
@@ -34,7 +34,7 @@ $(B, U) \leftarrow$ \textsc{RecursiveBMSSP}($l, \infty, O$)\;
 }
 
 \BlankLine
-{\color{Bittersweet}
+{\color{Red}
   \eIf{$dest \neq \text{None}$}{
     {\color{ForestGreen}$\textit{path} \leftarrow \textsc{ReconstructPath}(dest, \textit{pred})$\;}
     $\textit{length} \leftarrow \textit{dist}[dest]$\;

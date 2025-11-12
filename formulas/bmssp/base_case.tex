@@ -8,7 +8,7 @@
 $Heap \leftarrow \textsc{BinaryHeap}((\textit{dist}[x],x))$; $S' \leftarrow \emptyset$; $B' \leftarrow B$\;
 \While{$Heap\neq\emptyset$}{
   $(d,u) \leftarrow Heap.ExtractMin()$\;
-  {\color{Fuchsia} \If{$|S'| \geq k$}{
+  {\color{Blue} \If{$|S'| \geq k$}{
     $B' \leftarrow d$; \textbf{break}\tcp*{Early termination}\label{alg:bmssp_base_case_early_break}
   }}
   $S'\leftarrow S'\cup\{u\}$\;
