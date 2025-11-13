@@ -5,46 +5,46 @@
 \SetAlgoLined
 \KwIn{upper bound $B$, frontier $S$}
 \KwOut{pivot set $P$, temporary frontier $W$}
-$W\leftarrow S$; {\color{Blue}$W_{\mathrm{prev}}$}$\leftarrow S$\;
+
+\BlankLine
+$W \leftarrow S$; {\color{Blue}$W_{\mathrm{prev}} \leftarrow S$\tcp*{FIN: initialize previous frontier}}\label{alg:bmssp_find_pivots_start}
 \For{$1$ \KwTo $k$ iterations}{
-  {\color{Blue}$W_{\mathrm{curr}}$}$\leftarrow\emptyset$\;
-  \ForEach{$u\in$ {\color{Blue}$W_{\mathrm{prev}}$}}{
-    \ForEach{$(v,w)\in G[u]$}{
-      {\color{Sepia}$d'\leftarrow \textit{cdist}[u] + w + counter + G_{edge}[u][v]$\tcp*{Unique distance}}
-      \If{$d'\le \textit{dist}[v]$}{
-          $\textit{dist}[v]\leftarrow d'$\;
-          {\color{ForestGreen}$\textit{pred}[v]\leftarrow u$\tcp*{Update predecessor}\label{alg:bmssp_find_pivots_pred}}
-          {\color{Sepia} $\textit{cdist}[v]\leftarrow \textit{cdist}[u] + w + counter$\tcp*{Update counter distance}\label{alg:bmssp_find_pivots_counter_dist_update}}
-        \If{$d'<B$}{{\color{Blue}$W_{\mathrm{curr}}$}$\leftarrow$ {\color{Blue}$W_{\mathrm{curr}}$}$\cup\{v\}$}
+  {\color{Blue}$W_{\mathrm{curr}} \leftarrow \emptyset$}\;
+  \ForEach{$u \in W_{\mathrm{prev}}$}{
+    \ForEach{$(v,w) \in G[u]$}{
+      {\color{Brown}$d' \leftarrow \textit{cdist}[u] + w + counter + G_{edge}[u][v]$\tcp*{RUA: Unique distance}\label{alg:bmssp_find_pivots_counter_dist_update}}
+      \If{$d' \le \textit{dist}[v]$}{
+        $\textit{dist}[v] \leftarrow d'$\;
+        {\color{Green}$\textit{pred}[v] \leftarrow u$\tcp*{PT: update predecessor}\label{alg:bmssp_find_pivots_pred}}
+        {\color{Brown}$\textit{cdist}[v] \leftarrow \textit{cdist}[u] + w + counter$\tcp*{RUA: Counter distance update}\label{alg:bmssp_find_pivots_counter_dist_update2}}
+        \If{$d' < B$}{{\color{Blue}$W_{\mathrm{curr}} \leftarrow W_{\mathrm{curr}} \cup \{v\}$}}
       }
     }
   }
-  $W\leftarrow W\cup$ {\color{Blue}$W_{\mathrm{curr}}$}\;
-  \If{$|W|>k|S|$}{\Return{$(S,W)$}}
-  {\color{Blue}$W_{\mathrm{prev}}$}$\leftarrow$ {\color{Blue}$W_{\mathrm{curr}}$}\;
+  $W \leftarrow W \cup W_{\mathrm{curr}}$\;
+  \If{$|W| > k|S|$}{\Return{$(S,W)$}}
+  {\color{Blue}$W_{\mathrm{prev}} \leftarrow W_{\mathrm{curr}}$\tcp*{FIN: advance to next iteration frontier}\label{alg:bmssp_find_pivots_prev_update}}
 }
-\BlankLine
 {\color{Bittersweet}
-$F \leftarrow \{u \mapsto \emptyset : u \in W\}$\tcp*{Create an empty forest $F$ to be filled}\label{alg:bmssp_find_pivots_forest_expansion}
-$\text{indegreeF} \leftarrow \{u \mapsto 0 : u \in W\}$\tcp*{Create an empty $indegreeF$ to be filled}
-
-\ForEach{$u\in W$}{
-  \ForEach{$(v,w)\in G[u]$}{
-    \If{$v\in W$ \textbf {and} {\color{Blue}$\textit{pred}[v] = u$}\label{alg:bmssp_find_pivots_pred_not_dist}}{
-        $F[u]\leftarrow F[u]\cup\{v\}$\;
-        $\text{indegreeF}[v]\leftarrow \text{indegreeF}[v]+1$\;
-    }
-  }
-}
+$F \leftarrow \{u \mapsto \emptyset : u \in W\}$\tcp*{EFPC: initialize empty adjacency lists for forest $F$}\label{alg:bmssp_find_pivots_forest_init}
+$F^{ID} \leftarrow \{u \mapsto 0 : u \in W\}$\tcp*{EFPC: initialize in-degree counter $F^{ID}$}
 \BlankLine
-$P\leftarrow\emptyset$\;
-\ForEach{$u \in S$}{
-  \If{$\text{indegreeF}[u] = 0$}{
-    \If{$\textsc{IsPivot}(u, F, k)$}{
-      $P \leftarrow P \cup \{u\}$
+\ForEach{$u \in W$}{
+  \ForEach{$(v,w) \in G[u]$}{
+    \If(\tcp*[f]{EFPC: add edge $v$ if reached from $u$ \label{alg:bmssp_find_pivots_pred_in_forest}}){$v \in W$ \textbf{and} {\color{Blue}$\textit{pred}[v] = u$}}{
+      $F[u] \leftarrow F[u] \cup \{v\}$\tcp*{EFPC: record child $v$ under parent $u$ in $F$}
+      $F^{ID}[v] \leftarrow F^{ID}[v] + 1$\tcp*{EFPC: increment in-degree of $v$}
     }
   }
-}
+}\label{alg:bmssp_find_pivots_forest_loop_end}
+$P \leftarrow \emptyset$\;
+\ForEach{$u \in S$}{\label{alg:bmssp_find_pivots_roots_start}
+  \If(\tcp*[f]{EFPC: root node in forest $F$}){$F^{ID}[u] = 0$}{
+    \If(\tcp*[f]{EFPC: call Algorithm~\ref{alg:utils_is_pivot}}){\textsc{IsPivot}$(u, F, k)$}{
+      $P \leftarrow P \cup \{u\}$\tcp*{EFPC: add pivot $u$ to set $P$}
+    }
+  }
+}\label{alg:bmssp_find_pivots_roots_end}
 }
 \Return{$(P,W)$}\;
 \end{algorithm}

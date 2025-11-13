@@ -21,17 +21,21 @@ pip install bmsspy
 ```python
 from bmsspy import Bmssp
 
+# Graph with 5 nodes: 0..4
+# Adjacency-list representation with nonnegative weights
 graph = [
-    {1: 1, 2: 1},
-    {2: 1, 3: 3},
-    {3: 1, 4: 2},
-    {4: 2},
-    {}
+    {1: 1, 2: 1},   # 0 -> 1 (1), 0 -> 2 (1)
+    {2: 1, 3: 3},   # 1 -> 2 (1), 1 -> 3 (3)
+    {3: 1, 4: 2},   # 2 -> 3 (1), 2 -> 4 (2)
+    {4: 2},         # 3 -> 4 (2)
+    {}              # 4 has no outgoing edges
 ]
 
-bmssp_graph = Bmssp(graph) 
+bmssp_graph = Bmssp(graph) # Initialize the graph as a Bmssp graph
 
-bmssp_graph.solve(origin_id=0) #=>
+# Distances and predecessors from origin 0
+res_0 = bmssp_graph.solve(origin_id=0) 
+print(res_0) #=>
 # {
 #     'origin_id': 0,
 #     'destination_id': None,
@@ -41,7 +45,9 @@ bmssp_graph.solve(origin_id=0) #=>
 #     'length': None
 # }
 
-bmssp_graph.solve(origin_id=0, destination_id=4) #=>
+# Shortest path from 0 to 4
+res_0_4 = bmssp_graph.solve(origin_id=0, destination_id=4) 
+print(res_0_4) #=>
 # {
 #     'origin_id': 0,
 #     'destination_id': 4,

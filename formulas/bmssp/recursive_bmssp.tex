@@ -11,34 +11,33 @@
 }
 
 $(P,W) \leftarrow$ \textsc{FindPivots}($B,S$)\;
-$D \leftarrow$  \textsc{BmsspDataStructure}($M,B$) with $M=2^{(l-1)t}$\;
-\ForEach{$p \in P$}{$D.\textsc{Insert}(p, \textit{dist}[p])$}
+$D \leftarrow$ \textsc{BmsspDataStructure}($M,B$) with $M=2^{(l-1)t}$\;\label{alg:bmssp_recursive_ds_init}
+\ForEach{$p \in P$}{$D.\textsc{Insert}(p, \textit{dist}[p])$}\label{alg:bmssp_recursive_insert_pivots}
 
-{\color{Blue}$B_{\mathrm{comp}}$} $\leftarrow \min(\{\textit{dist}[p] : p \in P\}\cup\{B\})$; $U \leftarrow \emptyset$\;
+{\color{Blue}$B_{\mathrm{comp}}$} $\leftarrow \min(\{\textit{dist}[p] : p \in P\}\cup\{B\})$; 
+$U \leftarrow \emptyset$\;\label{alg:bmssp_recursive_init_bcomp}
 
-\While{$|U| < k \cdot 2^{lt}$ and $\neg D.\textsc{IsEmpty}()$}{
-  ({\color{Blue}$B_{\mathrm{curr}}$},{\color{Blue}$S_{\mathrm{curr}}$}) $\leftarrow D.\textsc{Pull}()$\;
-  ({\color{Blue}$B_{\mathrm{comp}}$},{\color{Blue}$U_{\mathrm{curr}}$}) $\leftarrow$ \textsc{RecursiveBMSSP}($l-1$,{\color{Blue}$B_{\mathrm{curr}}$},{\color{Blue}$S_{\mathrm{curr}}$})\;
+\While{$|U| < k \cdot 2^{lt}$ \textbf{and} $\neg D.\textsc{IsEmpty}()$}{\label{alg:bmssp_recursive_budget_guard}
+  ({\color{Blue}$B_{\mathrm{curr}}$},{\color{Blue}$S_{\mathrm{curr}}$}) $\leftarrow D.\textsc{Pull}()$\;\label{alg:bmssp_recursive_pull}
+  ({\color{Blue}$B_{\mathrm{comp}}$},{\color{Blue}$U_{\mathrm{curr}}$}) $\leftarrow$ \textsc{RecursiveBMSSP}($l-1$,{\color{Blue}$B_{\mathrm{curr}}$},{\color{Blue}$S_{\mathrm{curr}}$})\;\label{alg:bmssp_recursive_recurse}
   $U \leftarrow U \cup$ {\color{Blue}$U_{\mathrm{curr}}$}\;
   $K \leftarrow \emptyset$\;
 
   \ForEach{$u \in$ {\color{Blue}$U_{\mathrm{curr}}$}}{
     \ForEach{$(v,w) \in G[u]$}{
-      {\color{Sepia}$d' \leftarrow \textit{cdist}[u]+w+counter+G_{edge}[u][v]$\tcp*{Unique distance}}
-      \If{$d' \leq \textit{dist}[v]$}{
+      {\color{Brown}$d' \leftarrow \textit{cdist}[u]+w+counter+G_{edge}[u][v]$\tcp*{RUA: Unique effective key}}\label{alg:bmssp_recursive_key}
+      \If{$d' \leq \textit{dist}[v]$}{\label{alg:bmssp_recursive_relax}
         $\textit{dist}[v]\leftarrow d'$\;
-        {\color{ForestGreen}$\textit{pred}[v]\leftarrow u$\tcp*{Update predecessor}\label{alg:bmssp_recursive_bmssp_pred}}
-        {\color{Sepia}$\textit{cdist}[v]\leftarrow \textit{cdist}[u]+w+counter$\tcp*{Update counter distance}}
-        \uIf{{\color{Blue}$B_{\mathrm{curr}}$}$ \leq d' < B$}{ $D.\textsc{Insert}(v,d')$ }
-        \ElseIf{{\color{Blue}$B_{\mathrm{comp}}$}$ \leq d' < $ {\color{Blue}$B_{\mathrm{curr}}$}}{ $K \leftarrow K \cup \{(v,d')\}$ }
+        {\color{Green}$\textit{pred}[v]\leftarrow u$\tcp*{PT: Update predecessor}\label{alg:bmssp_recursive_bmssp_pred}}
+        {\color{Brown}$\textit{cdist}[v]\leftarrow \textit{cdist}[u]+w+counter$\tcp*{RUA: Counter distance update}}\label{alg:bmssp_recursive_key2}
+        \uIf{{\color{Blue}$B_{\mathrm{curr}}$}$ \leq d' < B$}{ $D.\textsc{Insert}(v,d')$ }\label{alg:bmssp_recursive_insert}
+        \ElseIf{{\color{Blue}$B_{\mathrm{comp}}$}$ \leq d' < $ {\color{Blue}$B_{\mathrm{curr}}$}}{ $K \leftarrow K \cup \{(v,d')\}$ }\label{alg:bmssp_recursive_collectK}
       }
     }
   }
 
-  $D.\textsc{BatchPrepend}(K \cup \{(x,\textit{dist}[x]) : x \in$ {\color{Blue}$S_{\mathrm{curr}}$}$, ${\color{Blue}$B_{\mathrm{comp}}$}$ \leq \textit{dist}[x] < $ {\color{Blue}$B_{\mathrm{curr}}$}$\})$\;
+  $D.\textsc{BatchPrepend}(K \cup \{(x,\textit{dist}[x]) : x \in$ {\color{Blue}$S_{\mathrm{curr}}$}$, ${\color{Blue}$B_{\mathrm{comp}}$}$ \leq \textit{dist}[x] < $ {\color{Blue}$B_{\mathrm{curr}}$}$\})$\;\label{alg:bmssp_recursive_batchprepend}
 }
-$B_{\mathrm{comp}} \leftarrow \min(B_{\mathrm{comp}}, B)$\;
-\Return $(B_{\mathrm{comp}},U \leftarrow U \cup \{x \in W : \textit{dist}[x] < B_{\mathrm{comp}}\})$\;
-
-
+$B_{\mathrm{comp}} \leftarrow \min(B_{\mathrm{comp}}, B)$\;\label{alg:bmssp_recursive_clip}
+\Return $(B_{\mathrm{comp}},\, U \cup \{x \in W : \textit{dist}[x] < B_{\mathrm{comp}}\})$\;\label{alg:bmssp_recursive_return}
 \end{algorithm}

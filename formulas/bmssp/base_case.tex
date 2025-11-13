@@ -3,24 +3,28 @@
 \caption{Base Case (\texttt{BmsspCore.base\_case})}
 \label{alg:bmssp_base_case}
 \SetAlgoLined
-\KwIn{upper bound $B$, singleton frontier $S$}
+\KwIn{upper bound $B$, singleton frontier $S=\{x\}$}
 \KwOut{new bound $B'$, new frontier $S'$}
-$Heap \leftarrow \textsc{BinaryHeap}((\textit{dist}[x],x))$; $S' \leftarrow \emptyset$; $B' \leftarrow B$\;
-\While{$Heap\neq\emptyset$}{
-  $(d,u) \leftarrow Heap.ExtractMin()$\;
-  {\color{Blue} \If{$|S'| \geq k$}{
-    $B' \leftarrow d$; \textbf{break}\tcp*{Early termination}\label{alg:bmssp_base_case_early_break}
+
+$Heap \leftarrow \textsc{BinaryHeap}((\textit{dist}[x],x))$; 
+$S' \leftarrow \emptyset$; 
+$B' \leftarrow B$\;\label{alg:bmssp_base_case_heap_init}
+
+\While{$Heap \neq \emptyset$}{
+  $(d,u) \leftarrow Heap.\textsc{ExtractMin}()$\;
+  {\color{Blue}\If{$|S'| \geq k$}{
+    $B' \leftarrow d$; \textbf{break}\tcp*{FIN: stop at $(k{+}1)$st vertex}\label{alg:bmssp_base_case_early_break}
   }}
-  $S'\leftarrow S'\cup\{u\}$\;
-  \ForEach{$(v,w)\in G[u]$}{
-    {\color{Sepia}$d'\leftarrow \textit{cdist}[u] + w + counter + G_{edge}[u][v]$\tcp*{Unique distance}\label{alg:bmssp_base_case_modified_distance}}
-    \If{$d'\le \textit{dist}[v]$ \textbf{and} $d'<B$}{
-      $\textit{dist}[v]\leftarrow d'$\;
-      {\color{ForestGreen}$\textit{pred}[v]\leftarrow u$\tcp*{Update predecessor}\label{alg:bmssp_base_case_pred}}
-      {\color{Sepia}$\textit{cdist}[v]\leftarrow \textit{cdist}[u] + w + counter$\tcp*{Update counter distance}\label{alg:bmssp_base_case_counter_dist_update}}
-      $Heap.InsertOrDecreaseKey(v,d')$\;\label{alg:bmssp_base_case_push}
+  $S' \leftarrow S' \cup \{u\}$\;
+  \ForEach{$(v,w) \in G[u]$}{
+    {\color{Brown}$d' \leftarrow \textit{cdist}[u] + w + counter + G_{edge}[u][v]$\tcp*{RUA: unique distance}\label{alg:bmssp_base_case_modified_distance}}
+    \If{$d' \le \textit{dist}[v]$ \textbf{and} $d' < B$}{
+      $\textit{dist}[v] \leftarrow d'$\;
+      {\color{Green}$\textit{pred}[v] \leftarrow u$\tcp*{PT: update predecessor}\label{alg:bmssp_base_case_pred}}
+      {\color{Brown}$\textit{cdist}[v] \leftarrow \textit{cdist}[u] + w + counter$\tcp*{RUA: advance counter distance}\label{alg:bmssp_base_case_counter_dist_update}}
+      $Heap.\textsc{InsertOrDecreaseKey}(v,d')$\;\label{alg:bmssp_base_case_push}
     }
   }
 }
-\Return{$(B',S')$}\;
+\Return{$(B', S')$}\;
 \end{algorithm}
