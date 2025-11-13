@@ -158,7 +158,7 @@ class Bmssp:
             distance_matrix = solver.counter_distance_matrix
 
         # Remove counter values from distance matrix
-        distance_matrix = [round(i, self.precision) if i != inf else i for i in distance_matrix]
+        distance_matrix = [float(round(i, self.precision)) if i != inf else i for i in distance_matrix]
 
         return {
             "origin_id": (
