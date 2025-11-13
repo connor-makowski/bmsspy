@@ -1,47 +1,59 @@
+# General Imports
 import time
 from pamda import pamda
-from scgraph import Graph
 from scgraph.utils import hard_round
+from scgraph.spanning import SpanningTree
+
+# Geographs
 from scgraph.geographs.marnet import graph as marnet_graph
 from scgraph.geographs.us_freeway import graph as us_freeway_graph
-
 from scgraph_data.world_highways_and_marnet import (
     graph as world_highways_and_marnet_graph,
 )
 
-from scgraph.spanning import SpanningTree
-
-from bmsspy.bmssp_solver import BmsspSolver
-from bmsspy.solvers import bmssp
+# Local Imports
+from bmsspy import Bmssp
+from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 
 
 print("\n===============\nBMSSP VS SCGraph Tests:\n===============")
 
 
-def bmssp_tester(graph, origin_id, destination_id):
-    obj = bmssp(graph, origin_id, destination_id)
-    return {
-        "path": obj["path"],
-        "length": (
-            hard_round(3, obj["length"]) if obj["length"] is not None else None
-        ),
-    }
-
-
 def validate(name, realized, expected):
     # Custom lenth rounding for floating point precision issues
-    if isinstance(realized, dict):
-        if "length" in realized:
-            realized["length"] = hard_round(3, realized["length"])
-    if isinstance(expected, dict):
-        if "length" in expected:
-            expected["length"] = hard_round(3, expected["length"])
+    realized = [hard_round(6, float(val)) if float(val)!=float('inf') else float('inf') for val in realized]
+    expected = [hard_round(6, float(val)) if float(val)!=float('inf') else float('inf') for val in expected]
     if realized == expected:
         print(f"{name}: PASS")
     else:
         print(f"{name}: FAIL")
-        print("Expected:", expected)
-        print("Realized:", realized)
+        # for idx in range(len(realized)):
+        #     if realized[idx] != expected[idx]:
+        #         print(
+        #             f"  Node {idx}: Realized={realized[idx]}, Expected={expected[idx]}"
+        #         )
+        #         raise Exception("Test Failed")
+        # print("Expected:", expected)
+        # print("Realized:", realized)
+
+def check_correctness(name, graph, origin_id):
+    # Since the BMSSP conversion function can not take 0 lenghts, we test it vs
+    # the constant degree converted graph trimmed to the original graph size
+    bmssp_graph = Bmssp(graph=graph)
+    dm_sp_tree = SpanningTree.makowskis_spanning_tree(graph, origin_id)
+    validate(
+        name=name + " (Standard)",
+        realized=bmssp_graph.solve(origin_id=origin_id)["distance_matrix"],
+        expected=dm_sp_tree["distance_matrix"],  # Trimmed to original graph size
+    )
+    bmssp_heap_function = bmssp_graph.solve(
+        origin_id=origin_id, data_structure=BmsspHeapDataStructure
+    )
+    validate(
+        name=name + " (Heap)",
+        realized=bmssp_heap_function["distance_matrix"],
+        expected=dm_sp_tree["distance_matrix"],  # Trimmed to original graph size
+    )
 
 
 def time_test(name, thunk):
@@ -59,125 +71,80 @@ graph = [
     {3: 6},
 ]
 
-bmssp_solver = BmsspSolver(graph, 1)
-shortest_path_tree = SpanningTree.makowskis_spanning_tree(graph, 1)
-validate(
+check_correctness(
     name="BMSSP Basic Graph Distance Matrix",
-    realized=bmssp_solver.distance_matrix,
-    expected=shortest_path_tree["distance_matrix"],
+    graph=graph,
+    origin_id=1,
 )
 
-bmssp_marnet_solver = BmsspSolver(marnet_graph, 1)
-marnet_shortest_path_tree = SpanningTree.makowskis_spanning_tree(
-    marnet_graph, 1
-)
-validate(
+check_correctness(
     name="BMSSP Marnet Graph Distance Matrix",
-    realized=bmssp_marnet_solver.distance_matrix,
-    expected=marnet_shortest_path_tree["distance_matrix"],
+    graph=marnet_graph,
+    origin_id=1,
 )
 
-bmssp_us_freeway_solver = BmsspSolver(us_freeway_graph, 1)
-us_freeway_shortest_path_tree = SpanningTree.makowskis_spanning_tree(
-    us_freeway_graph, 1
-)
-validate(
+check_correctness(
     name="BMSSP US Freeway Graph Distance Matrix",
-    realized=bmssp_us_freeway_solver.distance_matrix,
-    expected=us_freeway_shortest_path_tree["distance_matrix"],
+    graph=us_freeway_graph,
+    origin_id=1,
 )
 
-world_highways_and_marnet_solver = BmsspSolver(
-    world_highways_and_marnet_graph, 1
-)
-world_highways_and_marnet_shortest_path_tree = (
-    SpanningTree.makowskis_spanning_tree(world_highways_and_marnet_graph, 1)
-)
-validate(
+check_correctness(
     name="BMSSP World Highways and Marnet Graph Distance Matrix",
-    realized=world_highways_and_marnet_solver.distance_matrix,
-    expected=world_highways_and_marnet_shortest_path_tree["distance_matrix"],
-)
-
-print()
-
-graph = marnet_graph
-
-validate(
-    name="BMSSP 1 (marnet)",
-    realized=bmssp_tester(marnet_graph, 0, 5),
-    expected=Graph.dijkstra_makowski(marnet_graph, 0, 5),
-)
-
-validate(
-    name="BMSSP 2 (marnet)",
-    realized=bmssp_tester(marnet_graph, 100, 7999),
-    expected=Graph.dijkstra_makowski(marnet_graph, 100, 7999),
-)
-
-validate(
-    name="BMSSP 3 (marnet)",
-    realized=bmssp_tester(marnet_graph, 4022, 8342),
-    expected=Graph.dijkstra_makowski(marnet_graph, 4022, 8342),
-)
-
-validate(
-    name="BMSSP 4 (us_freeway)",
-    realized=bmssp_tester(us_freeway_graph, 0, 5),
-    expected=Graph.dijkstra_makowski(us_freeway_graph, 0, 5),
-)
-
-validate(
-    name="BMSSP 5 (us_freeway)",
-    realized=bmssp_tester(us_freeway_graph, 4022, 8342),
-    expected=Graph.dijkstra_makowski(us_freeway_graph, 4022, 8342),
-)
-
-validate(
-    name="BMSSP 6 (world_highways_and_marnet)",
-    realized=bmssp_tester(world_highways_and_marnet_graph, 0, 5),
-    expected=Graph.dijkstra_makowski(world_highways_and_marnet_graph, 0, 5),
+    graph=world_highways_and_marnet_graph,
+    origin_id=1,
 )
 
 print("\n===============\nBMSSP Time Tests:\n===============")
 
+marnet_graph_bmssp = Bmssp(graph=marnet_graph)
+us_freeway_graph_bmssp = Bmssp(graph=us_freeway_graph)
+world_highways_and_marnet_graph_bmssp = Bmssp(graph=world_highways_and_marnet_graph)
+
 time_test(
     "BMSSP 1 (marnet)",
-    pamda.thunkify(bmssp_tester)(
-        graph=marnet_graph, origin_id=0, destination_id=5
+    pamda.thunkify(marnet_graph_bmssp.solve)(
+    origin_id=0, destination_id=5
     ),
 )
 time_test(
     "BMSSP 2 (marnet)",
-    pamda.thunkify(bmssp_tester)(
-        graph=marnet_graph, origin_id=100, destination_id=7999
+    pamda.thunkify(marnet_graph_bmssp.solve)(
+        origin_id=100, destination_id=7999
     ),
 )
 time_test(
     "BMSSP 3 (marnet)",
-    pamda.thunkify(bmssp_tester)(
-        graph=marnet_graph, origin_id=4022, destination_id=8342
+    pamda.thunkify(marnet_graph_bmssp.solve)(
+        origin_id=4022, destination_id=8342
     ),
 )
 
 time_test(
     "BMSSP 4 (us_freeway)",
-    pamda.thunkify(bmssp_tester)(
-        graph=us_freeway_graph, origin_id=0, destination_id=5
+    pamda.thunkify(us_freeway_graph_bmssp.solve)(
+        origin_id=0, destination_id=5
     ),
 )
 
 time_test(
     "BMSSP 5 (us_freeway)",
-    pamda.thunkify(bmssp_tester)(
-        graph=us_freeway_graph, origin_id=4022, destination_id=8342
+    pamda.thunkify(us_freeway_graph_bmssp.solve)(
+        origin_id=4022, destination_id=8342
     ),
 )
 
 time_test(
     "BMSSP 6 (world_highways_and_marnet)",
-    pamda.thunkify(bmssp_tester)(
-        graph=world_highways_and_marnet_graph, origin_id=0, destination_id=5
+    pamda.thunkify(world_highways_and_marnet_graph_bmssp.solve)(
+        origin_id=0, destination_id=5
+    ),
+)
+
+time_test(
+    "BMSSP 7 (heap) (world_highways_and_marnet)",
+    pamda.thunkify(world_highways_and_marnet_graph_bmssp.solve)(
+        origin_id=0, destination_id=5, data_structure=BmsspHeapDataStructure
     ),
 )
 

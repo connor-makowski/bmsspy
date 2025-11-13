@@ -1,6 +1,6 @@
 \begin{algorithm}[!htbp]
 \SingleSpacedXI
-\caption{Recursive BMSSP (\texttt{BmsspSolver.recursive\_bmssp})}
+\caption{Recursive BMSSP (\texttt{BmsspCore.recursive\_bmssp})}
 \label{alg:bmssp_recursive_bmssp}
 \SetAlgoLined
 \KwIn{depth $l$, bound $B$, frontier $S$}
@@ -11,33 +11,34 @@
 }
 
 $(P,W) \leftarrow$ \textsc{FindPivots}($B,S$)\;
-$D \leftarrow$ new \textsc{BmsspDataStructure}($M,B$) with $M=2^{(l-1)t}$\;
-\ForEach{$p \in P$}{$D.\textsc{Insert}(p, dist[p])$}
+$D \leftarrow$  \textsc{BmsspDataStructure}($M,B$) with $M=2^{(l-1)t}$\;
+\ForEach{$p \in P$}{$D.\textsc{Insert}(p, \textit{dist}[p])$}
 
-{\color{Fuchsia}$B_{\mathrm{comp}}$} $\leftarrow \min(\{\textit{dist}[p] : p \in P\}\cup\{B\})$; $U \leftarrow \emptyset$\;
+{\color{Blue}$B_{\mathrm{comp}}$} $\leftarrow \min(\{\textit{dist}[p] : p \in P\}\cup\{B\})$; $U \leftarrow \emptyset$\;
 
-\While{$|U| < k^{2lt}$ and $\neg D.\textsc{IsEmpty}()$}{
-  ({\color{Fuchsia}$B_{\mathrm{curr}}$},{\color{Fuchsia}$S_{\mathrm{curr}}$}) $\leftarrow D.\textsc{Pull}()$\;
-  ({\color{Fuchsia}$B_{\mathrm{comp}}$},{\color{Fuchsia}$U_{\mathrm{curr}}$}) $\leftarrow$ \textsc{RecursiveBMSSP}($l-1$,{\color{Fuchsia}$B_{\mathrm{curr}}$},{\color{Fuchsia}$S_{\mathrm{curr}}$})\;
-  $U \leftarrow U \cup$ {\color{Fuchsia}$U_{\mathrm{curr}}$}\;
+\While{$|U| < k \cdot 2^{lt}$ and $\neg D.\textsc{IsEmpty}()$}{
+  ({\color{Blue}$B_{\mathrm{curr}}$},{\color{Blue}$S_{\mathrm{curr}}$}) $\leftarrow D.\textsc{Pull}()$\;
+  ({\color{Blue}$B_{\mathrm{comp}}$},{\color{Blue}$U_{\mathrm{curr}}$}) $\leftarrow$ \textsc{RecursiveBMSSP}($l-1$,{\color{Blue}$B_{\mathrm{curr}}$},{\color{Blue}$S_{\mathrm{curr}}$})\;
+  $U \leftarrow U \cup$ {\color{Blue}$U_{\mathrm{curr}}$}\;
   $K \leftarrow \emptyset$\;
 
-  \ForEach{$u \in$ {\color{Fuchsia}$U_{\mathrm{curr}}$}}{
+  \ForEach{$u \in$ {\color{Blue}$U_{\mathrm{curr}}$}}{
     \ForEach{$(v,w) \in G[u]$}{
-      {\color{blue}\If{$v=u$}{ continue \tcp*{Avoid $\infty$ self-loops if they exist in $G$}}}\label{alg:bmssp_recursive_bmssp_self_loop_break}
-      $d' \leftarrow dist[u]+w$\;
-      \If{$d' \leq dist[v]$}{
-        {\color{ForestGreen}\If{$d'<\textit{dist}[v]$}{
-          $\textit{dist}[v]\leftarrow d'$; $\textit{pred}[v]\leftarrow u$\tcp*{Update tracking arrays}\label{alg:bmssp_recursive_bmssp_pred}
-        }}
-        \uIf{{\color{Fuchsia}$B_{\mathrm{curr}}$}$ \leq d' < B$}{ $D.\textsc{Insert}(v,d')$ }
-        \ElseIf{{\color{Fuchsia}$B_{\mathrm{comp}}$}$ \leq d' < $ {\color{Fuchsia}$B_{\mathrm{curr}}$}}{ $K \leftarrow K \cup \{(v,d')\}$ }
+      {\color{Sepia}$d' \leftarrow \textit{cdist}[u]+w+counter+G_{edge}[u][v]$\tcp*{Unique distance}}
+      \If{$d' \leq \textit{dist}[v]$}{
+        $\textit{dist}[v]\leftarrow d'$\;
+        {\color{ForestGreen}$\textit{pred}[v]\leftarrow u$\tcp*{Update predecessor}\label{alg:bmssp_recursive_bmssp_pred}}
+        {\color{Sepia}$\textit{cdist}[v]\leftarrow \textit{cdist}[u]+w+counter$\tcp*{Update counter distance}}
+        \uIf{{\color{Blue}$B_{\mathrm{curr}}$}$ \leq d' < B$}{ $D.\textsc{Insert}(v,d')$ }
+        \ElseIf{{\color{Blue}$B_{\mathrm{comp}}$}$ \leq d' < $ {\color{Blue}$B_{\mathrm{curr}}$}}{ $K \leftarrow K \cup \{(v,d')\}$ }
       }
     }
   }
 
-  $D.\textsc{BatchPrepend}(K \cup \{(x,dist[x]) : x \in$ {\color{Fuchsia}$S_{\mathrm{curr}}$}$, ${\color{Fuchsia}$B_{\mathrm{comp}}$}$ \leq dist[x] < $ {\color{Fuchsia}$B_{\mathrm{curr}}$}$\})$\;
+  $D.\textsc{BatchPrepend}(K \cup \{(x,\textit{dist}[x]) : x \in$ {\color{Blue}$S_{\mathrm{curr}}$}$, ${\color{Blue}$B_{\mathrm{comp}}$}$ \leq \textit{dist}[x] < $ {\color{Blue}$B_{\mathrm{curr}}$}$\})$\;
 }
-\Return $({\color{Fuchsia}B_{\mathrm{comp}}},U \leftarrow U \cup \{x \in W : dist[x] < {\color{Fuchsia}B_{\mathrm{comp}}}\})${\color{Fuchsia}\tcp*{Unnecessary $\min$ omitted}}\label{alg:bmssp_recursive_bmssp_return}
+$B_{\mathrm{comp}} \leftarrow \min(B_{\mathrm{comp}}, B)$\;
+\Return $(B_{\mathrm{comp}},U \leftarrow U \cup \{x \in W : \textit{dist}[x] < B_{\mathrm{comp}}\})$\;
+
 
 \end{algorithm}
