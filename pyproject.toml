@@ -18,7 +18,7 @@ authors = [
     {name="Connor Makowski", email="conmak@mit.edu"}
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     'License :: OSI Approved :: MIT License',
@@ -29,4 +29,4 @@ dependencies = []
 [project.urls]
 "Homepage" = "https://github.com/connor-makowski/bmsspy"
 "Bug Tracker" = "https://github.com/connor-makowski/bmsspy/issues"
-"Documentation" = "https://connor-makowski.github.io/bmsspy/bmsspy/enforcer.html"
+"Documentation" = "https://connor-makowski.github.io/bmsspy/bmsspy.html"

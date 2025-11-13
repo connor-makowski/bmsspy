@@ -55,6 +55,14 @@ def check_correctness(name, graph, origin_id):
         expected=dm_sp_tree["distance_matrix"],  # Trimmed to original graph size
     )
 
+    bmssp_no_cd = Bmssp(graph=graph, use_constant_degree_graph=False)
+    dm_sp_tree_no_cd = SpanningTree.makowskis_spanning_tree(graph, origin_id)
+    validate(
+        name=name + "(Not Constant Degree)",
+        realized=bmssp_no_cd.solve(origin_id=origin_id)["distance_matrix"],
+        expected=dm_sp_tree_no_cd["distance_matrix"],  # Trimmed to original graph size
+    )
+
 
 def time_test(name, thunk):
     start = time.time()
@@ -101,6 +109,10 @@ marnet_graph_bmssp = Bmssp(graph=marnet_graph)
 us_freeway_graph_bmssp = Bmssp(graph=us_freeway_graph)
 world_highways_and_marnet_graph_bmssp = Bmssp(graph=world_highways_and_marnet_graph)
 
+marnet_graph_bmssp_no_cd = Bmssp(graph=marnet_graph, use_constant_degree_graph=False)
+us_freeway_graph_bmssp_no_cd = Bmssp(graph=us_freeway_graph, use_constant_degree_graph=False)
+world_highways_and_marnet_graph_bmssp_no_cd = Bmssp(graph=world_highways_and_marnet_graph, use_constant_degree_graph=False)
+
 time_test(
     "BMSSP 1 (marnet)",
     pamda.thunkify(marnet_graph_bmssp.solve)(
@@ -145,6 +157,13 @@ time_test(
     "BMSSP 7 (heap) (world_highways_and_marnet)",
     pamda.thunkify(world_highways_and_marnet_graph_bmssp.solve)(
         origin_id=0, destination_id=5, data_structure=BmsspHeapDataStructure
+    ),
+)
+
+time_test(
+    "BMSSP 8 (not constant degree) (world_highways_and_marnet)",
+    pamda.thunkify(world_highways_and_marnet_graph_bmssp_no_cd.solve)(
+        origin_id=0, destination_id=5
     ),
 )
 

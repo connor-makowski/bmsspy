@@ -60,6 +60,14 @@ def check_correctness(name, graph, origin_id):
         expected=dm_sp_tree["distance_matrix"][:len(graph)],  # Trimmed to original graph size
     )
 
+    bmmssp_no_cd = Bmssp(graph=graph, use_constant_degree_graph=False)
+    bmssp_no_cd_output = bmmssp_no_cd.solve(origin_id=origin_id)
+    validate(
+        name=name + "(Not Constant Degree)",
+        realized=bmssp_no_cd_output["distance_matrix"],
+        expected=dm_sp_tree["distance_matrix"][:len(graph)],  # Trimmed to original graph size
+    )
+
 
 for gridgraph_size in [25, 50, 100]:
     gridgraph = make_gridgraph(gridgraph_size, gridgraph_size)

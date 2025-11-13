@@ -3,9 +3,6 @@
 # This file has been modified significantly for use in this project
 
 
-NoneType = type(None)
-
-
 class BSNode:
     def __init__(self, key: any, value: any = None):
         """
@@ -30,9 +27,9 @@ class BSNode:
         """
         self.key: any = key
         self.val: any = value
-        self.parent: "BSNode" | None = None
-        self.left: "BSNode" | None = None
-        self.right: "BSNode" | None = None
+        self.parent: BSNode | None = None
+        self.left: BSNode | None = None
+        self.right: BSNode | None = None
 
     def num_nodes(self) -> int:
         """
