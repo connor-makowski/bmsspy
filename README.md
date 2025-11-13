@@ -38,7 +38,7 @@ graph = [
 bmssp_graph = Bmssp(graph) # Initialize the graph as a Bmssp graph
 
 # Distances and predecessors from origin 0
-res_0 = bmssp_graph.solve(origin_id=0) 
+res_0 = bmssp_graph.solve(origin_id=0)
 print(res_0) #=>
 # {
 #     'origin_id': 0,
@@ -50,7 +50,7 @@ print(res_0) #=>
 # }
 
 # Shortest path from 0 to 4
-res_0_4 = bmssp_graph.solve(origin_id=0, destination_id=4) 
+res_0_4 = bmssp_graph.solve(origin_id=0, destination_id=4)
 print(res_0_4) #=>
 # {
 #     'origin_id': 0,

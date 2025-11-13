@@ -21,8 +21,22 @@ print("\n===============\nBMSSP VS SCGraph Tests:\n===============")
 
 def validate(name, realized, expected):
     # Custom lenth rounding for floating point precision issues
-    realized = [hard_round(6, float(val)) if float(val)!=float('inf') else float('inf') for val in realized]
-    expected = [hard_round(6, float(val)) if float(val)!=float('inf') else float('inf') for val in expected]
+    realized = [
+        (
+            hard_round(6, float(val))
+            if float(val) != float("inf")
+            else float("inf")
+        )
+        for val in realized
+    ]
+    expected = [
+        (
+            hard_round(6, float(val))
+            if float(val) != float("inf")
+            else float("inf")
+        )
+        for val in expected
+    ]
     if realized == expected:
         print(f"{name}: PASS")
     else:
@@ -36,6 +50,7 @@ def validate(name, realized, expected):
         # print("Expected:", expected)
         # print("Realized:", realized)
 
+
 def check_correctness(name, graph, origin_id):
     # Since the BMSSP conversion function can not take 0 lenghts, we test it vs
     # the constant degree converted graph trimmed to the original graph size
@@ -44,7 +59,9 @@ def check_correctness(name, graph, origin_id):
     validate(
         name=name + " (Standard)",
         realized=bmssp_graph.solve(origin_id=origin_id)["distance_matrix"],
-        expected=dm_sp_tree["distance_matrix"],  # Trimmed to original graph size
+        expected=dm_sp_tree[
+            "distance_matrix"
+        ],  # Trimmed to original graph size
     )
     bmssp_heap_function = bmssp_graph.solve(
         origin_id=origin_id, data_structure=BmsspHeapDataStructure
@@ -52,7 +69,9 @@ def check_correctness(name, graph, origin_id):
     validate(
         name=name + " (Heap)",
         realized=bmssp_heap_function["distance_matrix"],
-        expected=dm_sp_tree["distance_matrix"],  # Trimmed to original graph size
+        expected=dm_sp_tree[
+            "distance_matrix"
+        ],  # Trimmed to original graph size
     )
 
     bmssp_no_cd = Bmssp(graph=graph, use_constant_degree_graph=False)
@@ -60,7 +79,9 @@ def check_correctness(name, graph, origin_id):
     validate(
         name=name + "(Not Constant Degree)",
         realized=bmssp_no_cd.solve(origin_id=origin_id)["distance_matrix"],
-        expected=dm_sp_tree_no_cd["distance_matrix"],  # Trimmed to original graph size
+        expected=dm_sp_tree_no_cd[
+            "distance_matrix"
+        ],  # Trimmed to original graph size
     )
 
 
@@ -107,17 +128,23 @@ print("\n===============\nBMSSP Time Tests:\n===============")
 
 marnet_graph_bmssp = Bmssp(graph=marnet_graph)
 us_freeway_graph_bmssp = Bmssp(graph=us_freeway_graph)
-world_highways_and_marnet_graph_bmssp = Bmssp(graph=world_highways_and_marnet_graph)
+world_highways_and_marnet_graph_bmssp = Bmssp(
+    graph=world_highways_and_marnet_graph
+)
 
-marnet_graph_bmssp_no_cd = Bmssp(graph=marnet_graph, use_constant_degree_graph=False)
-us_freeway_graph_bmssp_no_cd = Bmssp(graph=us_freeway_graph, use_constant_degree_graph=False)
-world_highways_and_marnet_graph_bmssp_no_cd = Bmssp(graph=world_highways_and_marnet_graph, use_constant_degree_graph=False)
+marnet_graph_bmssp_no_cd = Bmssp(
+    graph=marnet_graph, use_constant_degree_graph=False
+)
+us_freeway_graph_bmssp_no_cd = Bmssp(
+    graph=us_freeway_graph, use_constant_degree_graph=False
+)
+world_highways_and_marnet_graph_bmssp_no_cd = Bmssp(
+    graph=world_highways_and_marnet_graph, use_constant_degree_graph=False
+)
 
 time_test(
     "BMSSP 1 (marnet)",
-    pamda.thunkify(marnet_graph_bmssp.solve)(
-    origin_id=0, destination_id=5
-    ),
+    pamda.thunkify(marnet_graph_bmssp.solve)(origin_id=0, destination_id=5),
 )
 time_test(
     "BMSSP 2 (marnet)",
@@ -134,9 +161,7 @@ time_test(
 
 time_test(
     "BMSSP 4 (us_freeway)",
-    pamda.thunkify(us_freeway_graph_bmssp.solve)(
-        origin_id=0, destination_id=5
-    ),
+    pamda.thunkify(us_freeway_graph_bmssp.solve)(origin_id=0, destination_id=5),
 )
 
 time_test(

@@ -1,6 +1,7 @@
 from copy import deepcopy
 from decimal import Decimal
-inf = Decimal('Infinity')
+
+inf = Decimal("Infinity")
 
 
 def input_check(
@@ -81,11 +82,11 @@ def convert_to_constant_degree(graph: list[dict[int, int | float]]) -> dict:
     Convert a graph to a guaranteed unique path length based constant degree graph with no more than 2 incoming and 2 outgoing edges per node.
 
     The precision value determines the number of decimal places to maintain when adjusting edge weights to ensure unique path lengths.
-    
+
     Args:
 
     - graph (list of dict): The input graph represented as an adjacency list.
-    
+
     Returns:
 
     - dict: A dictionary containing the converted constant degree graph and the output mapping.
@@ -95,7 +96,7 @@ def convert_to_constant_degree(graph: list[dict[int, int | float]]) -> dict:
             - Note: All nodes below the original graph length map to themselves.
         - 'original_graph_len' (int): The length of the original graph.
     """
-    # Determine if the graph needs to be converted to constant degree 
+    # Determine if the graph needs to be converted to constant degree
     #   - (two in / two out)
     #   - Or
     #   - One of (one in / two out) (two in / one out)
@@ -122,7 +123,9 @@ def convert_to_constant_degree(graph: list[dict[int, int | float]]) -> dict:
     idx_map = list(range(len(graph)))
 
     for node_idx, num_partitions in nodes_to_partition.items():
-        local_idx_mapping = [node_idx] + list(range(len(graph), len(graph) + num_partitions - 1))
+        local_idx_mapping = [node_idx] + list(
+            range(len(graph), len(graph) + num_partitions - 1)
+        )
         graph.extend([{} for _ in range(num_partitions - 1)])
         in_graph.extend([{} for _ in range(num_partitions - 1)])
         idx_map.extend([node_idx] * (num_partitions - 1))
@@ -166,7 +169,10 @@ def convert_to_constant_degree(graph: list[dict[int, int | float]]) -> dict:
         "original_graph_len": original_graph_len,
     }
 
-def convert_from_constant_degree(distance_matrix, predecessor_matrix, constant_degree_dict):
+
+def convert_from_constant_degree(
+    distance_matrix, predecessor_matrix, constant_degree_dict
+):
     """
     Convert the distance and predecessor matrices from a constant degree graph back to the equivalent matrices for the original graph.
 
@@ -175,7 +181,7 @@ def convert_from_constant_degree(distance_matrix, predecessor_matrix, constant_d
     - distance_matrix (list of float): The distance matrix from the constant degree graph.
     - predecessor_matrix (list of int): The predecessor matrix from the constant degree graph.
     - constant_degree_dict (dict): The dictionary returned by `convert_to_constant_degree` function.
-    
+
     Returns:
 
     - dict: A dictionary containing the converted distance and predecessor matrices.
@@ -186,14 +192,19 @@ def convert_from_constant_degree(distance_matrix, predecessor_matrix, constant_d
     cd_original_graph_len = constant_degree_dict["original_graph_len"]
 
     predecessor_matrix_converted = []
-    for loc_idx, node_idx in enumerate(predecessor_matrix[:cd_original_graph_len]):
+    for loc_idx, node_idx in enumerate(
+        predecessor_matrix[:cd_original_graph_len]
+    ):
         while True:
             if node_idx == -1:
                 predecessor_matrix_converted.append(node_idx)
                 break
             else:
                 mapped_node_idx = cd_idx_map[node_idx]
-                if mapped_node_idx < cd_original_graph_len and mapped_node_idx != loc_idx:
+                if (
+                    mapped_node_idx < cd_original_graph_len
+                    and mapped_node_idx != loc_idx
+                ):
                     predecessor_matrix_converted.append(mapped_node_idx)
                     break
                 else:

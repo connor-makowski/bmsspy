@@ -1,12 +1,24 @@
 from .core import BmsspCore
-from .helpers.utils import input_check, reconstruct_path, convert_to_constant_degree, convert_from_constant_degree, inf
+from .helpers.utils import (
+    input_check,
+    reconstruct_path,
+    convert_to_constant_degree,
+    convert_from_constant_degree,
+    inf,
+)
 
 from bmsspy.data_structures.data_structure import BmsspDataStructure
 from decimal import Decimal
 from math import ceil, log
 
+
 class Bmssp:
-    def __init__(self, graph: list[dict[int, int | float]], precision: int = 6, use_constant_degree_graph: bool = True):
+    def __init__(
+        self,
+        graph: list[dict[int, int | float]],
+        precision: int = 6,
+        use_constant_degree_graph: bool = True,
+    ):
         """
         Function:
 
@@ -35,7 +47,10 @@ class Bmssp:
             - Note: It appears that this is not necessary for solving the algorithm, but is used to achieve big O complexity targets.
                     This is default to True even though it appears to be slower in practice for all the graphs we have tested thus far.
         """
-        self.graph = [{k: round(Decimal(v), precision) for k, v in i.items()} for i in graph]
+        self.graph = [
+            {k: round(Decimal(v), precision) for k, v in i.items()}
+            for i in graph
+        ]
         self.precision = precision
         self.use_constant_degree_graph = use_constant_degree_graph
 
@@ -53,10 +68,22 @@ class Bmssp:
         #   to ensure that no two paths are measured as the same length
         num_edges = sum(len(neighbors) for neighbors in self.used_graph)
         num_nodes = len(self.used_graph)
-        counter_magnitude_adjustment = -ceil(log((Decimal(num_nodes*2+1))/(Decimal(10)**Decimal(-self.precision-1)),10))
-        self.counter_value = Decimal(10)**Decimal(counter_magnitude_adjustment)
-        edge_id_magnitude_adjustment = -ceil(log(((Decimal(num_edges*2+1))/(self.counter_value)),10))
-        edge_id_adjustment_value = Decimal(10)**Decimal(edge_id_magnitude_adjustment)
+        counter_magnitude_adjustment = -ceil(
+            log(
+                (Decimal(num_nodes * 2 + 1))
+                / (Decimal(10) ** Decimal(-self.precision - 1)),
+                10,
+            )
+        )
+        self.counter_value = Decimal(10) ** Decimal(
+            counter_magnitude_adjustment
+        )
+        edge_id_magnitude_adjustment = -ceil(
+            log(((Decimal(num_edges * 2 + 1)) / (self.counter_value)), 10)
+        )
+        edge_id_adjustment_value = Decimal(10) ** Decimal(
+            edge_id_magnitude_adjustment
+        )
 
         # Store a set of adjustment values to be used during BMSSP solving
         edge_id_value = Decimal(0.0)
@@ -65,7 +92,6 @@ class Bmssp:
             for neighbor in node_neighbors:
                 edge_id_value += edge_id_adjustment_value
                 self.edge_adj_graph[node_idx][neighbor] = edge_id_value
-
 
     def solve(
         self,
@@ -126,25 +152,27 @@ class Bmssp:
             origin_id_check = origin_id
         # Input Validation (Uses original graph and not used_graph to ensure validity)
         input_check(
-            graph=self.graph, origin_id=origin_id_check, destination_id=destination_id
+            graph=self.graph,
+            origin_id=origin_id_check,
+            destination_id=destination_id,
         )
 
         # Run the BMSSP Algorithm to relax as many edges as possible.
         solver = BmsspCore(
-            graph = self.used_graph,
-            origin_ids = origin_id,
+            graph=self.used_graph,
+            origin_ids=origin_id,
             counter_value=self.counter_value,
             edge_adj_graph=self.edge_adj_graph,
             data_structure=data_structure,
-            pivot_relaxation_steps=pivot_relaxation_steps, 
-            target_tree_depth=target_tree_depth
+            pivot_relaxation_steps=pivot_relaxation_steps,
+            target_tree_depth=target_tree_depth,
         )
         if destination_id is not None:
             if solver.counter_distance_matrix[destination_id] == float("inf"):
                 raise Exception(
                     "Something went wrong, the origin and destination nodes are not connected."
                 )
-        
+
         if self.use_constant_degree_graph:
             converted_outputs = convert_from_constant_degree(
                 distance_matrix=solver.counter_distance_matrix,
@@ -158,7 +186,10 @@ class Bmssp:
             distance_matrix = solver.counter_distance_matrix
 
         # Remove counter values from distance matrix
-        distance_matrix = [float(round(i, self.precision)) if i != inf else i for i in distance_matrix]
+        distance_matrix = [
+            float(round(i, self.precision)) if i != inf else i
+            for i in distance_matrix
+        ]
 
         return {
             "origin_id": (

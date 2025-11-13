@@ -10,7 +10,9 @@ if output["distance_matrix"] != [0, 1]:
 else:
     print("BMSSP Tiny Test: PASS")
 
-graph = Bmssp([{1: 1, 2: 1, 3: 10}, {2: 1, 3: 3, 1: 10}, {3: 1, 4: 2}, {4: 2}, {}])
+graph = Bmssp(
+    [{1: 1, 2: 1, 3: 10}, {2: 1, 3: 3, 1: 10}, {3: 1, 4: 2}, {4: 2}, {}]
+)
 
 output = graph.solve(0)
 if output["distance_matrix"] != [0, 1, 1, 2, 3]:
@@ -24,19 +26,27 @@ if output["length"] != 2 or output["path"] != [0, 2, 3]:
 else:
     print("BMSSP Test with destination: PASS")
 
-zero_weight_graph = Bmssp([{1:0}, {2:0}, {3:0}, {4:0}, {}])
+zero_weight_graph = Bmssp([{1: 0}, {2: 0}, {3: 0}, {4: 0}, {}])
 
 output = zero_weight_graph.solve(0)
-if output["distance_matrix"] != [0,0,0,0,0]:
+if output["distance_matrix"] != [0, 0, 0, 0, 0]:
     print("BMSSP Zero-Weight Test: FAIL")
 else:
     print("BMSSP Zero-Weight Test: PASS")
 
 
-zero_weight_graph2 = Bmssp([{1:0, 2:0, 3:0, 4:0}, {2:0, 3:0}, {3:0, 4:0}, {4:0, 0:0}, {0:0, 1:0}])
+zero_weight_graph2 = Bmssp(
+    [
+        {1: 0, 2: 0, 3: 0, 4: 0},
+        {2: 0, 3: 0},
+        {3: 0, 4: 0},
+        {4: 0, 0: 0},
+        {0: 0, 1: 0},
+    ]
+)
 
 output = zero_weight_graph2.solve(0)
-if output["distance_matrix"] != [0,0,0,0,0]:
+if output["distance_matrix"] != [0, 0, 0, 0, 0]:
     print("BMSSP Zero-Weight 2 Test: FAIL")
 else:
     print("BMSSP Zero-Weight 2 Test: PASS")

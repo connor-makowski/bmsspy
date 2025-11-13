@@ -22,9 +22,24 @@ def make_gridgraph(x_size, y_size):
         add_exterior_walls=False,
     )
 
+
 def validate(name, realized, expected):
-    realized = [hard_round(6, float(val)) if float(val)!=float('inf') else float('inf') for val in realized]
-    expected = [hard_round(6, float(val)) if float(val)!=float('inf') else float('inf') for val in expected]
+    realized = [
+        (
+            hard_round(6, float(val))
+            if float(val) != float("inf")
+            else float("inf")
+        )
+        for val in realized
+    ]
+    expected = [
+        (
+            hard_round(6, float(val))
+            if float(val) != float("inf")
+            else float("inf")
+        )
+        for val in expected
+    ]
     if realized == expected:
         print(f"{name}: PASS")
     else:
@@ -38,18 +53,19 @@ def validate(name, realized, expected):
         # print("Expected:", expected)
         # print("Realized:", realized)
 
+
 def check_correctness(name, graph, origin_id):
     # Since the BMSSP conversion function can not take 0 lenghts, we test it vs
     # the constant degree converted graph trimmed to the original graph size
     bmssp_graph = Bmssp(graph=graph)
     bmssp_graph_output = bmssp_graph.solve(origin_id=origin_id)
-    dm_sp_tree = SpanningTree.makowskis_spanning_tree(
-        graph, origin_id
-    )
+    dm_sp_tree = SpanningTree.makowskis_spanning_tree(graph, origin_id)
     validate(
         name=name + " (Standard)",
         realized=bmssp_graph_output["distance_matrix"],
-        expected=dm_sp_tree["distance_matrix"][:len(graph)],  # Trimmed to original graph size
+        expected=dm_sp_tree["distance_matrix"][
+            : len(graph)
+        ],  # Trimmed to original graph size
     )
     bmssp_heap_output = bmssp_graph.solve(
         origin_id=origin_id, data_structure=BmsspHeapDataStructure
@@ -57,7 +73,9 @@ def check_correctness(name, graph, origin_id):
     validate(
         name=name + " (Heap)",
         realized=bmssp_heap_output["distance_matrix"],
-        expected=dm_sp_tree["distance_matrix"][:len(graph)],  # Trimmed to original graph size
+        expected=dm_sp_tree["distance_matrix"][
+            : len(graph)
+        ],  # Trimmed to original graph size
     )
 
     bmmssp_no_cd = Bmssp(graph=graph, use_constant_degree_graph=False)
@@ -65,7 +83,9 @@ def check_correctness(name, graph, origin_id):
     validate(
         name=name + "(Not Constant Degree)",
         realized=bmssp_no_cd_output["distance_matrix"],
-        expected=dm_sp_tree["distance_matrix"][:len(graph)],  # Trimmed to original graph size
+        expected=dm_sp_tree["distance_matrix"][
+            : len(graph)
+        ],  # Trimmed to original graph size
     )
 
 
