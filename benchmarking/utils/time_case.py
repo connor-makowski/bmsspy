@@ -11,9 +11,9 @@ from .sc_dijkstra import pure_python_sc_dijkstra, pure_python_heapdict_sc_dijkst
 from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 
 
-vanilla_limit = 80000
-nx_limit = 1000000
-ig_limit = 1000000
+vanilla_limit = 80_000
+nx_limit = 600_000
+ig_limit = 600_000
 cd_bmssp_limit = 1000000
 
 def run_algo(algo_key:str, algo_func, algo_kwargs:dict, output:dict, do_run:bool=True, iterations:int=10, print_console:bool=True):

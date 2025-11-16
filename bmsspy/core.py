@@ -243,17 +243,7 @@ class BmsspCore:
             for connection_idx, connection_distance in self.graph[
                 frontier_idx
             ].items():
-                # Old code:
-                # Modification: Use a new get distance function to ensure unique lengths
-                # new_distance = prev_distance + connection_distance + self.counter_value + self.edge_adj_graph[frontier_idx][connection_idx]
-                # if (
-                #     connection_idx in temp_frontier
-                #     and new_distance == self.counter_and_edge_distance_matrix[connection_idx]
-                # ):
-                #     # direction is frontier_idx -> connection_idx (parent to child)
-                #     forest[frontier_idx].add(connection_idx)
-                #     indegree[connection_idx] += 1
-                # TODO: Confirm if this new code is correct
+                # Modification: Use predecessor tracking instead of distance comparison
                 if self.predecessor[connection_idx] == frontier_idx:
                     if connection_idx in temp_frontier:
                         # direction is frontier_idx -> connection_idx (parent to child)

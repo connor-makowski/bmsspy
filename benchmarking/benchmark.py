@@ -31,20 +31,20 @@ graph_data = [
 
     # GridGraphs
     # Square GridGraphs
-    ('square_gridgraph_10x10', make_gridgraph(15, 15)),
+    ('square_gridgraph_15x15', make_gridgraph(15, 15)),
     ('square_gridgraph_25x25', make_gridgraph(25, 25)),
     ('Square GridGraph 50x50', make_gridgraph(50, 50)),
+    ('Square GridGraph 75x75', make_gridgraph(75, 75)),
     ('Square GridGraph 100x100', make_gridgraph(100, 100)),
-    ('Square GridGraph 200x200', make_gridgraph(200, 200)),
-    ('Square GridGraph 300x300', make_gridgraph(300, 300)),
-    ('Square GridGraph 400x400', make_gridgraph(400, 400)),    
+    ('Square GridGraph 250x250', make_gridgraph(250, 250)),
+    ('Square GridGraph 500x500', make_gridgraph(500, 500)),
+    ('Square GridGraph 1000x1000', make_gridgraph(1000, 1000)),
     # Rectangular GridGraphs
-    ('Rectangular_gridgraph_10x50', make_gridgraph(10, 50)),
+    ('Rectangular_gridgraph_15x50', make_gridgraph(15, 50)),
     ('Rectangular_gridgraph_25x50', make_gridgraph(25, 50)),
     ('Rectangular GridGraph 25x100', make_gridgraph(25, 100)),
     ('Rectangular GridGraph 50x100', make_gridgraph(50, 100)),
     ('Rectangular GridGraph 50x200', make_gridgraph(50, 200)),
-    ('Rectangular GridGraph 500x100', make_gridgraph(500, 100)),
     ('Rectangular GridGraph 100x500', make_gridgraph(100, 500)),
     ('Rectangular GridGraph 100x1000', make_gridgraph(100, 1000)),
     ('Rectangular GridGraph 100x1500', make_gridgraph(100, 1500)),
@@ -99,12 +99,12 @@ import platform
 if platform.python_implementation() == 'PyPy':
     print("Code is running under PyPy.")
     pamda.write_csv(
-        filename="benchmarking/outputs/pypy_algorithm_time_tests.csv",
+        filename="benchmarking/outputs/pypy_benchmark_time_tests.csv",
         data=output
     )
 else:
     print(f"Code is running under {platform.python_implementation()}.")
     pamda.write_csv(
-        filename="benchmarking/outputs/algorithm_time_tests.csv",
+        filename="benchmarking/outputs/benchmark_time_tests.csv",
         data=output
     )

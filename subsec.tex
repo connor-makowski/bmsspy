@@ -1,0 +1,14 @@
+\subsection{Data Structure}
+The data structure also had some ambiguities and open questions that required clarification during implementation. To implement the required operations without affecting the asymptotic runtime behavior, several major additions were necessary. We also made some smaller changes that allowed for easier implementation. However, these may not be required given other potential setups.
+
+The first major part of the data structure that needed to be added was a hashmap that hashes each key in the data structure and points to its respective linked-list node. This addition is required in order to facilitate the overwriting of existing keys with new lower values in $O(log(n/m))$ time. As hashmap lookups, inserts, and deletes take an average of $O(1)$ time, this addition does not worsen the asymptotic behavior of any other key data structure operations.
+
+The second major addition required was all linked lists are doubly linked. This includes the linked nodes in a block, and the linked blocks in a chain.
+
+In addition, several minor modifications or extensions have been made for functionality:
+\begin{itemize}
+    \item Modified linked list blocks that were pointed to from the red-black tree to be linked chains of linked list blocks. While not required for our implementation, this generalization is required if future implementations want to work with non-unique values. The modification prevents each block from growing larger than $m$ when more than $m$ keys with the same value are added to the data structure. We ensure that only the ``head" block pointed at from the red-black tree can contain values less than the lower bound, with all blocks later in the chain only containing values equal to the lower bound. This enables us to examine only the following blocks when the size of the first block is less than $m$, ensuring that the pull operations still take $O(m)$ and inserts do not have to consider these later blocks.
+    \item A minimum block size of 2 is enforced, with a separate return size for the ``pull" operation that can be 1.
+    \item Each block linked list has a container object that tracks its upper bound and size.
+    \item The block with the global upper bound is never removed from the red-black tree even if empty.
+\end{itemize}
