@@ -22,6 +22,8 @@ pip install bmsspy
 
 ### Use
 
+![readme_graph](https://raw.githubusercontent.com/connor-makowski/bmsspy/main/static/readme_graph.png)
+
 ```python
 from bmsspy import Bmssp
 
@@ -44,7 +46,7 @@ print(res_0) #=>
 #     'origin_id': 0,
 #     'destination_id': None,
 #     'predecessor': [-1, 0, 0, 2, 2],
-#     'distance_matrix': [0, 1, 1, 2, 3],
+#     'distance_matrix': [0.0, 1.0, 1.0, 2.0, 3.0],
 #     'path': None,
 #     'length': None
 # }
@@ -56,9 +58,25 @@ print(res_0_4) #=>
 #     'origin_id': 0,
 #     'destination_id': 4,
 #     'predecessor': [-1, 0, 0, 2, 2],
-#     'distance_matrix': [0, 1, 1, 2, 3],
+#     'distance_matrix': [0.0, 1.0, 1.0, 2.0, 3.0],
 #     'path': [0, 2, 4],
 #     'length': 3
+# }
+```
+
+In the example above, we only use a single orign, however multiple origins are supported if passed as a set:
+
+```python
+# Pass orgin_id as a set of ids
+res_02 = bmssp_graph.solve(origin_id={0,2})
+print(res_02) #=>
+# {
+#     'origin_id': [0, 2], 
+#     'destination_id': None, 
+#     'predecessor': [-1, 0, -1, 2, 2], 
+#     'distance_matrix': [0.0, 1.0, 0.0, 1.0, 2.0], 
+#     'path': None, 
+#     'length': None
 # }
 ```
 
