@@ -23,6 +23,10 @@ pip install bmsspy
 
 ### Use
 
+The example use cases in this section are based on the following graph:
+
+![readme_graph](https://raw.githubusercontent.com/connor-makowski/bmsspy/main/static/readme_graph.png)
+
 ```python
 from bmsspy import Bmssp
 
@@ -45,7 +49,7 @@ print(res_0) #=>
 #     'origin_id': 0,
 #     'destination_id': None,
 #     'predecessor': [-1, 0, 0, 2, 2],
-#     'distance_matrix': [0, 1, 1, 2, 3],
+#     'distance_matrix': [0.0, 1.0, 1.0, 2.0, 3.0],
 #     'path': None,
 #     'length': None
 # }
@@ -57,11 +61,38 @@ print(res_0_4) #=>
 #     'origin_id': 0,
 #     'destination_id': 4,
 #     'predecessor': [-1, 0, 0, 2, 2],
-#     'distance_matrix': [0, 1, 1, 2, 3],
+#     'distance_matrix': [0.0, 1.0, 1.0, 2.0, 3.0],
 #     'path': [0, 2, 4],
 #     'length': 3
 # }
 ```
+
+In the example above, we only use a single orign, however multiple origins are supported if passed as a set:
+
+```python
+# Pass orgin_id as a set of ids
+res_02 = bmssp_graph.solve(origin_id={0,2})
+print(res_02) #=>
+# {
+#     'origin_id': [0, 2], 
+#     'destination_id': None, 
+#     'predecessor': [-1, 0, -1, 2, 2], 
+#     'distance_matrix': [0.0, 1.0, 0.0, 1.0, 2.0], 
+#     'path': None, 
+#     'length': None
+# }
+```
+
+By default graphs that are given are converted to constant degree such that worst case asymtotic run times are based on the constant degree converted graphs. Before returning a result, the constant degree conversion is undone such that the results are in the original passed graph format.
+
+Most real world graphs are not constant degree. Converting to constant degree graphs can add substantial operational overhead during pre and post processing as well as during the actual algorithmic runtime.
+
+To skip the constant degree conversion:
+```python
+# Set use_constant_degree_graph=False
+bmssp_graph = Bmssp(graph=graph, use_constant_degree_graph=False)
+```
+
 
 
 ## Development
