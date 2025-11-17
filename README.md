@@ -62,6 +62,17 @@ print(res_0_4) #=>
 # }
 ```
 
+By default graphs that are given are converted to constant degree such that worst case asymtotic run times are based on the constant degree converted graphs.
+
+Most real world graphs are not constant degree. Converting to constant degree graphs can add substantial operational overhead. 
+
+To skip the constant degree conversion:
+```python
+# Set use_constant_degree_graph=False
+bmssp_graph = Bmssp(graph=graph, use_constant_degree_graph=False)
+```
+
+
 
 ## Development
 

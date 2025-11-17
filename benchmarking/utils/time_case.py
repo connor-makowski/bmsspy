@@ -14,7 +14,7 @@ from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 vanilla_limit = 80_000
 nx_limit = 600_000
 ig_limit = 600_000
-cd_bmssp_limit = 1000000
+cd_bmssp_limit = 1_000_000
 
 def run_algo(algo_key:str, algo_func, algo_kwargs:dict, output:dict, do_run:bool=True, iterations:int=10, print_console:bool=True):
     if do_run:
