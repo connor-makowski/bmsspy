@@ -22,6 +22,8 @@ pip install bmsspy
 
 ### Use
 
+The example use cases in this section are based on the following graph:
+
 ![readme_graph](https://raw.githubusercontent.com/connor-makowski/bmsspy/main/static/readme_graph.png)
 
 ```python
@@ -80,9 +82,9 @@ print(res_02) #=>
 # }
 ```
 
-By default graphs that are given are converted to constant degree such that worst case asymtotic run times are based on the constant degree converted graphs.
+By default graphs that are given are converted to constant degree such that worst case asymtotic run times are based on the constant degree converted graphs. Before returning a result, the constant degree conversion is undone such that the results are in the original passed graph format.
 
-Most real world graphs are not constant degree. Converting to constant degree graphs can add substantial operational overhead. 
+Most real world graphs are not constant degree. Converting to constant degree graphs can add substantial operational overhead during pre and post processing as well as during the actual algorithmic runtime.
 
 To skip the constant degree conversion:
 ```python
