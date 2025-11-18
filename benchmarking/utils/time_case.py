@@ -12,8 +12,8 @@ from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 
 
 vanilla_limit = 80_000
-nx_limit = 600_000
-ig_limit = 600_000
+nx_limit = 1_000_000
+ig_limit = 1_000_000
 cd_bmssp_limit = 1_000_000
 
 def run_algo(algo_key:str, algo_func, algo_kwargs:dict, output:dict, do_run:bool=True, iterations:int=10, print_console:bool=True):
@@ -30,8 +30,6 @@ def run_algo(algo_key:str, algo_func, algo_kwargs:dict, output:dict, do_run:bool
         output['raw'][algo_key] = []
 
 def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None, test_vanilla_dijkstra:bool=False, print_console:bool=True, iterations:int=10):
-
-
 
     bmssp_graph = Bmssp(graph = scgraph)
     bmssp_graph_no_cd = Bmssp(graph = scgraph, use_constant_degree_graph = False)
@@ -75,8 +73,8 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
     # )
     # SCGraph Dijkstra on Constant Degree Graph Timing
     run_algo(
-        algo_key = 'sc_dijkstra_constant_degree',
-        algo_func = SCSpanning.makowskis_spanning_tree,
+        algo_key = 'pure_python_sc_dijkstra_constant_degree',
+        algo_func = pure_python_sc_dijkstra,
         algo_kwargs = {'graph': constant_degree_scgraph, 'node_id': origin},
         output = output,
         do_run = True,
