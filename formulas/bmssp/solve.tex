@@ -28,7 +28,7 @@ $(B, U) \leftarrow$ \textsc{RecursiveBMSSP}($l, \infty, O$) \tcp*{Algorithm \ref
 {\color{Brown}
   \ForEach{$i \in \textit{dist}$}{
     \If{$\textit{dist}[i] \neq \infty$}{
-      $\textit{dist}[i] \leftarrow \text{round}(\textit{dist}[i], p)$\tcp*{RUA: Convert back to original precision}\label{alg:bmssp_solve_precision_adjustment}
+      $\textit{dist}[i] \leftarrow \text{round}(\textit{dist}[i], precision)$\tcp*{RUA: Convert back to original precision}\label{alg:bmssp_solve_precision_adjustment}
     }
   }
 }

@@ -3,8 +3,8 @@
 \caption{{\color{Red}BMSSP Initialization (E2E) (\texttt{Bmssp.\_\_init\_\_})}}
 \label{alg:bmssp_wrapper_init}
 \SetAlgoLined
-\KwIn{graph $G$ (adjacency list), precision $p$}
-\KwOut{BMSSP object with preprocessed graph and adjustment values}
+\KwIn{graph $G$ (adjacency list), precision $precision$}
+\KwOut{BMSSP object with preprocessed graph and edge adjustment values}
 
 \If{$|G| < 2$}{
   \textbf{raise error} ``graph must have at least 2 nodes''
@@ -13,15 +13,16 @@
 \BlankLine
 \ForEach{node $u \in G$}{
   \ForEach{$(v, w) \in G[u]$}{
-    $G[u][v] \leftarrow \text{round}(w, p)$\;
+    $G[u][v] \leftarrow \text{round}(w, precision)$\;
   }
 }
 
 \BlankLine
 $m \leftarrow \sum_{u \in G} |G[u]|$\;
 $n \leftarrow |G|$\;
+$precision \leftarrow precision$\;
 
-$\textit{counter} \leftarrow 10^{-\left\lceil \log_{10}\left(\frac{(n \cdot 2) + 1}{10^{-(p+1)}}\right) \right\rceil}$\;
+$\textit{counter} \leftarrow 10^{-\left\lceil \log_{10}\left(\frac{(n \cdot 2) + 1}{10^{-(precision+1)}}\right) \right\rceil}$\;
 $\textit{edge\_adj\_value} \leftarrow 10^{-\left\lceil \log_{10}\left(\frac{(m \cdot 2) + 1}{\textit{counter}}\right) \right\rceil}$\;
 
 \BlankLine
