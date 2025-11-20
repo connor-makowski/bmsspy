@@ -86,7 +86,7 @@ print(res_0_4) #=>
 # }
 ```
 
-In the example above, we only use a single orign, however multiple origins are supported if passed as a set:
+In the example above, we only use a single origin, however multiple origins are supported if passed as a set:
 
 ```python
 # Pass orgin_id as a set of ids
