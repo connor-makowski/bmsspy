@@ -150,6 +150,15 @@ class BmsspCore:
         )  # l
 
         #################################
+        # Create recursion tracking structures to operate in O(1) time
+        # The structures are created in O(n log(n)^(1/3)) time
+        #################################
+        self.recursion_counter = [0] * (self.max_recursion_depth)
+        self.recursion_data_struct_maps = [
+            [0] * len(graph) for _ in range(self.max_recursion_depth)
+        ]
+
+        #################################
         # Run the algorithm
         #################################
         # Run the solver algorithm
@@ -382,8 +391,16 @@ class BmsspCore:
         # Step 5–6: initialize data_struct with pivots
         # subset_size = 2^((l-1) * t)
         subset_size = 2 ** ((recursion_depth - 1) * self.target_tree_depth)
+        # Increment the recursion counter for this depth
+        self.recursion_counter[recursion_depth - 1] += 1
+        # Pass the shared recursion data structure map for this depth
+        # Include the current recursion counter as the unique id to ensure
+        # that we don't have stale data in the shared map
         data_struct = self.data_structure(
-            subset_size=subset_size, upper_bound=upper_bound
+            subset_size=subset_size, 
+            upper_bound=upper_bound, 
+            recursion_data_id=self.recursion_counter[recursion_depth - 1], 
+            recursion_data_list=self.recursion_data_struct_maps[recursion_depth - 1]
         )
         for p in pivots:
             data_struct.insert_key_value(
