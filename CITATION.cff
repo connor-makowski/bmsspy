@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: >-
+  BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: article
+authors:
+  - given-names: Connor
+    family-names: Makowski
+    email: conmak@mit.edu
+    affiliation: MIT
+    orcid: 'https://orcid.org/0009-0005-1522-022X'
+  - given-names: Willem
+    family-names: Guter
+  - given-names: Tim
+    family-names: Russell
+  - given-names: Austin
+    family-names: Saragih
+journal: MIT Center for Transportation & Logistics Research Paper Series
+issue: '2025-028'
+year: 2025
+url: 'https://ssrn.com/abstract=5777186'
+repository-code: 'https://github.com/connor-makowski/bmsspy'
+abstract: >-
+  We introduce BMSSPy, the first open-source Python package faithfully implementing the Bounded Multi-Source Shortest Path (BMSSP) algorithm, recently proposed as a breakthrough beyond Dijkstra's sorting barrier for single-source shortest paths.
