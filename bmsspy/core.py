@@ -1,7 +1,7 @@
 from heapq import heappush, heappop
 from math import ceil, log
 
-from bmsspy.data_structures.data_structure import BmsspDataStructure
+from bmsspy.data_structures.list_data_structure import ListBmsspDataStructure
 from bmsspy.helpers.utils import inf
 
 from decimal import Decimal
@@ -48,7 +48,7 @@ class BmsspCore:
         origin_ids: set[int] | int,
         counter_value: int,
         edge_adj_graph: list[dict[int, int | float]],
-        data_structure=BmsspDataStructure,
+        data_structure=ListBmsspDataStructure,
         pivot_relaxation_steps: int | None = None,
         target_tree_depth: int | None = None,
     ):
