@@ -4,6 +4,9 @@ from decimal import Decimal
 # Local Imports
 from bmsspy.helpers.utils import convert_to_constant_degree
 
+
+print("\n===============\nConstant Degree Tests:\n===============")
+
 graph = [
     {1: 1, 2: 1, 3: 1},
     {2: 1, 3: 1},
