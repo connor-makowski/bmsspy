@@ -21,6 +21,11 @@ $\textit{dist}[0..|G|-1] \leftarrow \infty$\;
 {\color{blue}$t \leftarrow \lfloor \log_2(|G|)^{2/3} \rfloor$ \tcp*{FIN: Use $log_2$}\label{alg:bmssp_solve_t}}
 {\color{blue}$l \leftarrow \left\lceil \dfrac{\log_2(|G|)}{t} \right\rceil$\  \tcp*{FIN: Use $log_2$}\label{alg:bmssp_solve_l}}
 
+{\color{blue}$\textit{rlcnt}[0..l-1] \leftarrow 0$\tcp*{Create recursion level counters}\label{alg:bmssp_solve_recursion_counter}}
+{\color{blue}$\textit{rldsm}[0..l-1][0..|G|-1] \leftarrow 0 $\tcp*{Create recursion level data struct mappings}\label{alg:bmssp_solve_recursion_data_struct_map}}
+
+\BlankLine
+
 \BlankLine
 $(B, U) \leftarrow$ \textsc{RecursiveBMSSP}($l, \infty, O$) \tcp*{Algorithm \ref{alg:bmssp_recursive_bmssp}}
 

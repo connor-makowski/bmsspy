@@ -11,7 +11,11 @@
 }
 
 $(P,W) \leftarrow$ \textsc{FindPivots}($B,S$)\;
-$D \leftarrow$ \textsc{BmsspDataStructure}($M,B$) with $M=2^{(l-1)t}$\;\label{alg:bmssp_recursive_ds_init}
+
+$M \leftarrow 2^{(l-1)t}$\;
+{\color{blue} $\textit{rlcnt}[l-1] \leftarrow \textit{rlcnt}[l-1] + 1$ \tcp*{Increment recursion level counter}}
+{\color{blue} $D \leftarrow$ \textsc{BmsspDataStructure}($M,B, \textit{rlcnt}[l-1], \textit{rldsm}[l-1])$\tcp*{Pass recursion map}}\label{alg:bmssp_recursive_ds_init}
+
 \ForEach{$p \in P$}{$D.\textsc{Insert}(p, \textit{dist}[p])$}\label{alg:bmssp_recursive_insert_pivots}
 
 {\color{Blue}$B_{\mathrm{comp}}$} $\leftarrow \min(\{\textit{dist}[p] : p \in P\}\cup\{B\})$; 
