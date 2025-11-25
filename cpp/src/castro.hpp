@@ -489,7 +489,7 @@ struct bmssp { // bmssp class
     }
 
     using uniqueDistT = tuple<wT, int, int, int>;
-    inline uniqueDistT getDist(int u, int v, int w) {
+    inline uniqueDistT getDist(int u, int v, wT w) {
         return {d[u] + w, path_sz[u] + 1, v, u};
     }
     inline uniqueDistT getDist(int u) {

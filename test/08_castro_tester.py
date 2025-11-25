@@ -1,6 +1,8 @@
 # General Imports
 from scgraph import GridGraph
 from scgraph.utils import hard_round
+import time
+from pamda import pamda
 
 # Local Imports
 from bmsspy.entrypoint import Bmssp
@@ -119,3 +121,15 @@ for gridgraph_size in [25, 50, 100]:
             graph=gridgraph.graph,
             origin_id=origin_idx,
         )
+        bmssp_graph = Bmssp(graph=gridgraph.graph)
+
+        start = time.time()
+        bmssp_graph.solve(origin_id=origin_idx)
+        print(f"BMSSP Gridgraph {gridgraph_size}x{gridgraph_size} {case_name} (Python): {round((time.time()-start)*1000, 4)}ms")
+
+
+        cgraph = [[(k, v) for k, v in nbrs.items()] for nbrs in gridgraph.graph]
+        castro_cpp_graph = castro_cpp.BMSSP(cgraph)
+        start = time.time()
+        castro_cpp_graph.solve(origin_idx)
+        print(f"BMSSP Gridgraph {gridgraph_size}x{gridgraph_size} {case_name} (C++): {round((time.time()-start)*1000, 4)}ms")
