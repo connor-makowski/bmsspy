@@ -267,7 +267,7 @@ class ListBmsspDataStructure:
         remaining_best is the smallest value still present after removal, or self.upper_bound if empty.
         """
 
-        smallest_d0 = set()
+        smallest_d0 = []
         if self.D0 and not self.D0.is_empty():
             current_list = self.D0
             # First create the set - we don't know if we will need all of them yet so don't remove
@@ -275,19 +275,19 @@ class ListBmsspDataStructure:
                 len(smallest_d0) < self.subset_size and current_list is not None
             ):
                 for item in current_list:
-                    smallest_d0.add(item.key)
+                    smallest_d0.append(item.key)
                 current_list = current_list.next_list
-        smallest_d1 = set()
+        smallest_d1 = []
         if self.D1.root is not None:
             current_list = self.D1.get_min(self.D1.root).val
             while (
                 len(smallest_d1) < self.subset_size and current_list is not None
             ):
                 for item in current_list:
-                    smallest_d1.add(item.key)
+                    smallest_d1.append(item.key)
                 current_list = current_list.next_list
         # Now combine the two sets to get the final subset and limit the length
-        combined = list(smallest_d0) + list(smallest_d1)
+        combined = smallest_d0 + smallest_d1
         if len(combined) > self.pull_size:
             # Use quicksplit to get the pull_size lowest values
             subset = [
@@ -322,7 +322,7 @@ class ListBmsspDataStructure:
                 remaining_best,
                 min(node.value for node in smallest_block.val),
             )
-        return remaining_best, set(subset)
+        return remaining_best, subset
 
     def is_empty(self) -> bool:
         """
