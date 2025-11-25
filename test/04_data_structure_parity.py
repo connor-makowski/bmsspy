@@ -5,6 +5,7 @@ import random
 from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 from bmsspy.data_structures.data_structure import BmsspDataStructure
 from bmsspy.data_structures.unique_data_structure import UniqueBmsspDataStructure
+from bmsspy.data_structures.list_data_structure import ListBmsspDataStructure
 
 
 def basic_test(ds_class):
@@ -24,18 +25,18 @@ def basic_test(ds_class):
 
     remaining_best, subset = ds.pull()
     assert remaining_best == 70
-    assert subset == {4, 2, 1}
+    assert set(subset) == {4, 2, 1} and len(subset) == 3
 
     remaining_best, subset = ds.pull()
     assert remaining_best == 100
-    assert subset == {3, 5}
+    assert set(subset) == {3, 5} and len(subset) == 2
 
     assert ds.is_empty()
 
     ds.insert_key_value(6, 10)
     remaining_best, subset = ds.pull()
     assert remaining_best == 100
-    assert subset == {6}
+    assert set(subset) == {6} and len(subset) == 1
 
     assert ds.is_empty()
 
@@ -47,15 +48,19 @@ def test_data_structure_parity(seed, ds_class_1, ds_class_2):
     random.seed(seed)
 
     subset_size = random.randint(1, 10)
-    upper_bound = random.randint(100, 2000)
+    upper_bound = random.randint(300, 2000)
 
-    ds_class_1_obj = ds_class_1(subset_size, upper_bound, recursion_data_id=1, recursion_data_list=[0]*100)
-    ds_class_2_obj = ds_class_2(subset_size, upper_bound, recursion_data_id=1, recursion_data_list=[0]*100)
+    ds_class_1_obj = ds_class_1(subset_size, upper_bound, recursion_data_id=1, recursion_data_list=[0]*201)
+    ds_class_2_obj = ds_class_2(subset_size, upper_bound, recursion_data_id=1, recursion_data_list=[0]*201)
     key_values = {}
+    used_values = set()
     # Test insert_key_value
     for _ in range(100):
         key = random.randint(0, 100)
         value = random.randint(upper_bound // 2, upper_bound - 1)
+        while value in used_values:
+            value = random.randint(upper_bound // 2, upper_bound - 1)
+        used_values.add(value)
         if key in key_values:
             if value < key_values[key]:
                 key_values[key] = value
@@ -79,7 +84,12 @@ def test_data_structure_parity(seed, ds_class_1, ds_class_2):
     batch = []
     for _ in range(50):
         key = random.randint(101, 200)
+        while key in key_values:
+            key = random.randint(101, 200)
         value = random.randint(0, upper_bound // 2 - 1)
+        while value in used_values:
+            value = random.randint(0, upper_bound // 2 - 1)
+        used_values.add(value)
         if key in key_values:
             if value < key_values[key]:
                 key_values[key] = value
@@ -108,7 +118,12 @@ if __name__ == "__main__":
     basic_test(BmsspDataStructure)
     basic_test(BmsspHeapDataStructure)
     basic_test(UniqueBmsspDataStructure)
+    basic_test(ListBmsspDataStructure)
     for i in range(10000):
+        # First test parity between non-unique data structures
         test_data_structure_parity(i, BmsspDataStructure, BmsspHeapDataStructure)
-        # test_data_structure_parity(i, BmsspDataStructure, UniqueBmsspDataStructure)
-    print("All tests passed!")
+        # Then test parity between unique and non-unique data structures - essentially ensuring our tests are valid
+        test_data_structure_parity(i, BmsspHeapDataStructure, UniqueBmsspDataStructure)
+        # Finally test parity between unique and list data structures
+        test_data_structure_parity(i, UniqueBmsspDataStructure, ListBmsspDataStructure)
+    print("Data Structure tests passed!")
