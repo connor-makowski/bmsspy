@@ -90,7 +90,18 @@ class BmsspDataStructure:
     together with a lower bound on the remaining values (or B if empty), as required by Alg. 3.
     """
 
-    def __init__(self, subset_size: int, upper_bound: int | float):
+    def __init__(
+        self,
+        subset_size: int,
+        upper_bound: int | float,
+        # The data strucure id to check for current recursion data
+        # This would be compared to the recursion_id stored in the shared list
+        recursion_data_id: int,
+        # A mutable list shared across all data structures at this recursion depth
+        # Eg: [0,0,0,...,(recursion_id, linked_list_id), ...,0]
+        recursion_data_list: list[int, tuple[int, tuple[LinkedListNode, int]]],
+    ):
+        # print(recursion_data_id, recursion_data_list)
         # subset_size: how many items to return per pull (must match Alg. 3 for level l -> Given as M)
         self.subset_size = max(2, subset_size)
         self.pull_size = max(1, subset_size)
@@ -102,6 +113,7 @@ class BmsspDataStructure:
         self.D1 = (
             RBTree()
         )  # D1 is a RB tree tracking upper bounds of linked lists
+        # TODO: @Willem Dont use list as a name since it is a built-in object
         list = LinkedList()
         list.upper_bound = upper_bound
         self.D1.insert(

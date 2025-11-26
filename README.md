@@ -19,6 +19,26 @@ pip install bmsspy
 
 - Github: https://github.com/connor-makowski/bmsspy
 - Docs: https://connor-makowski.github.io/bmsspy/bmsspy.html
+- Paper: https://ssrn.com/abstract=5777186
+
+### How to Cite BMSSPy in your Research
+
+If you use BMSSPy for your research, please consider citing the following paper:
+
+> Makowski, Connor and Guter, Willem and Russell, Tim and Saragih, Austin, BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm (November 19, 2025). MIT Center for Transportation & Logistics Research Paper No. 2025/034, Available at SSRN: https://ssrn.com/abstract=5777186
+
+Or by using the BibTeX entry:
+
+```
+@article{makowski2025bmsspy,
+  title={BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm},
+  author={Makowski, Connor and Guter, Willem and Russell, Tim and Saragih, Austin},
+  journal={MIT Center for Transportation & Logistics Research Paper Series},
+  number={2025-034},
+  year={2025},
+  url={https://ssrn.com/abstract=5777186}
+}
+```
 
 ### Use
 
@@ -73,11 +93,11 @@ In the example above, we only use a single orign, however multiple origins are s
 res_02 = bmssp_graph.solve(origin_id={0,2})
 print(res_02) #=>
 # {
-#     'origin_id': [0, 2], 
-#     'destination_id': None, 
-#     'predecessor': [-1, 0, -1, 2, 2], 
-#     'distance_matrix': [0.0, 1.0, 0.0, 1.0, 2.0], 
-#     'path': None, 
+#     'origin_id': [0, 2],
+#     'destination_id': None,
+#     'predecessor': [-1, 0, -1, 2, 2],
+#     'distance_matrix': [0.0, 1.0, 0.0, 1.0, 2.0],
+#     'path': None,
 #     'length': None
 # }
 ```

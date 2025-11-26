@@ -9,7 +9,7 @@ class BmsspHeapDataStructure:
     together with a lower bound on the remaining values (or B if empty), as required by Alg. 3.
     """
 
-    def __init__(self, subset_size: int, upper_bound: int | float):
+    def __init__(self, subset_size: int, upper_bound: int | float, **kwargs):
         # subset_size: how many items to return per pull (must match Alg. 3 for level l -> Given as M)
         self.subset_size = max(1, subset_size)
         self.upper_bound = upper_bound

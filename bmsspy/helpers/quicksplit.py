@@ -146,6 +146,75 @@ def quicksplit(arr: list[int | float], lower_bucket_size: int = None) -> dict:
             return {"lower": lower, "higher": higher, "pivot": pivot}
 
 
+def quicksplit_tuple(
+    data: list[tuple[Any, int | float]], lower_bucket_size: int = None
+) -> dict:
+    """
+    Function:
+
+    - Splits a list of tuples into two lists using a variant of the Quickselect algorithm.
+
+    Required Arguments:
+
+    - data: A list of tuples where each tuple contains a key (any hashable type) and a value (integer or float) to be split.
+
+    Optional Arguments:
+
+    - lower_bucket_size: The desired size of the lower bucket.
+        - If not provided, the function will split the array into two equal halves (or as close as possible).
+
+    Returns:
+
+    - A dictionary with three keys:
+        - 'lower': A list of tuples in the lower bucket.
+        - 'higher': A list of tuples in the higher bucket.
+        - 'pivot': The max value in the lower bucket or None if the lower bucket is empty (i.e., lower_bucket_size is 0).
+    """
+    # If no lower bucket size is given, split in half or as close as possible
+    if lower_bucket_size is None:
+        lower_bucket_size = len(data) / 2
+    lower_bucket_size = ceil(lower_bucket_size)
+    assert (
+        0 < lower_bucket_size <= len(data)
+    ), "lower_bucket_size must be positive and less than or equal to the length of the array"
+    higher = []
+    lower = []
+    arr = data
+    while True:
+        pivot = median_of_medians([v for k, v in arr], split=False)
+        # Loop over the array once to partition into three lists
+        # This is faster than using list 3 list comprehensions
+        below = []
+        pivots = []
+        above = []
+        for item in arr:
+            if item[1] < pivot:
+                below.append(item)
+            elif item[1] > pivot:
+                above.append(item)
+            else:
+                pivots.append(item)
+
+        count_below = len(below) + len(lower)
+        if lower_bucket_size < count_below:
+            higher = pivots + above + higher
+            arr = below
+        elif lower_bucket_size > count_below + len(pivots):
+            lower = lower + below + pivots
+            arr = above
+        else:
+            pivot_split_idx = lower_bucket_size - count_below
+            lower = lower + below + pivots[:pivot_split_idx]
+            higher = pivots[pivot_split_idx:] + above + higher
+            if pivot_split_idx == 0:
+                pivot = max([i[1] for i in below])
+            return {
+                "lower": lower,
+                "higher": higher,
+                "pivot": pivot,
+            }
+
+
 def quicksplit_dict(
     data: dict[Any, list[int | float]], lower_bucket_size: int = None
 ) -> dict:
