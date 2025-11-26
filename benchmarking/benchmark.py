@@ -39,7 +39,6 @@ graph_data = [
     ('Square GridGraph 250x250', make_gridgraph(250, 250)),
     ('Square GridGraph 500x500', make_gridgraph(500, 500)),
     ('Square GridGraph 1000x1000', make_gridgraph(1000, 1000)),
-    ('Square GridGraph 2000x2000', make_gridgraph(2000, 2000)),
     # Rectangular GridGraphs
     ('Rectangular_gridgraph_15x50', make_gridgraph(15, 50)),
     ('Rectangular_gridgraph_25x50', make_gridgraph(25, 50)),
