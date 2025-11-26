@@ -7,14 +7,13 @@ from pamda.pamda_timer import pamda_timer
 from bmsspy.entrypoint import Bmssp
 from .graphs import get_nx_shortest_path, get_igraph_shortest_path
 from .vanilla_dijkstra import vanilla_dijkstra
-from .sc_dijkstra import pure_python_sc_dijkstra, pure_python_heapdict_sc_dijkstra
-from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
+from .sc_dijkstra import pure_python_sc_dijkstra
 
 
 vanilla_limit = 80_000
 nx_limit = 1_000_000
 ig_limit = 1_000_000
-cd_bmssp_limit = 1_000_000
+cd_limit = 1_000_000
 
 def run_algo(algo_key:str, algo_func, algo_kwargs:dict, output:dict, do_run:bool=True, iterations:int=10, print_console:bool=True):
     if do_run:
@@ -31,9 +30,14 @@ def run_algo(algo_key:str, algo_func, algo_kwargs:dict, output:dict, do_run:bool
 
 def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None, test_vanilla_dijkstra:bool=False, print_console:bool=True, iterations:int=10):
 
-    bmssp_graph = Bmssp(graph = scgraph)
+    if len(scgraph) <= cd_limit:
+        bmssp_graph = Bmssp(graph = scgraph)
+        constant_degree_scgraph = bmssp_graph.constant_degree_dict['graph']
+    else:
+        bmssp_graph = Bmssp(graph = [])
+        constant_degree_scgraph = bmssp_graph.constant_degree_dict['graph']
+
     bmssp_graph_no_cd = Bmssp(graph = scgraph, use_constant_degree_graph = False)
-    constant_degree_scgraph = bmssp_graph.constant_degree_dict['graph']
 
     output = {
         'graph_name': graph_name,
@@ -57,27 +61,17 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
         algo_func = bmssp_graph.solve,
         algo_kwargs = {'origin_id': origin},
         output = output,
-        do_run = len(scgraph) <= cd_bmssp_limit,
+        do_run = len(scgraph) <= cd_limit,
         iterations = iterations,
         print_console = print_console
     )
-    # BMSSP with Heap Timing
-    # run_algo(
-    #     algo_key = 'bmssp_heap_solve',
-    #     algo_func = bmssp_graph.solve,
-    #     algo_kwargs = {'origin_id': origin, 'data_structure': BmsspHeapDataStructure},
-    #     output = output,
-    #     do_run = len(scgraph) <= cd_bmssp_limit,
-    #     iterations = iterations,
-    #     print_console = print_console
-    # )
     # SCGraph Dijkstra on Constant Degree Graph Timing
     run_algo(
         algo_key = 'pure_python_sc_dijkstra_constant_degree',
         algo_func = pure_python_sc_dijkstra,
         algo_kwargs = {'graph': constant_degree_scgraph, 'node_id': origin},
         output = output,
-        do_run = True,
+        do_run = len(scgraph) <= cd_limit,
         iterations = iterations,
         print_console = print_console
     )
@@ -121,17 +115,6 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
     run_algo(
         algo_key = 'pure_python_sc_dijkstra',
         algo_func = pure_python_sc_dijkstra,
-        algo_kwargs = {'graph': scgraph, 'node_id': origin},
-        output = output,
-        do_run = True,
-        iterations = iterations,
-        print_console = print_console
-    )
-
-    # Pure Python SCGraph Dijkstra with HeapDict Timing to compare apples to apples with BMSSPy
-    run_algo(
-        algo_key = 'pure_python_heapdict_sc_dijkstra',
-        algo_func = pure_python_heapdict_sc_dijkstra,
         algo_kwargs = {'graph': scgraph, 'node_id': origin},
         output = output,
         do_run = True,
