@@ -90,8 +90,9 @@ class BmsspDataStructure:
     together with a lower bound on the remaining values (or B if empty), as required by Alg. 3.
     """
 
-    def __init__(self, 
-        subset_size: int, 
+    def __init__(
+        self,
+        subset_size: int,
         upper_bound: int | float,
         # The data strucure id to check for current recursion data
         # This would be compared to the recursion_id stored in the shared list

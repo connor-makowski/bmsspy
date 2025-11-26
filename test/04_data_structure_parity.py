@@ -4,7 +4,9 @@ import random
 # Local Imports
 from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 from bmsspy.data_structures.data_structure import BmsspDataStructure
-from bmsspy.data_structures.unique_data_structure import UniqueBmsspDataStructure
+from bmsspy.data_structures.unique_data_structure import (
+    UniqueBmsspDataStructure,
+)
 from bmsspy.data_structures.list_data_structure import ListBmsspDataStructure
 
 
@@ -12,7 +14,12 @@ def basic_test(ds_class):
     """
     Basic sanity test for BmsspDataStructure implementations.
     """
-    ds = ds_class(subset_size=3, upper_bound=100, recursion_data_id=1, recursion_data_list=[0]*10)
+    ds = ds_class(
+        subset_size=3,
+        upper_bound=100,
+        recursion_data_id=1,
+        recursion_data_list=[0] * 10,
+    )
     assert ds.is_empty()
 
     ds.insert_key_value(1, 50)
@@ -50,8 +57,18 @@ def test_data_structure_parity(seed, ds_class_1, ds_class_2):
     subset_size = random.randint(1, 10)
     upper_bound = random.randint(300, 2000)
 
-    ds_class_1_obj = ds_class_1(subset_size, upper_bound, recursion_data_id=1, recursion_data_list=[0]*201)
-    ds_class_2_obj = ds_class_2(subset_size, upper_bound, recursion_data_id=1, recursion_data_list=[0]*201)
+    ds_class_1_obj = ds_class_1(
+        subset_size,
+        upper_bound,
+        recursion_data_id=1,
+        recursion_data_list=[0] * 201,
+    )
+    ds_class_2_obj = ds_class_2(
+        subset_size,
+        upper_bound,
+        recursion_data_id=1,
+        recursion_data_list=[0] * 201,
+    )
     key_values = {}
     used_values = set()
     # Test insert_key_value
@@ -121,9 +138,15 @@ if __name__ == "__main__":
     basic_test(ListBmsspDataStructure)
     for i in range(10000):
         # First test parity between non-unique data structures
-        test_data_structure_parity(i, BmsspDataStructure, BmsspHeapDataStructure)
+        test_data_structure_parity(
+            i, BmsspDataStructure, BmsspHeapDataStructure
+        )
         # Then test parity between unique and non-unique data structures - essentially ensuring our tests are valid
-        test_data_structure_parity(i, BmsspHeapDataStructure, UniqueBmsspDataStructure)
+        test_data_structure_parity(
+            i, BmsspHeapDataStructure, UniqueBmsspDataStructure
+        )
         # Finally test parity between unique and list data structures
-        test_data_structure_parity(i, UniqueBmsspDataStructure, ListBmsspDataStructure)
+        test_data_structure_parity(
+            i, UniqueBmsspDataStructure, ListBmsspDataStructure
+        )
     print("Data Structure tests passed!")

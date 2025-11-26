@@ -397,10 +397,12 @@ class BmsspCore:
         # Include the current recursion counter as the unique id to ensure
         # that we don't have stale data in the shared map
         data_struct = self.data_structure(
-            subset_size=subset_size, 
-            upper_bound=upper_bound, 
-            recursion_data_id=self.recursion_counter[recursion_depth - 1], 
-            recursion_data_list=self.recursion_data_struct_maps[recursion_depth - 1]
+            subset_size=subset_size,
+            upper_bound=upper_bound,
+            recursion_data_id=self.recursion_counter[recursion_depth - 1],
+            recursion_data_list=self.recursion_data_struct_maps[
+                recursion_depth - 1
+            ],
         )
         for p in pivots:
             data_struct.insert_key_value(

@@ -145,6 +145,7 @@ def quicksplit(arr: list[int | float], lower_bucket_size: int = None) -> dict:
                 pivot = max(below)
             return {"lower": lower, "higher": higher, "pivot": pivot}
 
+
 def quicksplit_tuple(
     data: list[tuple[Any, int | float]], lower_bucket_size: int = None
 ) -> dict:
@@ -212,6 +213,8 @@ def quicksplit_tuple(
                 "higher": higher,
                 "pivot": pivot,
             }
+
+
 def quicksplit_dict(
     data: dict[Any, list[int | float]], lower_bucket_size: int = None
 ) -> dict:

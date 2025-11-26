@@ -74,11 +74,11 @@ In the example above, we only use a single orign, however multiple origins are s
 res_02 = bmssp_graph.solve(origin_id={0,2})
 print(res_02) #=>
 # {
-#     'origin_id': [0, 2], 
-#     'destination_id': None, 
-#     'predecessor': [-1, 0, -1, 2, 2], 
-#     'distance_matrix': [0.0, 1.0, 0.0, 1.0, 2.0], 
-#     'path': None, 
+#     'origin_id': [0, 2],
+#     'destination_id': None,
+#     'predecessor': [-1, 0, -1, 2, 2],
+#     'distance_matrix': [0.0, 1.0, 0.0, 1.0, 2.0],
+#     'path': None,
 #     'length': None
 # }
 ```

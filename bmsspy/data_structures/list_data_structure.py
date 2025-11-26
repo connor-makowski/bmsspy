@@ -183,7 +183,11 @@ class ListBmsspDataStructure:
             )
         linked_list = block.val
         linked_list.append(key, value)
-        self.keys[key] = [self.recursion_data_id, linked_list.tail, 1] # Update with the new node
+        self.keys[key] = [
+            self.recursion_data_id,
+            linked_list.tail,
+            1,
+        ]  # Update with the new node
         # If the linked list exceeds the subset size, perform a split
         if linked_list.size > self.subset_size:
             self.split(linked_list)
@@ -195,7 +199,11 @@ class ListBmsspDataStructure:
         for node in linked_list:
             if node.value < median_value:
                 new_list.append(node.key, node.value)
-                self.keys[node.key] = [self.recursion_data_id, new_list.tail, 1]  # Update with the new node
+                self.keys[node.key] = [
+                    self.recursion_data_id,
+                    new_list.tail,
+                    1,
+                ]  # Update with the new node
                 linked_list.remove(node)
 
         new_list.upper_bound = median_value
@@ -216,7 +224,10 @@ class ListBmsspDataStructure:
         """
         for key, value in key_value_pairs:
             # If the key already exists, see if we need to remove it first
-            if self.keys[key] != 0 and self.keys[key][0] == self.recursion_data_id:
+            if (
+                self.keys[key] != 0
+                and self.keys[key][0] == self.recursion_data_id
+            ):
                 if self.keys[key][1].value < value:
                     key_value_pairs.remove((key, value))
                 elif self.keys[key][2] == 0:
@@ -250,7 +261,11 @@ class ListBmsspDataStructure:
                     # Add all pairs to the new block
                     for key, value in current_pairs:
                         self.D0.append(key, value)
-                        self.keys[key] = [self.recursion_data_id, self.D0.tail, 0]
+                        self.keys[key] = [
+                            self.recursion_data_id,
+                            self.D0.tail,
+                            0,
+                        ]
                 else:
                     # Split by median
                     split_items = quicksplit_tuple(current_pairs)
