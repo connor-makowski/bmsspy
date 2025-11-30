@@ -154,10 +154,13 @@ class BmsspCore:
         # The structures are created in O(n log(n)^(1/3)) time
         #################################
         self.recursion_counter = [0] * (self.max_recursion_depth)
-        self.recursion_data_struct_maps = [
-            [0] * len(graph) for _ in range(self.max_recursion_depth)
-        ]
-
+        # Only need to store the maps for ListBmsspDataStructure
+        if self.data_structure==ListBmsspDataStructure:
+            self.recursion_data_struct_maps = [
+                [0] * len(graph) for _ in range(self.max_recursion_depth)
+            ]
+        else:
+            self.recursion_data_struct_maps = [list() for _ in range(self.max_recursion_depth)]
         #################################
         # Run the algorithm
         #################################

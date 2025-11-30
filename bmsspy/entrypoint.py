@@ -7,7 +7,7 @@ from .helpers.utils import (
     inf,
 )
 
-from bmsspy.data_structures.data_structure import BmsspDataStructure
+from bmsspy.data_structures.list_data_structure import ListBmsspDataStructure
 from decimal import Decimal
 from math import ceil, log
 
@@ -93,11 +93,13 @@ class Bmssp:
                 edge_id_value += edge_id_adjustment_value
                 self.edge_adj_graph[node_idx][neighbor] = edge_id_value
 
+        
+
     def solve(
         self,
         origin_id: int | set[int],
         destination_id: int = None,
-        data_structure=BmsspDataStructure,
+        data_structure=ListBmsspDataStructure,
         pivot_relaxation_steps: int | None = None,
         target_tree_depth: int | None = None,
     ):
