@@ -138,6 +138,7 @@ class BmsspCore:
         self.new_frontier_count = 0
         self.new_frontier_basecase_map = [0] * len(graph)
         self.forest_map = [[0, []]] * len(graph)
+        self.indegree_map = [0] * len(graph)
         #################################
         # Run the algorithm
         #################################
@@ -276,7 +277,6 @@ class BmsspCore:
                 return pivots, temp_frontier
 
         # Build tight-edge forest F on temp_frontier: edges (u -> v) with db[u] + w == db[v]
-        indegree = {i: 0 for i in temp_frontier}
         for frontier_idx in temp_frontier:
             # prev_distance = self.counter_distance_matrix[frontier_idx]
             for connection_idx, connection_distance in self.graph[
@@ -295,11 +295,13 @@ class BmsspCore:
                                 0
                             ] = self.find_pivots_count
                         self.forest_map[frontier_idx][1].append(connection_idx)
-                        indegree[connection_idx] += 1
+                        self.indegree_map[connection_idx] = self.find_pivots_count
 
         pivots = []
         for frontier_idx in frontier:
-            if indegree.get(frontier_idx, 0) == 0:
+            if (
+                self.indegree_map[frontier_idx] != self.find_pivots_count
+            ):
                 if self.is_pivot(
                     frontier_idx,
                     threshold=self.pivot_relaxation_steps,
