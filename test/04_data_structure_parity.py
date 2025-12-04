@@ -8,6 +8,7 @@ from bmsspy.data_structures.unique_data_structure import (
     UniqueBmsspDataStructure,
 )
 from bmsspy.data_structures.list_data_structure import ListBmsspDataStructure
+from bmsspy.helpers.fast import FastLookup
 
 
 def basic_test(ds_class):
@@ -17,8 +18,7 @@ def basic_test(ds_class):
     ds = ds_class(
         subset_size=3,
         upper_bound=100,
-        recursion_data_id=1,
-        recursion_data_list=[0] * 10,
+        recursion_data_struct_lookup = FastLookup(10)
     )
     assert ds.is_empty()
 
@@ -60,14 +60,12 @@ def test_data_structure_parity(seed, ds_class_1, ds_class_2):
     ds_class_1_obj = ds_class_1(
         subset_size,
         upper_bound,
-        recursion_data_id=1,
-        recursion_data_list=[0] * 201,
+        recursion_data_struct_lookup = FastLookup(201)
     )
     ds_class_2_obj = ds_class_2(
         subset_size,
         upper_bound,
-        recursion_data_id=1,
-        recursion_data_list=[0] * 201,
+        recursion_data_struct_lookup =FastLookup(201)
     )
     key_values = {}
     used_values = set()
