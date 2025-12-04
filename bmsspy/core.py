@@ -3,8 +3,10 @@ from math import ceil, log
 
 from bmsspy.data_structures.list_data_structure import ListBmsspDataStructure
 from bmsspy.helpers.utils import inf
+from bmsspy.helpers.fast import FastSet, FastDict, FastLookup
 
 from decimal import Decimal
+
 
 
 class BmsspCore:
@@ -119,26 +121,26 @@ class BmsspCore:
         # Create recursion tracking structures to operate in O(1) time
         # The structures are created in O(n log(n)^(1/3)) time
         #################################
-        self.recursion_counter = [0] * (self.max_recursion_depth)
-        self.recursion_data_struct_maps = [
-            [0] * len(graph) for _ in range(self.max_recursion_depth)
+        self.is_pivot_seen_set = FastSet(len(graph))
+
+        self.find_pivots_temp_frontier_set = FastSet(len(graph))
+        self.find_pivots_prev_frontier_set = FastSet(len(graph))
+        self.find_pivots_curr_frontier_set = FastSet(len(graph))
+        self.find_pivots_forest_dict = FastDict(len(graph))
+        self.find_pivots_has_indegree_set = FastSet(len(graph))
+        self.find_pivots_pivots_set = FastSet(len(graph))
+
+        self.base_case_new_frontier_set = FastSet(len(graph))
+
+
+        self.recursive_bmssp_data_struct_lookups = [
+            FastLookup(len(graph)) for _ in range(self.max_recursion_depth)
         ]
-        self.new_frontier_map = [
-            [0] * len(graph) for _ in range(self.max_recursion_depth)
+        self.recursive_bmssp_new_frontier_sets = [
+            FastSet(len(graph)) for _ in range(self.max_recursion_depth)
         ]
-        self.is_pivot_count = 0
-        self.is_pivot_map = [0] * len(graph)
-        self.intermediate_frontier_count = 0
-        self.intermediate_frontier_map = [0] * len(graph)
-        self.find_pivots_relaxation_count = 0
-        self.find_pivots_curr_frontier_map = [0] * len(graph)
-        self.find_pivots_count = 0
-        self.find_pivots_temp_frontier = [0] * len(graph)
-        self.find_pivots_pivot_map = [0] * len(graph)
-        self.new_frontier_count = 0
-        self.new_frontier_basecase_map = [0] * len(graph)
-        self.forest_map = [[0, []]] * len(graph)
-        self.indegree_map = [0] * len(graph)
+        self.recursive_bmssp_intermediate_frontier_dict = FastDict(len(graph))
+
         #################################
         # Run the algorithm
         #################################
@@ -148,7 +150,7 @@ class BmsspCore:
         )
 
     def is_pivot(
-        self, root: int, threshold: int
+        self, root: int, forest: dict[int, set[int]], threshold: int
     ) -> bool:
         """
         Function:
@@ -161,33 +163,34 @@ class BmsspCore:
         - `root`
             - Type: int
             - What: The starting node for the DFS traversal.
+        - `forest`
+            - Type: dict[int, set[int]]
+            - What: Adjacency list representing the directed forest.
         - `threshold`
             - Type: int
             - What: The minimum number of reachable nodes required to return True.
         """
-        self.is_pivot_count += 1
+        seen = self.is_pivot_seen_set.clear()
         stack = [root]
         cnt = 0
         while stack:
             x = stack.pop()
-            if self.is_pivot_map[x] == self.is_pivot_count:
+            if x in seen:
                 continue
             cnt += 1
             if cnt >= threshold:
                 return True
-            self.is_pivot_map[x] = self.is_pivot_count
-            # Ensure forest[x] exists and has children
-            if self.forest_map[x][0] == self.find_pivots_count:
-                stack.extend(self.forest_map[x][1])
+            seen.add(x)
+            stack.extend(forest.get(x, []))
         return False
 
     def find_pivots(
-        self, upper_bound: int | float, frontier: list[int]
-    ) -> tuple[list[int], list[int]]:
+        self, upper_bound: int | float, frontier: set[int]
+    ) -> tuple[set[int], set[int]]:
         """
         Function:
 
-        - Finds pivot lists pivots and temp_frontier according to Algorithm 1.
+        - Finds pivot sets pivots and temp_frontier according to Algorithm 1.
 
         Required Arguments:
 
@@ -195,8 +198,8 @@ class BmsspCore:
             - Type: int | float
             - What: The upper bound threshold (B)
         - frontier:
-            - Type: list[int]
-            - What: list of vertices (Unique list) (S)
+            - Type: set[int]
+            - What: Set of vertices (S)
 
         Optional Arguments:
 
@@ -205,20 +208,18 @@ class BmsspCore:
         Returns:
 
         - pivots:
-            - Type: list[int]
-            - What: List of pivot vertices (Unique list)
+            - Type: Set[int]
+            - What: Set of pivot vertices
         - frontier:
-            - Type: list[int]
-            - What: Return a new frontier list of vertices within the upper_bound (Unique list)
+            - Type: Set[int]
+            - What: Return a new frontier set of vertices within the upper_bound
         """
-        temp_frontier = list(frontier)
-        prev_frontier = list(frontier)
-        self.find_pivots_count += 1
+        temp_frontier = self.find_pivots_temp_frontier_set(frontier)
+        prev_frontier = self.find_pivots_prev_frontier_set(frontier)
 
         # Multi-step limited relaxation from current frontier
         for _ in range(self.pivot_relaxation_steps):
-            self.find_pivots_relaxation_count += 1
-            curr_frontier = []
+            curr_frontier = self.find_pivots_curr_frontier_set()
             for prev_frontier_idx in prev_frontier:
                 prev_distance = self.counter_distance_matrix[prev_frontier_idx]
                 for connection_idx, connection_distance in self.graph[
@@ -253,30 +254,19 @@ class BmsspCore:
                                 + self.counter_value
                             )
                         if new_distance < upper_bound:
-                            if (
-                                self.find_pivots_curr_frontier_map[
-                                    connection_idx
-                                ]
-                                != self.find_pivots_relaxation_count
-                            ):
-                                curr_frontier.append(connection_idx)
-                                self.find_pivots_curr_frontier_map[
-                                    connection_idx
-                                ] = self.find_pivots_relaxation_count
-            for idx in curr_frontier:
-                if (
-                    self.find_pivots_temp_frontier[idx]
-                    != self.find_pivots_count
-                ):
-                    temp_frontier.append(idx)
-                    self.find_pivots_temp_frontier[idx] = self.find_pivots_count
+                            curr_frontier.add(connection_idx)
+            temp_frontier.update(curr_frontier)
             prev_frontier = curr_frontier
             # If the search balloons, take the current frontier as pivots
             if len(temp_frontier) > self.pivot_relaxation_steps * len(frontier):
-                pivots = frontier
-                return pivots, temp_frontier
+                return frontier, temp_frontier
 
         # Build tight-edge forest F on temp_frontier: edges (u -> v) with db[u] + w == db[v]
+        forest = self.find_pivots_forest_dict()
+        for i in temp_frontier:
+            # Does not need to be a set since we use predecessor tracking which can only have one parent
+            forest[i] = []
+        has_indegree = self.find_pivots_has_indegree_set()
         for frontier_idx in temp_frontier:
             # prev_distance = self.counter_distance_matrix[frontier_idx]
             for connection_idx, connection_distance in self.graph[
@@ -284,42 +274,28 @@ class BmsspCore:
             ].items():
                 # Modification: Use predecessor tracking instead of distance comparison
                 if self.predecessor[connection_idx] == frontier_idx:
-                    if self.find_pivots_temp_frontier[connection_idx] == self.find_pivots_count:
+                    if connection_idx in temp_frontier:
                         # direction is frontier_idx -> connection_idx (parent to child)
-                        if (
-                            self.forest_map[frontier_idx][0]
-                            != self.find_pivots_count
-                        ):
-                            self.forest_map[frontier_idx][1] = []
-                            self.forest_map[frontier_idx][
-                                0
-                            ] = self.find_pivots_count
-                        self.forest_map[frontier_idx][1].append(connection_idx)
-                        self.indegree_map[connection_idx] = self.find_pivots_count
+                        forest[frontier_idx].append(connection_idx)
+                        has_indegree.add(connection_idx)
 
-        pivots = []
+        # Todo: Efficency Check later:
+        # Since frontier is a set, pivots could be list since it is guaranteed unique
+        pivots = self.find_pivots_pivots_set()
         for frontier_idx in frontier:
-            if (
-                self.indegree_map[frontier_idx] != self.find_pivots_count
-            ):
+            if frontier_idx not in has_indegree:
                 if self.is_pivot(
                     frontier_idx,
+                    forest=forest,
                     threshold=self.pivot_relaxation_steps,
                 ):
-                    if (
-                        self.find_pivots_pivot_map[frontier_idx]
-                        != self.find_pivots_count
-                    ):
-                        pivots.append(frontier_idx)
-                        self.find_pivots_pivot_map[frontier_idx] = (
-                            self.find_pivots_count
-                        )
+                    pivots.add(frontier_idx)
 
         return pivots, temp_frontier
 
     def base_case(
-        self, upper_bound: int | float, frontier: list[int]
-    ) -> tuple[int | float, list[int]]:
+        self, upper_bound: int | float, frontier: set[int]
+    ) -> tuple[int | float, set[int]]:
         """
         Function:
 
@@ -329,24 +305,21 @@ class BmsspCore:
         - upper_bound:
             - Type: int | float
         - frontier:
-            - Type: list[int]
-            - What: list with a single vertex x (complete)
+            - Type: set
+            - What: Set with a single vertex x (complete)
 
         Returns:
         - new_upper_bound:
             - Type: int | float
             - What: The new upper bound for the search
         - new_frontier:
-            - Type: list[int]
-            - What: Unique list of vertices v such that distance_matrix[v] < new_upper_bound
+            - Type: set[int]
+            - What: Set of vertices v such that distance_matrix[v] < new_upper_bound
         """
-        assert (
-            len(frontier) == 1
-        ), "Frontier must be a singleton for the basecase"
+        assert len(frontier) == 1, "Frontier must be a singleton set"
         first_frontier = next(iter(frontier))
 
-        self.new_frontier_count += 1
-        new_frontier = []
+        new_frontier = self.base_case_new_frontier_set()
         heap = []
         heappush(
             heap,
@@ -363,14 +336,7 @@ class BmsspCore:
             if len(new_frontier) >= self.pivot_relaxation_steps:
                 new_upper_bound = frontier_distance
                 break
-            if (
-                self.new_frontier_basecase_map[frontier_idx]
-                != self.new_frontier_count
-            ):
-                new_frontier.append(frontier_idx)
-                self.new_frontier_basecase_map[frontier_idx] = (
-                    self.new_frontier_count
-                )
+            new_frontier.add(frontier_idx)
             prev_distance = self.counter_distance_matrix[frontier_idx]
             for connection_idx, connection_distance in self.graph[
                 frontier_idx
@@ -406,11 +372,8 @@ class BmsspCore:
         return new_upper_bound, new_frontier
 
     def recursive_bmssp(
-        self,
-        recursion_depth: int,
-        upper_bound: int | float,
-        frontier: list[int],
-    ) -> tuple[int | float, list[int]]:
+        self, recursion_depth: int, upper_bound: int | float, frontier: set[int]
+    ) -> tuple[int | float, set[int]]:
         """
         Function:
 
@@ -425,8 +388,8 @@ class BmsspCore:
             - Type: float
             - What: The upper bound for the search
         - frontier:
-            - Type: list[int]
-            - What: The list of unique vertices to explore
+            - Type: set[int]
+            - What: The set of vertices to explore
 
         Returns:
 
@@ -434,8 +397,8 @@ class BmsspCore:
             - Type: int | float
             - What: The new upper bound for the search
         - new_frontier:
-            - Type: list[int]
-            - What: list of vertices v such that distance_matrix[v] < new_upper_bound
+            - Type: set[int]
+            - What: Set of vertices v such that distance_matrix[v] < new_upper_bound
         """
         # Base case
         if recursion_depth == 0:
@@ -450,18 +413,13 @@ class BmsspCore:
         # Step 5–6: initialize data_struct with pivots
         # subset_size = 2^((l-1) * t)
         subset_size = 2 ** ((recursion_depth - 1) * self.target_tree_depth)
-        # Increment the recursion counter for this depth
-        self.recursion_counter[recursion_depth - 1] += 1
         # Pass the shared recursion data structure map for this depth
         # Include the current recursion counter as the unique id to ensure
         # that we don't have stale data in the shared map
         data_struct = self.data_structure(
             subset_size=subset_size,
             upper_bound=upper_bound,
-            recursion_data_id=self.recursion_counter[recursion_depth - 1],
-            recursion_data_list=self.recursion_data_struct_maps[
-                recursion_depth - 1
-            ],
+            recursion_data_struct_lookup = self.recursive_bmssp_data_struct_lookups[recursion_depth - 1](),
         )
         for p in pivots:
             data_struct.insert_key_value(
@@ -469,7 +427,7 @@ class BmsspCore:
             )
 
         # Track new_frontier and B' according to Algorithm 3
-        new_frontier = []
+        new_frontier = self.recursive_bmssp_new_frontier_sets[recursion_depth - 1]()
         # Store the completion_bound for use if the frontier is empty and we break early
         completion_bound = min(
             (self.counter_and_edge_distance_matrix[p] for p in pivots),
@@ -497,19 +455,10 @@ class BmsspCore:
             )
 
             # Track results
-            for v in new_frontier_temp:
-                if (
-                    self.new_frontier_map[recursion_depth - 1][v]
-                    != self.recursion_counter[recursion_depth - 1]
-                ):
-                    self.new_frontier_map[recursion_depth - 1][v] = (
-                        self.recursion_counter[recursion_depth - 1]
-                    )
-                    new_frontier.append(v)
+            new_frontier.update(new_frontier_temp)
 
             # Step 13: Initialize intermediate_frontier to batch-prepend
-            self.intermediate_frontier_count += 1
-            intermediate_frontier = []
+            intermediate_frontier = self.recursive_bmssp_intermediate_frontier_dict()
 
             # Step 14–20: relax edges from new_frontier_temp and enqueue into D or intermediate_frontier per their interval
             for new_frontier_idx in new_frontier_temp:
@@ -557,58 +506,26 @@ class BmsspCore:
                             <= new_distance
                             < data_struct_frontier_bound_temp
                         ):
-                            if (
-                                self.intermediate_frontier_map[connection_idx]
-                                != self.intermediate_frontier_count
-                            ):
-                                self.intermediate_frontier_map[
-                                    connection_idx
-                                ] = self.intermediate_frontier_count
-                                intermediate_frontier.append(
-                                    (
-                                        connection_idx,
-                                        self.counter_and_edge_distance_matrix[
-                                            connection_idx
-                                        ],
-                                    )
-                                )
+                            if new_distance < intermediate_frontier.get(connection_idx, inf):
+                                intermediate_frontier[connection_idx] = new_distance
 
             # Step 21: Batch prepend intermediate_frontier plus filtered data_struct_frontier_temp in completion_bound, data_struct_frontier_bound_temp)
-            data_struct_frontier_temp_filtered = [
-                (x, self.counter_and_edge_distance_matrix[x])
-                for x in data_struct_frontier_temp
-                if completion_bound
-                <= self.counter_and_edge_distance_matrix[x]
-                < data_struct_frontier_bound_temp
-            ]
-            prepend_frontier = intermediate_frontier
-            for item in data_struct_frontier_temp_filtered:
-                if (
-                    self.intermediate_frontier_map[item[0]]
-                    != self.intermediate_frontier_count
-                ):
-                    prepend_frontier.append(item)
-            data_struct.batch_prepend(prepend_frontier)
+            for x in data_struct_frontier_temp:
+                if completion_bound <= self.counter_and_edge_distance_matrix[x] < data_struct_frontier_bound_temp:
+                    if self.counter_and_edge_distance_matrix[x] < intermediate_frontier.get(x, inf):
+                        intermediate_frontier[x] = self.counter_and_edge_distance_matrix[x]
+
+            data_struct.batch_prepend([(k,v) for k,v in intermediate_frontier.items()])
         # Optional code if you do not have guaranteed unique lengths.
         # if len(new_frontier) > work_budget:
         #     completion_bound = pivot_completion_bound
 
         # Step 22: Final return
         completion_bound = min(completion_bound, upper_bound)
-        final_frontier = new_frontier
-        additional_temp_frontier = [
-            v
-            for v in temp_frontier
-            if self.counter_and_edge_distance_matrix[v] < completion_bound
-        ]
-        for v in additional_temp_frontier:
-            if (
-                self.new_frontier_map[recursion_depth - 1][v]
-                != self.recursion_counter[recursion_depth - 1]
-            ):
-                self.new_frontier_map[recursion_depth - 1][v] = (
-                    self.recursion_counter[recursion_depth - 1]
-                )
-                final_frontier.append(v)
+        # Update new_frontier with temp_frontier only including those below completion_bound
+        for v in temp_frontier:
+            if self.counter_and_edge_distance_matrix[v] < completion_bound:
+                new_frontier.add(v)
 
-        return completion_bound, final_frontier
+
+        return completion_bound, new_frontier
