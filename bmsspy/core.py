@@ -137,6 +137,7 @@ class BmsspCore:
         self.find_pivots_pivot_map = [0] * len(graph)
         self.new_frontier_count = 0
         self.new_frontier_basecase_map = [0] * len(graph)
+        self.forest_map = [[0, []]] * len(graph)
         #################################
         # Run the algorithm
         #################################
@@ -146,7 +147,7 @@ class BmsspCore:
         )
 
     def is_pivot(
-        self, root: int, forest: dict[int, list[int]], threshold: int
+        self, root: int, threshold: int
     ) -> bool:
         """
         Function:
@@ -159,9 +160,6 @@ class BmsspCore:
         - `root`
             - Type: int
             - What: The starting node for the DFS traversal.
-        - `forest`
-            - Type: dict[int, list[int]]
-            - What: Adjacency list representing the directed forest.
         - `threshold`
             - Type: int
             - What: The minimum number of reachable nodes required to return True.
@@ -177,7 +175,9 @@ class BmsspCore:
             if cnt >= threshold:
                 return True
             self.is_pivot_map[x] = self.is_pivot_count
-            stack.extend(forest[x])
+            # Ensure forest[x] exists and has children
+            if self.forest_map[x][0] == self.find_pivots_count:
+                stack.extend(self.forest_map[x][1])
         return False
 
     def find_pivots(
@@ -276,7 +276,6 @@ class BmsspCore:
                 return pivots, temp_frontier
 
         # Build tight-edge forest F on temp_frontier: edges (u -> v) with db[u] + w == db[v]
-        forest = {i: set() for i in temp_frontier}
         indegree = {i: 0 for i in temp_frontier}
         for frontier_idx in temp_frontier:
             # prev_distance = self.counter_distance_matrix[frontier_idx]
@@ -285,9 +284,17 @@ class BmsspCore:
             ].items():
                 # Modification: Use predecessor tracking instead of distance comparison
                 if self.predecessor[connection_idx] == frontier_idx:
-                    if connection_idx in temp_frontier:
+                    if self.find_pivots_temp_frontier[connection_idx] == self.find_pivots_count:
                         # direction is frontier_idx -> connection_idx (parent to child)
-                        forest[frontier_idx].add(connection_idx)
+                        if (
+                            self.forest_map[frontier_idx][0]
+                            != self.find_pivots_count
+                        ):
+                            self.forest_map[frontier_idx][1] = []
+                            self.forest_map[frontier_idx][
+                                0
+                            ] = self.find_pivots_count
+                        self.forest_map[frontier_idx][1].append(connection_idx)
                         indegree[connection_idx] += 1
 
         pivots = []
@@ -295,7 +302,6 @@ class BmsspCore:
             if indegree.get(frontier_idx, 0) == 0:
                 if self.is_pivot(
                     frontier_idx,
-                    forest=forest,
                     threshold=self.pivot_relaxation_steps,
                 ):
                     if (
