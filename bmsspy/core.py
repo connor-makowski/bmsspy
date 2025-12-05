@@ -8,7 +8,6 @@ from bmsspy.helpers.fast import FastSet, FastDict, FastLookup
 from decimal import Decimal
 
 
-
 class BmsspCore:
     def __init__(
         self,
@@ -131,7 +130,6 @@ class BmsspCore:
         self.find_pivots_pivots_set = FastSet(len(graph))
 
         self.base_case_new_frontier_set = FastSet(len(graph))
-
 
         self.recursive_bmssp_data_struct_lookups = [
             FastLookup(len(graph)) for _ in range(self.max_recursion_depth)
@@ -418,7 +416,9 @@ class BmsspCore:
         data_struct = self.data_structure(
             subset_size=subset_size,
             upper_bound=upper_bound,
-            recursion_data_struct_lookup = self.recursive_bmssp_data_struct_lookups[recursion_depth - 1](),
+            recursion_data_struct_lookup=self.recursive_bmssp_data_struct_lookups[
+                recursion_depth - 1
+            ](),
         )
         for p in pivots:
             data_struct.insert_key_value(
@@ -426,7 +426,9 @@ class BmsspCore:
             )
 
         # Track new_frontier and B' according to Algorithm 3
-        new_frontier = self.recursive_bmssp_new_frontier_sets[recursion_depth - 1]()
+        new_frontier = self.recursive_bmssp_new_frontier_sets[
+            recursion_depth - 1
+        ]()
         # Store the completion_bound for use if the frontier is empty and we break early
         completion_bound = min(
             (self.counter_and_edge_distance_matrix[p] for p in pivots),
@@ -457,7 +459,9 @@ class BmsspCore:
             new_frontier.update(new_frontier_temp)
 
             # Step 13: Initialize intermediate_frontier to batch-prepend
-            intermediate_frontier = self.recursive_bmssp_intermediate_frontier_set()
+            intermediate_frontier = (
+                self.recursive_bmssp_intermediate_frontier_set()
+            )
 
             # Step 14–20: relax edges from new_frontier_temp and enqueue into D or intermediate_frontier per their interval
             for new_frontier_idx in new_frontier_temp:
@@ -508,8 +512,21 @@ class BmsspCore:
                             intermediate_frontier.add(connection_idx)
 
             # Step 21: Batch prepend intermediate_frontier plus filtered data_struct_frontier_temp in completion_bound, data_struct_frontier_bound_temp)
-            intermediate_frontier.update([x for x in data_struct_frontier_temp if completion_bound <= self.counter_and_edge_distance_matrix[x] < data_struct_frontier_bound_temp])
-            data_struct.batch_prepend([(x, self.counter_and_edge_distance_matrix[x]) for x in intermediate_frontier])
+            intermediate_frontier.update(
+                [
+                    x
+                    for x in data_struct_frontier_temp
+                    if completion_bound
+                    <= self.counter_and_edge_distance_matrix[x]
+                    < data_struct_frontier_bound_temp
+                ]
+            )
+            data_struct.batch_prepend(
+                [
+                    (x, self.counter_and_edge_distance_matrix[x])
+                    for x in intermediate_frontier
+                ]
+            )
 
         # Optional code if you do not have guaranteed unique lengths.
         # if len(new_frontier) > work_budget:
@@ -521,6 +538,5 @@ class BmsspCore:
         for v in temp_frontier:
             if self.counter_and_edge_distance_matrix[v] < completion_bound:
                 new_frontier.add(v)
-
 
         return completion_bound, new_frontier

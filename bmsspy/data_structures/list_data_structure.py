@@ -197,7 +197,7 @@ class ListBmsspDataStructure:
             if node.value < median_value:
                 new_list.append(node.key, node.value)
                 self.keys[node.key] = [1, new_list.tail]
-                  # Update with the new node
+                # Update with the new node
                 linked_list.remove(node)
 
         new_list.upper_bound = median_value

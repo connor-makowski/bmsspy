@@ -93,8 +93,6 @@ class Bmssp:
                 edge_id_value += edge_id_adjustment_value
                 self.edge_adj_graph[node_idx][neighbor] = edge_id_value
 
-        
-
     def solve(
         self,
         origin_id: int | set[int],
