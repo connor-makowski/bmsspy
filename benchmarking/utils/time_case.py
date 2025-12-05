@@ -76,26 +76,16 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
         iterations = iterations,
         print_console = print_console
     )
+
+    #####################################
     # Regular Graph Timing for Comparison
+    #####################################
 
     # BMSSP without Constant Degree Graph Timing
     run_algo(
         algo_key = 'bmssp_solve',
         algo_func = bmssp_graph_no_cd.solve,
         algo_kwargs = {'origin_id': origin},
-        output = output,
-        do_run = True,
-        iterations = iterations,
-        print_console = print_console
-    )
-    # BMSSP with HashMap Data Structure without Constant Degree Graph Timing
-    run_algo(
-        algo_key = 'bmssp_hashmap_solve',
-        algo_func = bmssp_graph_no_cd.solve,
-        algo_kwargs = {
-            'origin_id': origin,
-            'data_structure': UniqueBmsspDataStructure
-        },
         output = output,
         do_run = True,
         iterations = iterations,
