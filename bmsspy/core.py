@@ -263,9 +263,6 @@ class BmsspCore:
 
         # Build tight-edge forest F on temp_frontier: edges (u -> v) with db[u] + w == db[v]
         forest = self.find_pivots_forest_dict()
-        for i in temp_frontier:
-            # Does not need to be a set since we use predecessor tracking which can only have one parent
-            forest[i] = []
         has_indegree = self.find_pivots_has_indegree_set()
         for frontier_idx in temp_frontier:
             # prev_distance = self.counter_distance_matrix[frontier_idx]
@@ -276,6 +273,8 @@ class BmsspCore:
                 if self.predecessor[connection_idx] == frontier_idx:
                     if connection_idx in temp_frontier:
                         # direction is frontier_idx -> connection_idx (parent to child)
+                        if frontier_idx not in forest:
+                            forest[frontier_idx] = []
                         forest[frontier_idx].append(connection_idx)
                         has_indegree.add(connection_idx)
 
@@ -511,7 +510,7 @@ class BmsspCore:
             # Step 21: Batch prepend intermediate_frontier plus filtered data_struct_frontier_temp in completion_bound, data_struct_frontier_bound_temp)
             intermediate_frontier.update([x for x in data_struct_frontier_temp if completion_bound <= self.counter_and_edge_distance_matrix[x] < data_struct_frontier_bound_temp])
             data_struct.batch_prepend([(x, self.counter_and_edge_distance_matrix[x]) for x in intermediate_frontier])
-            
+
         # Optional code if you do not have guaranteed unique lengths.
         # if len(new_frontier) > work_budget:
         #     completion_bound = pivot_completion_bound
