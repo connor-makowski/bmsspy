@@ -154,6 +154,7 @@ class FastLookup(FastRoot):
     def __init__(self, size: int):
         # The equivalent of a FastDict without storing active keys
         # This can be used to prevent memory bloat when you know the keys you will access beforehand
+        # but still want to invalidate keys without worrying about removing them from a list
         # Does not support iteration over keys or values
         super().__init__(size)
         self.vals = [0] * size
@@ -172,8 +173,7 @@ class FastLookup(FastRoot):
         return self.vals[key]
     
     def __setitem__(self, key: int, value):
-        if self.memb[key] != self.scnt:
-            self.memb[key] = self.scnt
+        self.memb[key] = self.scnt
         self.vals[key] = value
         return self
     

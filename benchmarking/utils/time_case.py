@@ -72,30 +72,21 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
         algo_func = pure_python_sc_dijkstra,
         algo_kwargs = {'graph': constant_degree_scgraph, 'node_id': origin},
         output = output,
-        do_run = len(scgraph) <= cd_limit,
+        # do_run = len(scgraph) <= cd_limit,
+        do_run = False,
         iterations = iterations,
         print_console = print_console
     )
+
+    #####################################
     # Regular Graph Timing for Comparison
+    #####################################
 
     # BMSSP without Constant Degree Graph Timing
     run_algo(
         algo_key = 'bmssp_solve',
         algo_func = bmssp_graph_no_cd.solve,
         algo_kwargs = {'origin_id': origin},
-        output = output,
-        do_run = True,
-        iterations = iterations,
-        print_console = print_console
-    )
-    # BMSSP with HashMap Data Structure without Constant Degree Graph Timing
-    run_algo(
-        algo_key = 'bmssp_hashmap_solve',
-        algo_func = bmssp_graph_no_cd.solve,
-        algo_kwargs = {
-            'origin_id': origin,
-            'data_structure': UniqueBmsspDataStructure
-        },
         output = output,
         do_run = True,
         iterations = iterations,
@@ -131,7 +122,8 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
         algo_func = pure_python_sc_dijkstra,
         algo_kwargs = {'graph': scgraph, 'node_id': origin},
         output = output,
-        do_run = True,
+        # do_run = True,
+        do_run = False,
         iterations = iterations,
         print_console = print_console
     )

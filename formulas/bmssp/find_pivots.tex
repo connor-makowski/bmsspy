@@ -26,20 +26,20 @@ $W \leftarrow S$; {\color{Blue}$W_{\mathrm{prev}} \leftarrow S$\tcp*{FIN: initia
   {\color{Blue}$W_{\mathrm{prev}} \leftarrow W_{\mathrm{curr}}$\tcp*{FIN: advance to next iteration frontier}\label{alg:bmssp_find_pivots_prev_update}}
 }
 {\color{Bittersweet}
-$F \leftarrow \{u \mapsto \emptyset : u \in W\}$\tcp*{EFPC: initialize empty adjacency lists for forest $F$}\label{alg:bmssp_find_pivots_forest_init}
-$F^{ID} \leftarrow \{u \mapsto 0 : u \in W\}$\tcp*{EFPC: initialize in-degree counter $F^{ID}$}
+$F \leftarrow \{\}$\tcp*{EFPC: initialize empty adjacency lists for forest $F$}\label{alg:bmssp_find_pivots_forest_init}
+$F^{ID} \leftarrow \emptyset$\tcp*{EFPC: initialize in-degree set $F^{ID}$}
 \BlankLine
 \ForEach{$u \in W$}{
   \ForEach{$(v,w) \in G[u]$}{
     \If(\tcp*[f]{EFPC: add edge $v$ if reached from $u$ \label{alg:bmssp_find_pivots_pred_in_forest}}){$v \in W$ \textbf{and} {\color{Blue}$\textit{pred}[v] = u$}}{
-      $F[u] \leftarrow F[u] \cup \{v\}$\tcp*{EFPC: record child $v$ under parent $u$ in $F$}
-      $F^{ID}[v] \leftarrow F^{ID}[v] + 1$\tcp*{EFPC: increment in-degree of $v$}
+      $F[u] \leftarrow F[u] + [v]$ if $u \in F$ else $[v]$\tcp*{EFPC: record child $v$ in parent $u$}
+      $F^{ID} \leftarrow F^{ID} \cup \{v\}$\tcp*{EFPC: record $v$ has an incoming edge}
     }
   }
 }\label{alg:bmssp_find_pivots_forest_loop_end}
 $P \leftarrow \emptyset$\;
 \ForEach{$u \in S$}{\label{alg:bmssp_find_pivots_roots_start}
-  \If(\tcp*[f]{EFPC: root node in forest $F$}){$F^{ID}[u] = 0$}{
+  \If(\tcp*[f]{EFPC: root node in forest $F$}){$u \notin F^{ID}$}{
     \If(\tcp*[f]{EFPC: call Algorithm~\ref{alg:utils_is_pivot}}){\textsc{IsPivot}$(u, F, k)$}{
       $P \leftarrow P \cup \{u\}$\tcp*{EFPC: add pivot $u$ to set $P$}
     }

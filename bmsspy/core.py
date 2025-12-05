@@ -139,7 +139,7 @@ class BmsspCore:
         self.recursive_bmssp_new_frontier_sets = [
             FastSet(len(graph)) for _ in range(self.max_recursion_depth)
         ]
-        self.recursive_bmssp_intermediate_frontier_dict = FastDict(len(graph))
+        self.recursive_bmssp_intermediate_frontier_set = FastSet(len(graph))
 
         #################################
         # Run the algorithm
@@ -458,7 +458,7 @@ class BmsspCore:
             new_frontier.update(new_frontier_temp)
 
             # Step 13: Initialize intermediate_frontier to batch-prepend
-            intermediate_frontier = self.recursive_bmssp_intermediate_frontier_dict()
+            intermediate_frontier = self.recursive_bmssp_intermediate_frontier_set()
 
             # Step 14–20: relax edges from new_frontier_temp and enqueue into D or intermediate_frontier per their interval
             for new_frontier_idx in new_frontier_temp:
@@ -506,16 +506,12 @@ class BmsspCore:
                             <= new_distance
                             < data_struct_frontier_bound_temp
                         ):
-                            if new_distance < intermediate_frontier.get(connection_idx, inf):
-                                intermediate_frontier[connection_idx] = new_distance
+                            intermediate_frontier.add(connection_idx)
 
             # Step 21: Batch prepend intermediate_frontier plus filtered data_struct_frontier_temp in completion_bound, data_struct_frontier_bound_temp)
-            for x in data_struct_frontier_temp:
-                if completion_bound <= self.counter_and_edge_distance_matrix[x] < data_struct_frontier_bound_temp:
-                    if self.counter_and_edge_distance_matrix[x] < intermediate_frontier.get(x, inf):
-                        intermediate_frontier[x] = self.counter_and_edge_distance_matrix[x]
-
-            data_struct.batch_prepend([(k,v) for k,v in intermediate_frontier.items()])
+            intermediate_frontier.update([x for x in data_struct_frontier_temp if completion_bound <= self.counter_and_edge_distance_matrix[x] < data_struct_frontier_bound_temp])
+            data_struct.batch_prepend([(x, self.counter_and_edge_distance_matrix[x]) for x in intermediate_frontier])
+            
         # Optional code if you do not have guaranteed unique lengths.
         # if len(new_frontier) > work_budget:
         #     completion_bound = pivot_completion_bound
