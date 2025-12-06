@@ -133,3 +133,8 @@ for gridgraph_size in [25, 50, 100]:
         start = time.time()
         castro_cpp_graph.solve(origin_idx)
         print(f"BMSSP Gridgraph {gridgraph_size}x{gridgraph_size} {case_name} (C++): {round((time.time()-start)*1000, 4)}ms")
+
+        start_time = time.time()
+        dm_sp_tree = SpanningTree.makowskis_spanning_tree(gridgraph.graph, origin_idx)
+        print(f"Makowski's Spanning Tree Gridgraph {gridgraph_size}x{gridgraph_size} {case_name}: {round((time.time()-start_time)*1000, 4)}ms")
+        
