@@ -8,6 +8,7 @@ from bmsspy.entrypoint import Bmssp
 from .graphs import get_nx_shortest_path, get_igraph_shortest_path
 from .vanilla_dijkstra import vanilla_dijkstra
 from .sc_dijkstra import pure_python_sc_dijkstra
+from bmsspy.data_structures.unique_data_structure import UniqueBmsspDataStructure
 
 
 vanilla_limit = 80_000
@@ -75,7 +76,10 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
         iterations = iterations,
         print_console = print_console
     )
+
+    #####################################
     # Regular Graph Timing for Comparison
+    #####################################
 
     # BMSSP without Constant Degree Graph Timing
     run_algo(

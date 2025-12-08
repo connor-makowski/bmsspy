@@ -1,4 +1,5 @@
 from bmsspy.helpers.rbtree import RBTree
+from bmsspy.helpers.fast import FastLookup
 from bmsspy.helpers.quicksplit import quicksplit, quicksplit_tuple
 
 inf = float("inf")
@@ -97,10 +98,8 @@ class ListBmsspDataStructure:
         upper_bound: int | float,
         # The data strucure id to check for current recursion data
         # This would be compared to the recursion_id stored in the shared list
-        recursion_data_id: int,
         # A mutable list shared across all data structures at this recursion depth
-        # Eg: [0,0,0,...,[recursion_id, linked_list_node, data_id], ...,0]
-        recursion_data_list: list[int | list[int, LinkedListNode, int]],
+        recursion_data_struct_lookup: FastLookup,
         **kwargs,
     ):
         # TODO: Implement shared data recursion map here
@@ -108,8 +107,7 @@ class ListBmsspDataStructure:
         self.subset_size = max(2, subset_size)
         self.pull_size = max(1, subset_size)
         self.upper_bound = upper_bound
-        self.keys = recursion_data_list  # maps keys to their linked list node and which linked list they are in (0 for D0, 1 for D1)
-        self.recursion_data_id = recursion_data_id
+        self.keys = recursion_data_struct_lookup  # maps keys to their linked list node and which linked list they are in.
         self.D0 = LinkedList()  # D0 is a linked list of linked lists
         self.D1 = (
             RBTree()
@@ -121,10 +119,11 @@ class ListBmsspDataStructure:
         )  # Start with one empty linked list with upper bound B
 
     def delete_d1(self, key):
-        if self.keys[key] == 0 or self.keys[key][0] != self.recursion_data_id:
+        item = self.keys.get(key, None)
+        if item is None:
             raise ValueError("Key not found in data structure to delete.")
-        list_node = self.keys[key][1]
-        self.keys[key][0] = -1  # Mark as deleted
+        self.keys.invalidate(key)  # Mark as deleted
+        list_node = item[1]
         linked_list = list_node.parent_list
         # Remove the key-value pair from the linked list
         linked_list.remove(list_node)
@@ -147,10 +146,11 @@ class ListBmsspDataStructure:
                 linked_list.next_list.prev_list = linked_list.prev_list
 
     def delete_d0(self, key):
-        if self.keys[key] == 0 or self.keys[key][0] != self.recursion_data_id:
+        item = self.keys.get(key, None)
+        if item is None:
             raise ValueError("Key not found in data structure to delete.")
-        list_node = self.keys[key][1]
-        self.keys[key][0] = -1  # Mark as deleted
+        self.keys.invalidate(key)  # Mark as deleted
+        list_node = item[1]
         linked_list = list_node.parent_list
         linked_list.remove(list_node)
         if linked_list.is_empty():
@@ -168,10 +168,11 @@ class ListBmsspDataStructure:
         Insert/refresh a key-value pair;
         """
         # If the key already exists, see if we need to remove it first
-        if self.keys[key] != 0 and self.keys[key][0] == self.recursion_data_id:
-            if self.keys[key][1].value < value:
+        item = self.keys.get(key, None)
+        if item is not None:
+            if item[1].value < value:
                 return  # No need to update if the new value is not lower
-            elif self.keys[key][2] == 0:
+            elif item[0] == 0:
                 self.delete_d0(key)
             else:
                 self.delete_d1(key)
@@ -183,11 +184,7 @@ class ListBmsspDataStructure:
             )
         linked_list = block.val
         linked_list.append(key, value)
-        self.keys[key] = [
-            self.recursion_data_id,
-            linked_list.tail,
-            1,
-        ]  # Update with the new node
+        self.keys[key] = [1, linked_list.tail]
         # If the linked list exceeds the subset size, perform a split
         if linked_list.size > self.subset_size:
             self.split(linked_list)
@@ -199,11 +196,8 @@ class ListBmsspDataStructure:
         for node in linked_list:
             if node.value < median_value:
                 new_list.append(node.key, node.value)
-                self.keys[node.key] = [
-                    self.recursion_data_id,
-                    new_list.tail,
-                    1,
-                ]  # Update with the new node
+                self.keys[node.key] = [1, new_list.tail]
+                # Update with the new node
                 linked_list.remove(node)
 
         new_list.upper_bound = median_value
@@ -224,13 +218,11 @@ class ListBmsspDataStructure:
         """
         for key, value in key_value_pairs:
             # If the key already exists, see if we need to remove it first
-            if (
-                self.keys[key] != 0
-                and self.keys[key][0] == self.recursion_data_id
-            ):
-                if self.keys[key][1].value < value:
+            item = self.keys.get(key, None)
+            if item is not None:
+                if item[1].value < value:
                     key_value_pairs.remove((key, value))
-                elif self.keys[key][2] == 0:
+                elif item[0] == 0:
                     self.delete_d0(key)
                 else:
                     self.delete_d1(key)
@@ -244,7 +236,7 @@ class ListBmsspDataStructure:
             old_head.prev_list = self.D0
             for key, value in key_value_pairs:
                 self.D0.append(key, value)
-                self.keys[key] = [self.recursion_data_id, self.D0.tail, 0]
+                self.keys[key] = [0, self.D0.tail]
         else:
             # Otherwise, split by median and try again. (note that the lower half goes in last to preserve order)
             # Iterative approach to batch prepend
@@ -261,11 +253,7 @@ class ListBmsspDataStructure:
                     # Add all pairs to the new block
                     for key, value in current_pairs:
                         self.D0.append(key, value)
-                        self.keys[key] = [
-                            self.recursion_data_id,
-                            self.D0.tail,
-                            0,
-                        ]
+                        self.keys[key] = [0, self.D0.tail]
                 else:
                     # Split by median
                     split_items = quicksplit_tuple(current_pairs)
@@ -308,7 +296,7 @@ class ListBmsspDataStructure:
             subset = [
                 i[0]
                 for i in quicksplit_tuple(
-                    [(k, self.keys[k][1].value) for k in combined],
+                    [(k, self.keys.get(k)[1].value) for k in combined],
                     self.pull_size,
                 )["lower"]
             ]
@@ -316,14 +304,10 @@ class ListBmsspDataStructure:
             subset = combined
         for key in subset:
             # Now remove the selected keys from the structure
-            if (
-                self.keys[key] != 0
-                and self.keys[key][0] == self.recursion_data_id
-            ):
-                if self.keys[key][2] == 0:
-                    self.delete_d0(key)
-                else:
-                    self.delete_d1(key)
+            if self.keys.get(key)[0] == 0:
+                self.delete_d0(key)
+            else:
+                self.delete_d1(key)
         # Compute lower bound for remaining
         remaining_best = self.upper_bound
         if self.D0 and not self.D0.is_empty():

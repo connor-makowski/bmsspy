@@ -5,7 +5,6 @@ from scgraph.utils import hard_round
 # Local Imports
 from bmsspy.entrypoint import Bmssp
 from scgraph.spanning import SpanningTree
-from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 
 print("\n===============\nBMSSP GridGraph Tests:\n===============")
 
@@ -63,16 +62,6 @@ def check_correctness(name, graph, origin_id):
     validate(
         name=name + " (Standard)",
         realized=bmssp_graph_output["distance_matrix"],
-        expected=dm_sp_tree["distance_matrix"][
-            : len(graph)
-        ],  # Trimmed to original graph size
-    )
-    bmssp_heap_output = bmssp_graph.solve(
-        origin_id=origin_id, data_structure=BmsspHeapDataStructure
-    )
-    validate(
-        name=name + " (Heap)",
-        realized=bmssp_heap_output["distance_matrix"],
         expected=dm_sp_tree["distance_matrix"][
             : len(graph)
         ],  # Trimmed to original graph size

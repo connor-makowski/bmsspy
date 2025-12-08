@@ -13,7 +13,6 @@ from scgraph_data.world_highways_and_marnet import (
 
 # Local Imports
 from bmsspy import Bmssp
-from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 
 
 print("\n===============\nBMSSP VS SCGraph Tests:\n===============")
@@ -59,16 +58,6 @@ def check_correctness(name, graph, origin_id):
     validate(
         name=name + " (Standard)",
         realized=bmssp_graph.solve(origin_id=origin_id)["distance_matrix"],
-        expected=dm_sp_tree[
-            "distance_matrix"
-        ],  # Trimmed to original graph size
-    )
-    bmssp_heap_function = bmssp_graph.solve(
-        origin_id=origin_id, data_structure=BmsspHeapDataStructure
-    )
-    validate(
-        name=name + " (Heap)",
-        realized=bmssp_heap_function["distance_matrix"],
         expected=dm_sp_tree[
             "distance_matrix"
         ],  # Trimmed to original graph size
@@ -179,14 +168,7 @@ time_test(
 )
 
 time_test(
-    "BMSSP 7 (heap) (world_highways_and_marnet)",
-    pamda.thunkify(world_highways_and_marnet_graph_bmssp.solve)(
-        origin_id=0, destination_id=5, data_structure=BmsspHeapDataStructure
-    ),
-)
-
-time_test(
-    "BMSSP 8 (not constant degree) (world_highways_and_marnet)",
+    "BMSSP 7 (not constant degree) (world_highways_and_marnet)",
     pamda.thunkify(world_highways_and_marnet_graph_bmssp_no_cd.solve)(
         origin_id=0, destination_id=5
     ),

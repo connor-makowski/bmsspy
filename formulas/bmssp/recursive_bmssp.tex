@@ -13,8 +13,7 @@
 $(P,W) \leftarrow$ \textsc{FindPivots}($B,S$)\;
 
 $M \leftarrow 2^{(l-1)t}$\;
-{\color{blue} $\textit{rlcnt}[l-1] \leftarrow \textit{rlcnt}[l-1] + 1$ \tcp*{Increment recursion level counter}}
-{\color{blue} $D \leftarrow$ \textsc{BmsspDataStructure}($M,B, \textit{rlcnt}[l-1], \textit{rldsm}[l-1])$\tcp*{Pass recursion map}}\label{alg:bmssp_recursive_ds_init}
+\textnormal{\textsc{BmsspDataStructure}}($M,B$)
 
 \ForEach{$p \in P$}{$D.\textsc{Insert}(p, \textit{dist}[p])$}\label{alg:bmssp_recursive_insert_pivots}
 
@@ -35,13 +34,13 @@ $U \leftarrow \emptyset$\;\label{alg:bmssp_recursive_init_bcomp}
         {\color{Green}$\textit{pred}[v]\leftarrow u$\tcp*{PT: Update predecessor}\label{alg:bmssp_recursive_bmssp_pred}}
         {\color{Brown}$\textit{cdist}[v]\leftarrow \textit{cdist}[u]+w+counter$\tcp*{RUA: Counter distance update}}\label{alg:bmssp_recursive_key2}
         \uIf{{\color{Blue}$B_{\mathrm{curr}}$}$ \leq d' < B$}{ $D.\textsc{Insert}(v,d')$ }\label{alg:bmssp_recursive_insert}
-        \ElseIf{{\color{Blue}$B_{\mathrm{comp}}$}$ \leq d' < $ {\color{Blue}$B_{\mathrm{curr}}$}}{ $K \leftarrow K \cup \{(v,d')\}$ }\label{alg:bmssp_recursive_collectK}
-      }
+        \ElseIf {{\color{Blue}$B_{\mathrm{comp}}$}$ \leq d' < $ {\color{Blue}$B_{\mathrm{curr}}$}}{ {\color{Blue}$K \leftarrow K \cup \{v\}$\tcp*{FIN: Store K as set of of vertices}} } 
+      }\label{alg:bmssp_recursive_collectK}
     }
   }
-
-  $D.\textsc{BatchPrepend}(K \cup \{(x,\textit{dist}[x]) : x \in$ {\color{Blue}$S_{\mathrm{curr}}$}$, ${\color{Blue}$B_{\mathrm{comp}}$}$ \leq \textit{dist}[x] < $ {\color{Blue}$B_{\mathrm{curr}}$}$\})$\;\label{alg:bmssp_recursive_batchprepend}
 }
+$D.\textsc{BatchPrepend}(\{(i,\textit{dist}[i]) : i \in K \cup \{j : j \in$ {\color{Blue}$S_{\mathrm{curr}}$}$, ${\color{Blue}$B_{\mathrm{comp}}$}$ \leq \textit{dist}[j] < $ {\color{Blue}$B_{\mathrm{curr}}$}$\}\})$\;\label{alg:bmssp_recursive_batchprepend}
+
 $B_{\mathrm{comp}} \leftarrow \min(B_{\mathrm{comp}}, B)$\;\label{alg:bmssp_recursive_clip}
 \Return $(B_{\mathrm{comp}},\, U \cup \{x \in W : \textit{dist}[x] < B_{\mathrm{comp}}\})$\;\label{alg:bmssp_recursive_return}
 \end{algorithm}
