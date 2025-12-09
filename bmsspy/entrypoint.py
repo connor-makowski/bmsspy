@@ -2,7 +2,7 @@ from .core import BmsspCore
 from .helpers.utils import (
     input_check,
     reconstruct_path,
-    convert_to_constant_degree,
+    convert_to_constant_out_degree,
     convert_from_constant_degree,
     inf,
 )
@@ -55,7 +55,7 @@ class Bmssp:
         self.use_constant_degree_graph = use_constant_degree_graph
 
         if self.use_constant_degree_graph:
-            self.constant_degree_dict = convert_to_constant_degree(self.graph)
+            self.constant_degree_dict = convert_to_constant_out_degree(self.graph, out_degree=2)
             self.used_graph = self.constant_degree_dict["graph"]
         else:
             self.used_graph = self.graph

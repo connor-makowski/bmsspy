@@ -1,5 +1,6 @@
 from copy import deepcopy
 from decimal import Decimal
+from math import ceil
 
 inf = Decimal("Infinity")
 
@@ -76,12 +77,56 @@ def reconstruct_path(destination_id: int, predecessor: list[int]) -> list[int]:
     output_path.reverse()
     return output_path
 
+def convert_to_constant_out_degree(graph: list[dict[int, int | float]], out_degree:int=2) -> dict:
+    """
+    Convert a graph to a constant out-degree graph with no more than `out_degree` outgoing edges per node.
+    """
+    original_graph_len = len(graph)
+    graph = deepcopy(graph)
+
+
+    idx_map = list(range(len(graph)))
+
+    for node_idx in range(len(graph)):
+        num_connections = len(graph[node_idx])
+        if num_connections > out_degree:
+            num_partitions = ceil(num_connections / (out_degree-1))
+            partition_idx_mapping = [node_idx] + list(
+                range(len(graph), len(graph) + num_partitions - 1)
+            )
+            graph.extend([{} for _ in range(num_partitions - 1)])
+            idx_map.extend([node_idx] * (num_partitions - 1))
+
+            # Store the original connections
+            original_dict = dict(graph[node_idx])
+            # Clear out the original node's connections to be re-assigned
+            graph[node_idx] = {}
+
+            partition_idx = 0
+            partition_counter = 0
+            # Break the node into partitions assigning out_degree-1 outgoing edges per node
+            for out_node_idx, out_node_weight in original_dict.items():
+                graph[partition_idx_mapping[partition_idx]][out_node_idx] = out_node_weight
+                partition_counter += 1
+                if partition_counter >= (out_degree - 1):
+                    partition_counter = 0
+                    partition_idx += 1
+
+            # Cycle connect all partitions with zero-weight edges
+            for item_idx in range(len(partition_idx_mapping)):
+                from_idx = partition_idx_mapping[item_idx]
+                to_idx = partition_idx_mapping[(item_idx + 1) % len(partition_idx_mapping)]
+                graph[from_idx][to_idx] = Decimal(0)
+
+    return {
+        "graph": graph,
+        "idx_map": idx_map,
+        "original_graph_len": original_graph_len,
+    }
 
 def convert_to_constant_degree(graph: list[dict[int, int | float]]) -> dict:
     """
-    Convert a graph to a guaranteed unique path length based constant degree graph with no more than 2 incoming and 2 outgoing edges per node.
-
-    The precision value determines the number of decimal places to maintain when adjusting edge weights to ensure unique path lengths.
+    Convert a graph to a constant degree graph with no more than 2 incoming and 2 outgoing edges per node.
 
     Args:
 
