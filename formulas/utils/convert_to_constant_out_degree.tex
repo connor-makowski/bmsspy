@@ -1,0 +1,41 @@
+\begin{algorithm}[!htbp]
+\SingleSpacedXI
+\caption{{\color{Blue}Convert to Constant Out-Degree (\texttt{convert\_to\_constant\_out\_degree})}}
+\label{alg:utils_convert_to_constant_out_degree}
+\SetAlgoLined
+\KwIn{graph $G$ (adjacency maps), target out-degree $d$}
+\KwOut{dictionary with converted graph, index map, and original graph length}
+
+$n \leftarrow |G|$; 
+$G' \leftarrow G$; 
+$M \leftarrow [0,1,\dots,n-1]$\;
+
+\For{$u \leftarrow 0$ \KwTo $n-1$}{
+  \If{$|G[u]| > d$}{
+    $k \leftarrow \left\lceil \frac{|G[u]|}{\,d-1\,} \right\rceil$\tcp*{number of partitions}
+    $\textit{parts} \leftarrow [u,\, |G'|,\, |G'|+1,\,\dots,\, |G'|+k-2]$\;
+    extend $G'$ with $(k-1)$ empty maps\;
+    extend $M$ with $(k-1)$ copies of $u$\;
+
+    $G'[u] \leftarrow \{\}$ \tcp*{clear existing outgoing edges}
+
+    $i \leftarrow 0$;
+    $r \leftarrow 0$\;
+
+    \ForEach{$(v,w) \in G[u]$}{
+      $G'[\textit{parts}[i]][v] \leftarrow w$\;
+      $r \leftarrow r+1$\;
+      \If{$r \ge d-1$}{
+        $r \leftarrow 0$;
+        $i \leftarrow i+1$\;
+      }
+    }
+
+    \tcp{Add cycle edges of weight $0$ between all partition nodes}
+    \For{$j \leftarrow 0$ \KwTo $k-1$}{
+      $G'[\textit{parts}[j]][\textit{parts}[(j+1)\bmod k]] \leftarrow 0$\;
+    }
+  }
+}
+\Return $C \gets \{\textit{graph} \leftarrow G', \textit{idx\_map} \leftarrow M, \textit{original\_graph\_len} \leftarrow n\}s$\;
+\end{algorithm}

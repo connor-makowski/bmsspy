@@ -1,0 +1,33 @@
+\begin{algorithm}[!htbp]
+\SingleSpacedXI
+\caption{{\color{BLue}Convert from Constant Out-Degree (\texttt{convert\_from\_constant\_out\_degree})}}
+\label{alg:utils_convert_from_constant_degree}
+\SetAlgoLined
+\KwIn{$\text{dist}_{\text{cd}}$ (distance matrix), $\text{pred}_{\text{cd}}$ (predecessor matrix), constant-degree dictionary $C$}
+\KwOut{dictionary with converted $\text{dist}$ and $\text{pred}$ matrices}
+
+$M \leftarrow C[\text{idx\_map}]$\;
+$n \leftarrow C[\text{original\_graph\_len}]$\;
+$\text{pred} \leftarrow [\,]$ \tcp*{initialize empty predecessor matrix}
+
+\For{$i \leftarrow 0$ \KwTo $n-1$}{
+  $u \leftarrow \text{pred}_{\text{cd}}[i]$\;
+  \While{\textup{\textbf{true}}}{
+    \If{$u = -1$}{
+      append $u$ to $\text{pred}$\;
+      \textbf{break}\;
+    }
+    \Else{
+      \If{$M[u] < n$ \textbf{and} $M[u] \neq i$}{
+        append $M[u]$ to $\text{pred}$\;
+        \textbf{break}\;
+      }
+      \Else{
+        $u \leftarrow \text{pred}_{\text{cd}}[u]$ \tcp*{follow predecessor chain}
+      }
+    }
+  }
+}
+
+\Return $\{\textit{distance\_matrix} \leftarrow \text{dist}_{\text{cd}}[0\!\!:\!\!n], \textit{predecessor\_matrix} \leftarrow \text{pred}\}$\;
+\end{algorithm}
