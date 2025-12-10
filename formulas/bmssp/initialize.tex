@@ -22,14 +22,14 @@ $m \leftarrow \sum_{u \in G} |G[u]|$\;
 $n \leftarrow |G|$\;
 $precision \leftarrow precision$\;
 
-$\textit{counter} \leftarrow 10^{-\left\lceil \log_{10}\left(\frac{(n \cdot 2) + 1}{10^{-(precision+1)}}\right) \right\rceil}$\;
-$\textit{edge\_adj\_value} \leftarrow 10^{-\left\lceil \log_{10}\left(\frac{(m \cdot 2) + 1}{\textit{counter}}\right) \right\rceil}$\;
+$\textit{counter} \leftarrow 10^{-(\mathit{precision} + \ceil{\log_{10}(2n + 1)})}$\;
+$\textit{edge\_adj\_value} \leftarrow 10^{-(\mathit{precision} + \ceil{\log_{10}(2n + 1)} + \ceil{\log_{10}(m + 1)})}$\;
 
 \BlankLine
-$G_{edge} \leftarrow \{\}$; $\textit{edge\_id} \leftarrow 0$\;
+$G_{edge}[0..|G|-1] \leftarrow \{\}$ \tcp*{Can use hashmaps here since graph is constant degree}
+$\textit{edge\_id} \leftarrow 0$\;
 \ForEach{$u \in G$}{
-  $G_{edge}[u] \leftarrow \{\}$\;
-  \ForEach{$v \in G[u]$}{
+  \ForEach{$(v, w) \in G[u]$}{
     $\textit{edge\_id} \leftarrow \textit{edge\_id} + \textit{edge\_adj\_value}$\;
     $G_{edge}[u][v] \leftarrow \textit{edge\_id}$\;
   }

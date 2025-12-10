@@ -68,22 +68,9 @@ class Bmssp:
         #   to ensure that no two paths are measured as the same length
         num_edges = sum(len(neighbors) for neighbors in self.used_graph)
         num_nodes = len(self.used_graph)
-        counter_magnitude_adjustment = -ceil(
-            log(
-                (Decimal(num_nodes * 2 + 1))
-                / (Decimal(10) ** Decimal(-self.precision - 1)),
-                10,
-            )
-        )
-        self.counter_value = Decimal(10) ** Decimal(
-            counter_magnitude_adjustment
-        )
-        edge_id_magnitude_adjustment = -ceil(
-            log(((Decimal(num_edges * 2 + 1)) / (self.counter_value)), 10)
-        )
-        edge_id_adjustment_value = Decimal(10) ** Decimal(
-            edge_id_magnitude_adjustment
-        )
+
+        self.counter_value = Decimal(10) ** -(self.precision + ceil(log(Decimal(num_nodes * 2 + 1), 10)))
+        edge_id_adjustment_value = Decimal(10) ** -(self.precision + ceil(log(Decimal(num_nodes * 2 + 1), 10)) + ceil(log(Decimal(num_edges + 1), 10)))
 
         # Store a set of adjustment values to be used during BMSSP solving
         edge_id_value = Decimal(0.0)
