@@ -77,20 +77,22 @@ def reconstruct_path(destination_id: int, predecessor: list[int]) -> list[int]:
     output_path.reverse()
     return output_path
 
-def convert_to_constant_out_degree(graph: list[dict[int, int | float]], out_degree:int=2) -> dict:
+
+def convert_to_constant_out_degree(
+    graph: list[dict[int, int | float]], out_degree: int = 2
+) -> dict:
     """
     Convert a graph to a constant out-degree graph with no more than `out_degree` outgoing edges per node.
     """
     original_graph_len = len(graph)
     graph = deepcopy(graph)
 
-
     idx_map = list(range(len(graph)))
 
     for node_idx in range(len(graph)):
         num_connections = len(graph[node_idx])
         if num_connections > out_degree:
-            num_partitions = ceil(num_connections / (out_degree-1))
+            num_partitions = ceil(num_connections / (out_degree - 1))
             partition_idx_mapping = [node_idx] + list(
                 range(len(graph), len(graph) + num_partitions - 1)
             )
@@ -106,7 +108,9 @@ def convert_to_constant_out_degree(graph: list[dict[int, int | float]], out_degr
             partition_counter = 0
             # Break the node into partitions assigning out_degree-1 outgoing edges per node
             for out_node_idx, out_node_weight in original_dict.items():
-                graph[partition_idx_mapping[partition_idx]][out_node_idx] = out_node_weight
+                graph[partition_idx_mapping[partition_idx]][
+                    out_node_idx
+                ] = out_node_weight
                 partition_counter += 1
                 if partition_counter >= (out_degree - 1):
                     partition_counter = 0
@@ -115,7 +119,9 @@ def convert_to_constant_out_degree(graph: list[dict[int, int | float]], out_degr
             # Cycle connect all partitions with zero-weight edges
             for item_idx in range(len(partition_idx_mapping)):
                 from_idx = partition_idx_mapping[item_idx]
-                to_idx = partition_idx_mapping[(item_idx + 1) % len(partition_idx_mapping)]
+                to_idx = partition_idx_mapping[
+                    (item_idx + 1) % len(partition_idx_mapping)
+                ]
                 graph[from_idx][to_idx] = Decimal(0)
 
     return {
@@ -123,6 +129,7 @@ def convert_to_constant_out_degree(graph: list[dict[int, int | float]], out_degr
         "idx_map": idx_map,
         "original_graph_len": original_graph_len,
     }
+
 
 def convert_to_constant_degree(graph: list[dict[int, int | float]]) -> dict:
     """

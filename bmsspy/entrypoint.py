@@ -55,7 +55,9 @@ class Bmssp:
         self.use_constant_degree_graph = use_constant_degree_graph
 
         if self.use_constant_degree_graph:
-            self.constant_degree_dict = convert_to_constant_out_degree(self.graph, out_degree=2)
+            self.constant_degree_dict = convert_to_constant_out_degree(
+                self.graph, out_degree=2
+            )
             self.used_graph = self.constant_degree_dict["graph"]
         else:
             self.used_graph = self.graph
@@ -69,8 +71,14 @@ class Bmssp:
         num_edges = sum(len(neighbors) for neighbors in self.used_graph)
         num_nodes = len(self.used_graph)
 
-        self.counter_value = Decimal(10) ** -(self.precision + ceil(log(Decimal(num_nodes * 2 + 1), 10)))
-        edge_id_adjustment_value = Decimal(10) ** -(self.precision + ceil(log(Decimal(num_nodes * 2 + 1), 10)) + ceil(log(Decimal(num_edges + 1), 10)))
+        self.counter_value = Decimal(10) ** -(
+            self.precision + ceil(log(Decimal(num_nodes * 2 + 1), 10))
+        )
+        edge_id_adjustment_value = Decimal(10) ** -(
+            self.precision
+            + ceil(log(Decimal(num_nodes * 2 + 1), 10))
+            + ceil(log(Decimal(num_edges + 1), 10))
+        )
 
         # Store a set of adjustment values to be used during BMSSP solving
         edge_id_value = Decimal(0.0)
