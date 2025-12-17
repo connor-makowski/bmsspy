@@ -10,8 +10,8 @@ echo "from bmsspy.entrypoint import Bmssp" >> bmsspy/__init__.py
 
 
 # Specify versions for documentation purposes
-VERSION="2.1.1"
-OLD_DOC_VERSIONS="2.0.1"
+VERSION="2.2.0"
+OLD_DOC_VERSIONS="2.1.1 2.0.1"
 export version_options="$VERSION $OLD_DOC_VERSIONS"
 
 # generate the docs for a version function:
