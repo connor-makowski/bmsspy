@@ -42,7 +42,8 @@ class FastRoot:
 
 class FastSet(FastRoot):
     def __str__(self):
-        return f"FastSet({{{",".join(map(str, self.data))}}})"
+        items = ",".join(map(str, self.data))
+        return f"FastSet({{{items}}})"
 
     def __call__(self, data: list[int] | set[int] = list()):
         self.clear()
@@ -91,7 +92,8 @@ class FastDict(FastRoot):
         self.vals = [0] * size
 
     def __str__(self):
-        return f"FastDict({{{", ".join(f"{key}: {self.vals[key]}" for key in self.data)}}})"
+        items = ", ".join(f"{key}: {self.vals[key]}" for key in self.data)
+        return f"FastDict({{{items}}})"
 
     def __call__(self, data: dict[int, any] = dict()):
         self.clear()
