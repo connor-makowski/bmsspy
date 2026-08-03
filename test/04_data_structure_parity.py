@@ -1,7 +1,4 @@
-# General Imports
 import random
-
-# Local Imports
 from bmsspy.data_structures.heap_data_structure import BmsspHeapDataStructure
 from bmsspy.data_structures.data_structure import BmsspDataStructure
 from bmsspy.data_structures.unique_data_structure import (
@@ -12,9 +9,6 @@ from bmsspy.helpers.fast import FastLookup
 
 
 def basic_test(ds_class):
-    """
-    Basic sanity test for BmsspDataStructure implementations.
-    """
     ds = ds_class(
         subset_size=3,
         upper_bound=100,
@@ -48,12 +42,27 @@ def basic_test(ds_class):
     assert ds.is_empty()
 
 
-def test_data_structure_parity(seed, ds_class_1, ds_class_2):
-    """
-    Verify that both BmsspDataStructure implementations behave identically.
-    """
-    random.seed(seed)
+def test_data_structure_parity_func():
+    basic_test(BmsspDataStructure)
+    basic_test(BmsspHeapDataStructure)
+    basic_test(UniqueBmsspDataStructure)
+    basic_test(ListBmsspDataStructure)
 
+    for i in range(1000):
+        # First test parity between non-unique data structures
+        run_data_structure_parity(i, BmsspDataStructure, BmsspHeapDataStructure)
+        # Then test parity between unique and non-unique data structures
+        run_data_structure_parity(
+            i, BmsspHeapDataStructure, UniqueBmsspDataStructure
+        )
+        # Finally test parity between unique and list data structures
+        run_data_structure_parity(
+            i, UniqueBmsspDataStructure, ListBmsspDataStructure
+        )
+
+
+def run_data_structure_parity(seed, ds_class_1, ds_class_2):
+    random.seed(seed)
     subset_size = random.randint(1, 10)
     upper_bound = random.randint(300, 2000)
 
@@ -65,7 +74,6 @@ def test_data_structure_parity(seed, ds_class_1, ds_class_2):
     )
     key_values = {}
     used_values = set()
-    # Test insert_key_value
     for _ in range(100):
         key = random.randint(0, 100)
         value = random.randint(upper_bound // 2, upper_bound - 1)
@@ -83,7 +91,6 @@ def test_data_structure_parity(seed, ds_class_1, ds_class_2):
     assert not ds_class_1_obj.is_empty()
     assert not ds_class_2_obj.is_empty()
 
-    # Test pull
     remaining_best_ds_1, subset_ds_1 = ds_class_1_obj.pull()
     remaining_best_ds_2, subset_ds_2 = ds_class_2_obj.pull()
     assert remaining_best_ds_1 == remaining_best_ds_2
@@ -91,7 +98,6 @@ def test_data_structure_parity(seed, ds_class_1, ds_class_2):
         key_values[k] for k in subset_ds_2
     )
 
-    # Test batch_prepend
     batch = []
     for _ in range(50):
         key = random.randint(101, 200)
@@ -111,7 +117,6 @@ def test_data_structure_parity(seed, ds_class_1, ds_class_2):
     ds_class_1_obj.batch_prepend(set(batch))
     ds_class_2_obj.batch_prepend(batch)
 
-    # Pull until empty
     while not ds_class_1_obj.is_empty() and not ds_class_2_obj.is_empty():
         remaining_best_ds_1, subset_ds_1 = ds_class_1_obj.pull()
         remaining_best_ds_2, subset_ds_2 = ds_class_2_obj.pull()
@@ -132,15 +137,13 @@ if __name__ == "__main__":
     basic_test(ListBmsspDataStructure)
     for i in range(10000):
         # First test parity between non-unique data structures
-        test_data_structure_parity(
-            i, BmsspDataStructure, BmsspHeapDataStructure
-        )
+        run_data_structure_parity(i, BmsspDataStructure, BmsspHeapDataStructure)
         # Then test parity between unique and non-unique data structures - essentially ensuring our tests are valid
-        test_data_structure_parity(
+        run_data_structure_parity(
             i, BmsspHeapDataStructure, UniqueBmsspDataStructure
         )
         # Finally test parity between unique and list data structures
-        test_data_structure_parity(
+        run_data_structure_parity(
             i, UniqueBmsspDataStructure, ListBmsspDataStructure
         )
     print("Data Structure tests passed!")
