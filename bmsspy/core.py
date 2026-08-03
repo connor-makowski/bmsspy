@@ -123,8 +123,8 @@ class BmsspCore:
         self.is_pivot_seen_set = FastSet(len(graph))
 
         self.find_pivots_temp_frontier_set = FastSet(len(graph))
-        self.find_pivots_prev_frontier_set = FastSet(len(graph))
-        self.find_pivots_curr_frontier_set = FastSet(len(graph))
+        self.find_pivots_frontier_set_a = FastSet(len(graph))
+        self.find_pivots_frontier_set_b = FastSet(len(graph))
         self.find_pivots_forest_dict = FastDict(len(graph))
         self.find_pivots_has_indegree_set = FastSet(len(graph))
         self.find_pivots_pivots_set = FastSet(len(graph))
@@ -213,11 +213,9 @@ class BmsspCore:
             - What: Return a new frontier set of vertices within the upper_bound
         """
         temp_frontier = self.find_pivots_temp_frontier_set(frontier)
-        # Ping-pong between two distinct pooled sets so that the set we relax from
-        # is never the same object we clear and fill. Swapping the references keeps
-        # them distinct with no per-iteration copy.
-        prev_frontier = self.find_pivots_prev_frontier_set(frontier)
-        curr_frontier = self.find_pivots_curr_frontier_set()
+        # Swap between two fast sets to properly re alias without copy overhead.
+        prev_frontier = self.find_pivots_frontier_set_a(frontier)
+        curr_frontier = self.find_pivots_frontier_set_b
 
         # Multi-step limited relaxation from current frontier
         for _ in range(self.pivot_relaxation_steps):
@@ -258,8 +256,6 @@ class BmsspCore:
                         if new_distance < upper_bound:
                             curr_frontier.add(connection_idx)
             temp_frontier.update(curr_frontier)
-            # Swap: next iteration relaxes from curr_frontier, and reuses the old
-            # prev_frontier as the (cleared) buffer to fill.
             prev_frontier, curr_frontier = curr_frontier, prev_frontier
             # If the search balloons, take the current frontier as pivots
             if len(temp_frontier) > self.pivot_relaxation_steps * len(frontier):
