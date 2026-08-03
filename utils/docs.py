@@ -6,7 +6,7 @@ from pathlib import Path
 root = Path(__file__).parent.parent
 bmsspy_init = root / "bmsspy" / "__init__.py"
 
-VERSION = "2.2.1"
+VERSION = "2.2.2"
 OLD_DOC_VERSIONS = ["2.1.1", "2.0.1"]
 
 env = {

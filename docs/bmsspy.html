@@ -24,9 +24,12 @@
             <h2>Contents</h2>
             <ul>
   <li><a href="#bmsspy">BMSSPy</a></li>
-  <li><a href="#setup">Setup</a>
+  <li><a href="#setup">Setup</a></li>
+  <li><a href="#contributing">Contributing</a>
   <ul>
     <li><a href="#development">Development</a></li>
+    <li><a href="#making-changes">Making Changes</a></li>
+    <li><a href="#development-commands">Development Commands</a></li>
   </ul></li>
 </ul>
 
@@ -43,7 +46,7 @@
 <footer>
 <select id="version-selector">
     <option value="latest">latest</option>
-        <option value="2.2.1">2.2.1</option>
+        <option value="2.2.2">2.2.2</option>
         <option value="2.1.1">2.1.1</option>
         <option value="2.0.1">2.0.1</option>
 </select>
@@ -209,17 +212,21 @@ bmsspy    </h1>
 </code></pre>
 </div>
 
+<h1 id="contributing">Contributing</h1>
+
+<p>Contributions are welcome! Please open an issue or submit a pull request.</p>
+
 <h2 id="development">Development</h2>
 
 <p>To avoid extra development overhead, we expect all developers to use a unix based environment (Linux or Mac). If you use Windows, please use WSL2.</p>
 
-<p>For development, we test using Docker so we can lock system deps and swap out python versions easily. However, you can also use a virtual environment if you prefer. We provide a test script and a prettify script to help with development.</p>
+<p>For development, we use <a href="https://docs.astral.sh/uv/">uv</a> to manage dependencies and run tests.</p>
 
-<h3 id="making-changes">Making Changes</h3>
+<h2 id="making-changes">Making Changes</h2>
 
 <p>1) Fork the repo and clone it locally.
 2) Make your modifications.
-3) Use Docker or a virtual environment to run tests and make sure they pass.
+3) Run tests and make sure they pass.
 4) Prettify your code.
 5) <strong>DO NOT GENERATE DOCS</strong>.
     - We will generate the docs and update the version number when we are ready to release a new version.
@@ -227,54 +234,40 @@ bmsspy    </h1>
     - Atomic commits are preferred.
 7) Submit a pull request.</p>
 
-<h3 id="docker">Docker</h3>
+<h2 id="development-commands">Development Commands</h2>
 
-<p>Make sure Docker is installed and running.</p>
+<table>
+<thead>
+<tr>
+  <th>Command</th>
+  <th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>uv run nox</code></td>
+  <td>Run tests across Python 3.11, 3.12, 3.13, 3.14</td>
+</tr>
+<tr>
+  <td><code>uv run nox -s tests-3.14</code></td>
+  <td>Run tests on a single Python version</td>
+</tr>
+<tr>
+  <td><code>uv run pytest</code></td>
+  <td>Run tests in the local venv</td>
+</tr>
+<tr>
+  <td><code>uv run pytest -v</code></td>
+  <td>Run tests with verbose output</td>
+</tr>
+<tr>
+  <td><code>uv run python utils/prettify.py</code></td>
+  <td>Format with autoflake + black</td>
+</tr>
+</tbody>
+</table>
 
-<ul>
-<li>Create a docker container and drop into a shell
-<ul>
-<li><code>./run.sh</code></li>
-</ul></li>
-<li>Run all tests (see ./utils/test.sh)
-<ul>
-<li><code>./run.sh test</code></li>
-</ul></li>
-<li><p>Prettify the code (see ./utils/prettify.sh)</p>
-
-<ul>
-<li><code>./run.sh prettify</code></li>
-</ul></li>
-<li><p>Note: You can and should modify the <code>Dockerfile</code> to test different python versions.</p></li>
-</ul>
-
-<h3 id="virtual-environment">Virtual Environment</h3>
-
-<ul>
-<li>Create a virtual environment
-<ul>
-<li><code>python3.XX -m venv venv</code>
-<ul>
-<li>Replace <code>3.XX</code> with your python version (3.11 or higher)</li>
-</ul></li>
-</ul></li>
-<li>Activate the virtual environment
-<ul>
-<li><code>source venv/bin/activate</code></li>
-</ul></li>
-<li>Install the development requirements
-<ul>
-<li><code>pip install -r requirements/dev.txt</code></li>
-</ul></li>
-<li>Run Tests
-<ul>
-<li><code>./utils/test.sh</code></li>
-</ul></li>
-<li>Prettify Code
-<ul>
-<li><code>./utils/prettify.sh</code></li>
-</ul></li>
-</ul>
+<p>Dev dependencies are in <code>[project.optional-dependencies] dev</code> in <code>pyproject.toml</code>. Install with <code>uv sync --extra dev</code>.</p>
 </div>
 
                         <input id="mod-bmsspy-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
@@ -398,52 +391,42 @@ bmsspy    </h1>
 </span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>
 </span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>
 </span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>
-</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd">## Development</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd"># Contributing</span>
 </span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a>
-</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">To avoid extra development overhead, we expect all developers to use a unix based environment (Linux or Mac). If you use Windows, please use WSL2.</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">Contributions are welcome! Please open an issue or submit a pull request.</span>
 </span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>
-</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">For development, we test using Docker so we can lock system deps and swap out python versions easily. However, you can also use a virtual environment if you prefer. We provide a test script and a prettify script to help with development.</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">## Development</span>
 </span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>
-</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">### Making Changes</span>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">To avoid extra development overhead, we expect all developers to use a unix based environment (Linux or Mac). If you use Windows, please use WSL2.</span>
 </span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>
-</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a><span class="sd">1) Fork the repo and clone it locally.</span>
-</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a><span class="sd">2) Make your modifications.</span>
-</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="sd">3) Use Docker or a virtual environment to run tests and make sure they pass.</span>
-</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="sd">4) Prettify your code.</span>
-</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">5) **DO NOT GENERATE DOCS**.</span>
-</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a><span class="sd">    - We will generate the docs and update the version number when we are ready to release a new version.</span>
-</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">6) Only commit relevant changes and add clear commit messages.</span>
-</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a><span class="sd">    - Atomic commits are preferred.</span>
-</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="sd">7) Submit a pull request.</span>
-</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>
-</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">### Docker</span>
-</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a>
-</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="sd">Make sure Docker is installed and running.</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a><span class="sd">For development, we use [uv](https://docs.astral.sh/uv/) to manage dependencies and run tests.</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="sd">## Making Changes</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">1) Fork the repo and clone it locally.</span>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a><span class="sd">2) Make your modifications.</span>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">3) Run tests and make sure they pass.</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a><span class="sd">4) Prettify your code.</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="sd">5) **DO NOT GENERATE DOCS**.</span>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a><span class="sd">    - We will generate the docs and update the version number when we are ready to release a new version.</span>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">6) Only commit relevant changes and add clear commit messages.</span>
+</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a><span class="sd">    - Atomic commits are preferred.</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="sd">7) Submit a pull request.</span>
 </span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a>
-</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="sd">- Create a docker container and drop into a shell</span>
-</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="sd">    - `./run.sh`</span>
-</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="sd">- Run all tests (see ./utils/test.sh)</span>
-</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a><span class="sd">    - `./run.sh test`</span>
-</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a><span class="sd">- Prettify the code (see ./utils/prettify.sh)</span>
-</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a><span class="sd">    - `./run.sh prettify`</span>
-</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>
-</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a><span class="sd">- Note: You can and should modify the `Dockerfile` to test different python versions.</span>
-</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a>
-</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a><span class="sd">### Virtual Environment</span>
-</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a>
-</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="sd">- Create a virtual environment</span>
-</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a><span class="sd">    - `python3.XX -m venv venv`</span>
-</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="sd">        - Replace `3.XX` with your python version (3.11 or higher)</span>
-</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a><span class="sd">- Activate the virtual environment</span>
-</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a><span class="sd">    - `source venv/bin/activate`</span>
-</span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a><span class="sd">- Install the development requirements</span>
-</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a><span class="sd">    - `pip install -r requirements/dev.txt`</span>
-</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a><span class="sd">- Run Tests</span>
-</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a><span class="sd">    - `./utils/test.sh`</span>
-</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a><span class="sd">- Prettify Code</span>
-</span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a><span class="sd">    - `./utils/prettify.sh`&quot;&quot;&quot;</span>
-</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a>
-</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy.entrypoint</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bmssp</span>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="sd">## Development Commands</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="sd">| Command | What it does |</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a><span class="sd">|---|---|</span>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a><span class="sd">| `uv run nox` | Run tests across Python 3.11, 3.12, 3.13, 3.14 |</span>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a><span class="sd">| `uv run nox -s tests-3.14` | Run tests on a single Python version |</span>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a><span class="sd">| `uv run pytest` | Run tests in the local venv |</span>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a><span class="sd">| `uv run pytest -v` | Run tests with verbose output |</span>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a><span class="sd">| `uv run python utils/prettify.py` | Format with autoflake + black |</span>
+</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a>
+</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a><span class="sd">Dev dependencies are in `[project.optional-dependencies] dev` in `pyproject.toml`. Install with `uv sync --extra dev`.</span>
+</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a>
+</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy.entrypoint</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bmssp</span>
 </span></pre></div>
 
 
