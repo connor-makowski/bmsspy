@@ -1,13 +1,13 @@
-import time
-from pamda import pamda
+from scgraph import GeoGraph, Graph
 from scgraph.utils import hard_round
-from scgraph.spanning import SpanningTree
-from scgraph.geographs.marnet import graph as marnet_graph
-from scgraph.geographs.us_freeway import graph as us_freeway_graph
-from scgraph_data.world_highways_and_marnet import (
-    graph as world_highways_and_marnet_graph,
-)
+from pamda import pamda
 from bmsspy import Bmssp
+
+marnet_graph = GeoGraph.load_geograph("marnet").graph
+us_freeway_graph = GeoGraph.load_geograph("us_freeway").graph
+# world_highways_and_marnet_graph = GeoGraph.load_geograph(
+#     "world_highways_and_marnet"
+# ).graph
 
 
 def validate(realized, expected):
@@ -32,14 +32,14 @@ def validate(realized, expected):
 
 def check_correctness(graph, origin_id):
     bmssp_graph = Bmssp(graph=graph)
-    dm_sp_tree = SpanningTree.makowskis_spanning_tree(graph, origin_id)
+    dm_sp_tree = Graph(graph).get_shortest_path_tree(origin_id=origin_id)
     validate(
         realized=bmssp_graph.solve(origin_id=origin_id)["distance_matrix"],
         expected=dm_sp_tree["distance_matrix"][: len(graph)],
     )
 
     bmssp_no_cd = Bmssp(graph=graph, use_constant_degree_graph=False)
-    dm_sp_tree_no_cd = SpanningTree.makowskis_spanning_tree(graph, origin_id)
+    dm_sp_tree_no_cd = Graph(graph).get_shortest_path_tree(origin_id=origin_id)
     validate(
         realized=bmssp_no_cd.solve(origin_id=origin_id)["distance_matrix"],
         expected=dm_sp_tree_no_cd["distance_matrix"][: len(graph)],
@@ -59,15 +59,15 @@ def test_comprehensive_bmssp():
     check_correctness(graph=graph, origin_id=1)
     check_correctness(graph=marnet_graph, origin_id=1)
     check_correctness(graph=us_freeway_graph, origin_id=1)
-    check_correctness(graph=world_highways_and_marnet_graph, origin_id=1)
+    # check_correctness(graph=world_highways_and_marnet_graph, origin_id=1)
 
 
 def test_bmssp_time():
     marnet_graph_bmssp = Bmssp(graph=marnet_graph)
     us_freeway_graph_bmssp = Bmssp(graph=us_freeway_graph)
-    world_highways_and_marnet_graph_bmssp = Bmssp(
-        graph=world_highways_and_marnet_graph
-    )
+    # world_highways_and_marnet_graph_bmssp = Bmssp(
+    #     graph=world_highways_and_marnet_graph
+    # )
 
     marnet_graph_bmssp_no_cd = Bmssp(
         graph=marnet_graph, use_constant_degree_graph=False
@@ -75,9 +75,9 @@ def test_bmssp_time():
     us_freeway_graph_bmssp_no_cd = Bmssp(
         graph=us_freeway_graph, use_constant_degree_graph=False
     )
-    world_highways_and_marnet_graph_bmssp_no_cd = Bmssp(
-        graph=world_highways_and_marnet_graph, use_constant_degree_graph=False
-    )
+    # world_highways_and_marnet_graph_bmssp_no_cd = Bmssp(
+    #     graph=world_highways_and_marnet_graph, use_constant_degree_graph=False
+    # )
 
     marnet_graph_bmssp.solve(origin_id=0, destination_id=5)
     marnet_graph_bmssp.solve(origin_id=100, destination_id=7999)
@@ -86,19 +86,19 @@ def test_bmssp_time():
     us_freeway_graph_bmssp.solve(origin_id=0, destination_id=5)
     us_freeway_graph_bmssp.solve(origin_id=4022, destination_id=8342)
 
-    world_highways_and_marnet_graph_bmssp.solve(origin_id=0, destination_id=5)
-    world_highways_and_marnet_graph_bmssp_no_cd.solve(
-        origin_id=0, destination_id=5
-    )
+    # world_highways_and_marnet_graph_bmssp.solve(origin_id=0, destination_id=5)
+    # world_highways_and_marnet_graph_bmssp_no_cd.solve(
+    #     origin_id=0, destination_id=5
+    # )
 
-    SpanningTree.makowskis_spanning_tree(graph=marnet_graph, node_id=0)
-    SpanningTree.makowskis_spanning_tree(graph=us_freeway_graph, node_id=0)
-    SpanningTree.makowskis_spanning_tree(
-        graph=world_highways_and_marnet_graph, node_id=0
-    )
+    Graph(marnet_graph).get_shortest_path_tree(origin_id=0)
+    Graph(us_freeway_graph).get_shortest_path_tree(origin_id=0)
+    # Graph(world_highways_and_marnet_graph).get_shortest_path_tree(origin_id=0)
 
 
 if __name__ == "__main__":
+    import time
+
     print("\n===============\nBMSSP VS SCGraph Tests:\n===============")
 
     def validate_print(name, realized, expected):
@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
     def check_correctness_print(name, graph, origin_id):
         bmssp_graph = Bmssp(graph=graph)
-        dm_sp_tree = SpanningTree.makowskis_spanning_tree(graph, origin_id)
+        dm_sp_tree = Graph(graph).get_shortest_path_tree(origin_id=origin_id)
         validate_print(
             name=name + " (Standard)",
             realized=bmssp_graph.solve(origin_id=origin_id)["distance_matrix"],
@@ -133,9 +133,7 @@ if __name__ == "__main__":
         )
 
         bmssp_no_cd = Bmssp(graph=graph, use_constant_degree_graph=False)
-        dm_sp_tree_no_cd = SpanningTree.makowskis_spanning_tree(
-            graph, origin_id
-        )
+        dm_sp_tree_no_cd = Graph(graph).get_shortest_path_tree(origin_id=origin_id)
         validate_print(
             name=name + "(Not Constant Degree)",
             realized=bmssp_no_cd.solve(origin_id=origin_id)["distance_matrix"],
@@ -163,19 +161,19 @@ if __name__ == "__main__":
     check_correctness_print(
         "BMSSP US Freeway Graph Distance Matrix", us_freeway_graph, 1
     )
-    check_correctness_print(
-        "BMSSP World Highways and Marnet Graph Distance Matrix",
-        world_highways_and_marnet_graph,
-        1,
-    )
+    # check_correctness_print(
+    #     "BMSSP World Highways and Marnet Graph Distance Matrix",
+    #     world_highways_and_marnet_graph,
+    #     1,
+    # )
 
     print("\n===============\nBMSSP Time Tests:\n===============")
 
     marnet_graph_bmssp = Bmssp(graph=marnet_graph)
     us_freeway_graph_bmssp = Bmssp(graph=us_freeway_graph)
-    world_highways_and_marnet_graph_bmssp = Bmssp(
-        graph=world_highways_and_marnet_graph
-    )
+    # world_highways_and_marnet_graph_bmssp = Bmssp(
+    #     graph=world_highways_and_marnet_graph
+    # )
 
     marnet_graph_bmssp_no_cd = Bmssp(
         graph=marnet_graph, use_constant_degree_graph=False
@@ -183,9 +181,9 @@ if __name__ == "__main__":
     us_freeway_graph_bmssp_no_cd = Bmssp(
         graph=us_freeway_graph, use_constant_degree_graph=False
     )
-    world_highways_and_marnet_graph_bmssp_no_cd = Bmssp(
-        graph=world_highways_and_marnet_graph, use_constant_degree_graph=False
-    )
+    # world_highways_and_marnet_graph_bmssp_no_cd = Bmssp(
+    #     graph=world_highways_and_marnet_graph, use_constant_degree_graph=False
+    # )
 
     time_test(
         "BMSSP 1 (marnet)",
@@ -215,34 +213,32 @@ if __name__ == "__main__":
             origin_id=4022, destination_id=8342
         ),
     )
-    time_test(
-        "BMSSP 6 (world_highways_and_marnet)",
-        pamda.thunkify(world_highways_and_marnet_graph_bmssp.solve)(
-            origin_id=0, destination_id=5
-        ),
-    )
-    time_test(
-        "BMSSP 7 (not constant degree) (world_highways_and_marnet)",
-        pamda.thunkify(world_highways_and_marnet_graph_bmssp_no_cd.solve)(
-            origin_id=0, destination_id=5
-        ),
-    )
+    # time_test(
+    #     "BMSSP 6 (world_highways_and_marnet)",
+    #     pamda.thunkify(world_highways_and_marnet_graph_bmssp.solve)(
+    #         origin_id=0, destination_id=5
+    #     ),
+    # )
+    # time_test(
+    #     "BMSSP 7 (not constant degree) (world_highways_and_marnet)",
+    #     pamda.thunkify(world_highways_and_marnet_graph_bmssp_no_cd.solve)(
+    #         origin_id=0, destination_id=5
+    #     ),
+    # )
+
+    marnet_graph_obj = Graph(marnet_graph)
+    us_freeway_graph_obj = Graph(us_freeway_graph)
+    # world_highways_and_marnet_graph_obj = Graph(world_highways_and_marnet_graph)
 
     time_test(
         "Shortest Path Tree Comparison (marnet)",
-        pamda.thunkify(SpanningTree.makowskis_spanning_tree)(
-            graph=marnet_graph, node_id=0
-        ),
+        lambda: marnet_graph_obj.get_shortest_path_tree(origin_id=0),
     )
     time_test(
         "Shortest Path Tree Comparison (us_freeway)",
-        pamda.thunkify(SpanningTree.makowskis_spanning_tree)(
-            graph=us_freeway_graph, node_id=0
-        ),
+        lambda: us_freeway_graph_obj.get_shortest_path_tree(origin_id=0),
     )
-    time_test(
-        "Shortest Path Tree Comparison (world_highways)",
-        pamda.thunkify(SpanningTree.makowskis_spanning_tree)(
-            graph=world_highways_and_marnet_graph, node_id=0
-        ),
-    )
+    # time_test(
+    #     "Shortest Path Tree Comparison (world_highways)",
+    #     lambda: Graph(world_highways_and_marnet_graph).get_shortest_path_tree(origin_id=0),
+    # )

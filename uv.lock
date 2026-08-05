@@ -94,7 +94,6 @@ dev = [
     { name = "pdoc" },
     { name = "pytest" },
     { name = "scgraph" },
-    { name = "scgraph-data" },
     { name = "twine" },
 ]
 
@@ -108,8 +107,7 @@ requires-dist = [
     { name = "pamda", marker = "extra == 'dev'", specifier = "==2.8.1" },
     { name = "pdoc", marker = "extra == 'dev'", specifier = ">=15.0.1" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.0.3" },
-    { name = "scgraph", marker = "extra == 'dev'", specifier = ">=2.15.0,<3.0.0" },
-    { name = "scgraph-data", marker = "extra == 'dev'", specifier = ">=2.0.0,<3.0.0" },
+    { name = "scgraph", marker = "extra == 'dev'", specifier = "==3.4.1" },
     { name = "twine", marker = "extra == 'dev'", specifier = ">=6.1.0" },
 ]
 provides-extras = ["dev"]
@@ -373,6 +371,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/f6/57/3ba6e6cb097f85b85
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c1/e8/72f8cef9fdfeffe06213fe8508039396ee48daa0e3259457ed766173bfd6/filelock-3.32.2-py3-none-any.whl", hash = "sha256:87dd94cf281e586d135fa51132b8e3d9a598b316e90377a288663c9321036c82", size = 98830, upload-time = "2026-07-29T22:46:03.52Z" },
 ]
+
+[[package]]
+name = "geokdtree"
+version = "1.2.4"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/3a/a2/8075730dcb1c3c6f383ce34d36be3a5c7dcffe1cf8a69bd826191b67865e/geokdtree-1.2.4.tar.gz", hash = "sha256:dc10c9d4dd6164210f6fbaf8b81aac3cf912edcb512108954a5983947ad5ade2", size = 10992, upload-time = "2026-07-20T17:53:03.516Z" }
 
 [[package]]
 name = "humanize"
@@ -921,24 +925,14 @@ wheels = [
 
 [[package]]
 name = "scgraph"
-version = "2.15.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/d4/78/5205c82daa8b72c2ac408561b5a3a582638fdbd10519e39f817697a451db/scgraph-2.15.0.tar.gz", hash = "sha256:40a778cb3e5224d5f0930698abba8ca17932e4ca1276d542eb64b9d741924cb7", size = 976481, upload-time = "2025-11-25T16:15:32.362Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c7/dc/9bba0641710c6b0ceaf26e0bf2f10acc78c401b529e0582ec69ba055f69c/scgraph-2.15.0-py3-none-any.whl", hash = "sha256:0a347aa99ae7f93e74f8c6bf6f77ca2f4ef5cda3bdb44113b6ca99c2e1b89522", size = 989057, upload-time = "2025-11-25T16:15:26.976Z" },
-]
-
-[[package]]
-name = "scgraph-data"
-version = "2.0.0"
+version = "3.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "scgraph" },
+    { name = "bmsspy" },
+    { name = "geokdtree" },
+    { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e2/61/8ed14da0bd725e58e6f64f0066ab2ec1e9e8e59e63b327ba69d3c75817cf/scgraph_data-2.0.0.tar.gz", hash = "sha256:9f18196b511feb98d9f964d8c4728a45487f8b4109bd8b96daf209a016dd8416", size = 24358196, upload-time = "2024-04-19T18:31:44.67Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/50/dc/dcbe9bc753208d9296b7a548df92e4267150cf2754419648ec172118886d/scgraph_data-2.0.0-py3-none-any.whl", hash = "sha256:a8df15f4d9b4cce945f195b27c9e239ac49ebfa81aa948afc882b28653725406", size = 24572131, upload-time = "2024-04-19T18:31:38.391Z" },
-]
+sdist = { url = "https://files.pythonhosted.org/packages/74/34/cd4697bc1f56fe15fd33e1edab26a1d4881977d1eed48c0f95b1d5c016c4/scgraph-3.4.1.tar.gz", hash = "sha256:87894cecff974ae9a8c32e8dd2a668cd73483e807d0cdfdcc1a7bc53ba6b5fc7", size = 111548, upload-time = "2026-07-20T18:10:55.335Z" }
 
 [[package]]
 name = "secretstorage"

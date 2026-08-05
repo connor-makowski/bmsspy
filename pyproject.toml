@@ -29,8 +29,7 @@ dependencies = []
 [project.optional-dependencies]
 dev = [
     "pamda==2.8.1",
-    "scgraph>=2.15.0,<3.0.0",
-    "scgraph_data>=2.0.0,<3.0.0",
+    "scgraph==3.4.1",
     "pytest>=9.0.3",
     "autoflake>=2.3.1",
     "black>=25.1.0",

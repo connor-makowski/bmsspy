@@ -1,7 +1,8 @@
-from scgraph.spanning import SpanningTree
+from scgraph import GeoGraph, Graph
 from scgraph.utils import hard_round
 from bmsspy import Bmssp
-from scgraph.geographs.us_freeway import graph as us_freeway_graph
+
+us_freeway_graph = GeoGraph.load_geograph("us_freeway").graph
 
 
 def eq(a, b):
@@ -21,7 +22,7 @@ def test_path_graph_pivot_relaxation():
 
 
 def test_us_freeway_pivot_relaxation():
-    expected = SpanningTree.makowskis_spanning_tree(us_freeway_graph, 1)[
+    expected = Graph(us_freeway_graph).get_shortest_path_tree(origin_id=1)[
         "distance_matrix"
     ][: len(us_freeway_graph)]
     for k in [2, 3, 4, 6]:
@@ -48,7 +49,7 @@ if __name__ == "__main__":
             failed = True
             print(f"Path Graph k={k}: FAIL ({dm})")
 
-    expected = SpanningTree.makowskis_spanning_tree(us_freeway_graph, 1)[
+    expected = Graph(us_freeway_graph).get_shortest_path_tree(origin_id=1)[
         "distance_matrix"
     ][: len(us_freeway_graph)]
     for k in [2, 3, 4, 6]:
@@ -63,3 +64,4 @@ if __name__ == "__main__":
 
     if failed:
         raise Exception("Pivot Relaxation Steps (k) test failed")
+

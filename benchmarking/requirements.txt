@@ -1,8 +1,7 @@
 igraph==0.11.9
 networkx==3.6
 pamda==2.8.1
-scgraph==2.15.0
-scgraph_data==2.0.0
+scgraph==3.4.1
 folium==0.20.0
 ipykernel==6.30.1
 matplotlib==3.10.6

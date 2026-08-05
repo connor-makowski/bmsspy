@@ -1,7 +1,6 @@
-from scgraph import GridGraph
+from scgraph import GridGraph, Graph
 from scgraph.utils import hard_round
 from bmsspy.entrypoint import Bmssp
-from scgraph.spanning import SpanningTree
 
 
 def make_gridgraph(x_size, y_size):
@@ -39,7 +38,7 @@ def validate(realized, expected):
 def check_correctness(graph, origin_id):
     bmssp_graph = Bmssp(graph=graph)
     bmssp_graph_output = bmssp_graph.solve(origin_id=origin_id)
-    dm_sp_tree = SpanningTree.makowskis_spanning_tree(graph, origin_id)
+    dm_sp_tree = Graph(graph).get_shortest_path_tree(origin_id=origin_id)
     validate(
         realized=bmssp_graph_output["distance_matrix"],
         expected=dm_sp_tree["distance_matrix"][: len(graph)],
@@ -106,7 +105,7 @@ if __name__ == "__main__":
     def check_correctness_print(name, graph, origin_id):
         bmssp_graph = Bmssp(graph=graph)
         bmssp_graph_output = bmssp_graph.solve(origin_id=origin_id)
-        dm_sp_tree = SpanningTree.makowskis_spanning_tree(graph, origin_id)
+        dm_sp_tree = Graph(graph).get_shortest_path_tree(origin_id=origin_id)
         validate_print(
             name=name + " (Standard)",
             realized=bmssp_graph_output["distance_matrix"],
