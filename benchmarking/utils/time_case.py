@@ -1,5 +1,6 @@
 # SCGraph Utils
-from scgraph.spanning import SpanningTree as SCSpanning
+from scgraph.graph import Graph
+from scgraph.cpp import Graph as CGraph
 # Other Utilities
 from pamda.pamda_timer import pamda_timer
 
@@ -105,10 +106,33 @@ def time_case(graph_name, case_name, origin, scgraph, nxgraph=None, igraph=None,
 
 
     # SCGraph Dijkstra Timing
+    scgraph_object = Graph(scgraph)
     run_algo(
         algo_key = 'sc_dijkstra',
-        algo_func = SCSpanning.makowskis_spanning_tree,
-        algo_kwargs = {'graph': scgraph, 'node_id': origin},
+        algo_func = lambda: scgraph_object.get_shortest_path_tree(origin_id=origin),
+        algo_kwargs = {},
+        output = output,
+        do_run = True,
+        iterations = iterations,
+        print_console = print_console
+    )
+
+    # SCGraph C++ Timings
+    scgraph_cpp_object = CGraph(scgraph)
+    run_algo(
+        algo_key = 'sc_dijkstra_cpp',
+        algo_func = lambda: scgraph_cpp_object.get_shortest_path_tree(origin_id=origin),
+        algo_kwargs = {},
+        output = output,
+        do_run = True,
+        iterations = iterations,
+        print_console = print_console
+    )
+
+    run_algo(
+        algo_key = 'sc_bmssp_cpp',
+        algo_func = lambda: scgraph_cpp_object.bmssp(origin_id=origin, destination_id=origin+1),
+        algo_kwargs = {},
         output = output,
         do_run = True,
         iterations = iterations,

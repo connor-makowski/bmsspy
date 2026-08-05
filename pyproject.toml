@@ -39,6 +39,14 @@ dev = [
     "pdoc>=15.0.1",
     "twine>=6.1.0",
 ]
+bench = [
+    "igraph==0.11.9",
+    "networkx==3.6",
+    "folium==0.20.0",
+    "ipykernel==6.30.1",
+    "matplotlib==3.10.6",
+    "scipy==1.16.2",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/connor-makowski/bmsspy"

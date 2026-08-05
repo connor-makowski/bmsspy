@@ -1,13 +1,15 @@
+from scgraph import GeoGraph
+
 # Small Geographs
-from scgraph.geographs.marnet import marnet_geograph
-from scgraph.geographs.north_america_rail import north_america_rail_geograph
-from scgraph.geographs.oak_ridge_maritime import oak_ridge_maritime_geograph
-from scgraph.geographs.us_freeway import us_freeway_geograph
+marnet_geograph = GeoGraph.load_geograph("marnet")
+north_america_rail_geograph = GeoGraph.load_geograph("north_america_rail")
+oak_ridge_maritime_geograph = GeoGraph.load_geograph("oak_ridge_maritime")
+us_freeway_geograph = GeoGraph.load_geograph("us_freeway")
 
 # Large Geographs
-from scgraph_data.world_highways_and_marnet import world_highways_and_marnet_geograph
-# from scgraph_data.world_highways import world_highways_geograph
-# from scgraph_data.world_railways import world_railways_geograph
+world_highways_and_marnet_geograph = GeoGraph.load_geograph("world_highways_and_marnet")
+# world_highways_geograph = GeoGraph.load_geograph("world_highways")
+# world_railways_geograph = GeoGraph.load_geograph("world_railways")
 
 # Utilities
 from pamda import pamda
