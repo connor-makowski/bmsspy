@@ -1,0 +1,1187 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Author template for INFORMS Journal on Computing (ijoc)
+%% Mirko Janc, Ph.D., INFORMS, mirko.janc@informs.org
+%% ver. 0.95, December 2010
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\documentclass[ijoc,blindrev]{informs3}
+\documentclass[ijoc,blindrev]{informs3} % current default for manuscript submission
+% If hyperref is used, dvi-to-ps driver of choice must be declared as
+%   an additional option to the \documentclass. For example
+%\documentclass[dvips,ijoc]{informs3}      % if dvips is used
+%\documentclass[dvipsone,ijoc]{informs3}   % if dvipsone is used, etc.
+
+% --- Preamble split ---
+\input{preamble/packages}
+\input{preamble/macros}
+
+% Graphics root
+\graphicspath{{figures/}}
+
+%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%
+
+% Line spacing / font size per INFORMS class
+\OneAndAHalfSpacedXII  % current default line spacing
+%%\OneAndAHalfSpacedXI
+%%\DoubleSpacedXII
+%%\DoubleSpacedXI
+
+% Full title. Sample:
+% \TITLE{Bundling Information Goods of Decreasing Value}
+% Enter the full title:
+\TITLE{BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm}
+
+% Title or shortened title suitable for running heads. Sample:
+% \RUNTITLE{Bundling Information Goods of Decreasing Value}
+% Enter the (shortened) title:
+\RUNTITLE{BMSSPy}
+
+% Author's names for the running heads
+% Sample depending on the number of authors;
+% \RUNAUTHOR{Jones}
+% \RUNAUTHOR{Jones and Wilson}
+% \RUNAUTHOR{Jones, Miller, and Wilson}
+% \RUNAUTHOR{Jones et al.} % for four or more authors
+% Enter authors following the given pattern:
+%\RUNAUTHOR{}
+\RUNAUTHOR{Makowski et al.}
+
+% Block of authors and their affiliations starts here:
+% NOTE: Authors with same affiliation, if the order of authors allows, 
+%   should be entered in ONE field, separated by a comma. 
+%   \EMAIL field can be repeated if more than one author
+\ARTICLEAUTHORS{%
+\AUTHOR{Connor Makowski, Willem Guter, Tim Russell, Lucas Castro, Austin Saragih}
+\AFF{Massachusetts Institute of Technology, Cambridge, MA, USA \EMAIL{\{conmak,wjguter,trussell,saragih\}@mit.edu}}
+\AFF{Federal University of Amazonas, Manaus, AM, BRA \EMAIL{lucas.castro@icomp.ufam.edu.br}}
+
+% frontmatter/titleblock.tex
+
+% Outcomment only when entries are known. Otherwise leave as is and 
+%   default values will be used.
+%\setcounter{page}{1}
+%\VOLUME{00}%
+%\NO{0}%
+%\MONTH{Xxxxx}% (month or a similar seasonal id)
+%\YEAR{0000}% e.g., 2005
+%\FIRSTPAGE{000}%
+%\LASTPAGE{000}%
+%\SHORTYEAR{00}% shortened year (two-digit)
+%\ISSUE{0000} %
+%\LONGFIRSTPAGE{0001} %
+%\DOI{10.1287/xxxx.0000.0000}%
+
+% Title or shortened title suitable for running heads. Sample:
+% \RUNTITLE{Bundling Information Goods of Decreasing Value}
+% Enter the (shortened) title:
+
+% Full title. Sample:
+% \TITLE{Bundling Information Goods of Decreasing Value}
+% Enter the full title:
+\TITLE{BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm}
+
+% Title or shortened title suitable for running heads. Sample:
+% \RUNTITLE{Bundling Information Goods of Decreasing Value}
+% Enter the (shortened) title:
+\RUNTITLE{BMSSPy}
+
+% Author's names for the running heads
+% Sample depending on the number of authors;
+% \RUNAUTHOR{Jones}
+% \RUNAUTHOR{Jones and Wilson}
+% \RUNAUTHOR{Jones, Miller, and Wilson}
+% \RUNAUTHOR{Jones et al.} % for four or more authors
+% Enter authors following the given pattern:
+%\RUNAUTHOR{}
+\RUNAUTHOR{Makowski et al.}
+
+% Block of authors and their affiliations starts here:
+% NOTE: Authors with same affiliation, if the order of authors allows, 
+%   should be entered in ONE field, separated by a comma. 
+%   \EMAIL field can be repeated if more than one author
+% \ARTICLEAUTHORS{%
+% \AUTHOR{Connor Makowski, Willem Guter, Tim Russell, Austin Saragih}
+% \AFF{C for Transportation \& Logistics, Massachusetts Institute of Technology, Cambridge, MA, USA \EMAIL{\{conmak,wjguter,trussell,saragih\}@mit.edu}} 
+% % \AUTHOR{}
+% % \AFF{C for Transportation \& Logistics, Massachusetts Institute of Technology, Cambridge, MA, USA \EMAIL{@mit.edu}}
+% % \AUTHOR{}
+% % \AFF{C for Transportation \& Logistics, Massachusetts Institute of Technology, Cambridge, MA, USA \EMAIL{wjguter@mit.edu}}
+% % \AUTHOR{}
+% % \AFF{C for Transportation \& Logistics, Massachusetts Institute of Technology, Cambridge, MA, USA \EMAIL{trussell@mit.edu}}
+% % \AUTHOR{Arne Heinold}
+% % \AFF{Kühne Logistics University \EMAIL{arne.heinold@klu.org}}
+% % \AUTHOR{Spyros Lekkakos}
+% % \AFF{Zaragoza Logistics C, Spain \EMAIL{slekkakos@zlc.edu.es}}
+% % Enter all authors
+% } % end of the block% end of the block
+} % end of the block% end of the block
+
+% --- Front matter ---
+% Title, authors, history
+% frontmatter/abstract.tex
+\ABSTRACT{%
+We introduce BMSSPy, the first open-source Python package that faithfully implements the Bounded Multi-Source Shortest Path (BMSSP) algorithm. This algorithm was recently discovered as a breakthrough that addresses Dijkstra’s sorting barrier for single-source shortest paths. BMSSPy implements the theoretical breakthrough with three practical advantages. First, it preserves the algorithm’s asymptotic performance guarantees while returning both distance labels and paths. Second, it clarifies pivot selection, tight-edge forest construction, and frontier management. Third, it handles graphs with non-unique path lengths, structural irregularities, unreachable vertices, and highly variable node degrees, ensuring function and robust performance on real data. With these three advantages, empirical experiments on grid and geospatial networks demonstrate that BMSSPy delivers competitive performance. For instance, on a graph with 200,000 nodes and 1.56 million edges, BMSSP runs 1.6-1.9× faster than NetworkX’s Dijkstra and up to 3.3-3.9× faster than igraph's, although the highly optimized SCGraph Modified Dijkstra still achieves the best performance. BMSSP proves practical and efficient in practice, despite the remaining gap between theory and system-level performance. BMSSPy serves to support future research and development in shortest-path algorithms.
+}%
+
+% Sample 
+%\KEYWORDS{deterministic inventory theory; infinite linear programming duality; 
+%  existence of optimal policies; semi-Markov decision process; cyclic schedule}
+
+% Fill in data. If unknown, outcomment the field
+\KEYWORDS{Software, Algorithms, Shortest Path, Logistics, Distance Estimation}
+
+% Example
+%\HISTORY{%
+%This paper was first submitted on January 1, 2025 and has been with the authors for X months for Y revision(s).
+%}
+%\HISTORY{}
+
+% Abstract + keywords
+% frontmatter/titleblock.tex
+
+% Outcomment only when entries are known. Otherwise leave as is and 
+%   default values will be used.
+%\setcounter{page}{1}
+%\VOLUME{00}%
+%\NO{0}%
+%\MONTH{Xxxxx}% (month or a similar seasonal id)
+%\YEAR{0000}% e.g., 2005
+%\FIRSTPAGE{000}%
+%\LASTPAGE{000}%
+%\SHORTYEAR{00}% shortened year (two-digit)
+%\ISSUE{0000} %
+%\LONGFIRSTPAGE{0001} %
+%\DOI{10.1287/xxxx.0000.0000}%
+
+% Title or shortened title suitable for running heads. Sample:
+% \RUNTITLE{Bundling Information Goods of Decreasing Value}
+% Enter the (shortened) title:
+
+
+
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Samples of sectioning (and labeling) in IJOC
+% NOTE: (1) \section and \subsection do NOT end with a period
+%       (2) \subsubsection and lower need end punctuation
+%       (3) capitalization is as shown (title style).
+%
+%\section{Introduction.}\label{intro} %%1.
+%\subsection{Duality and the Classical EOQ Problem.}\label{class-EOQ} %% 1.1.
+%\subsection{Outline.}\label{outline1} %% 1.2.
+%\subsubsection{Cyclic Schedules for the General Deterministic SMDP.}
+%  \label{cyclic-schedules} %% 1.2.1
+%\section{Problem Description.}\label{problemdescription} %% 2.
+
+% Text of your paper here
+% Sections...
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{-20pt}
+\section{Introduction}\label{sec:intro}
+Solving the single-source shortest path (SSSP) problem on (un)directed graphs with non-negative weights is a foundational challenge in graph theory, operations research, theoretical computer science, and management science \citep{elmaghraby1970theory, orlin2010faster, duan_breaking_2025}. Given $m$ edges and $n$ nodes, the classic algorithm by \cite{dijkstra1959note}, enhanced by modern heap structures, achieves $O(m + n\log n)$ runtime. The term $O(n\log n)$ arises from the necessity of sorting distances—a limitation known as the \emph{sorting barrier}. 
+
+This barrier is fundamental and makes Dijkstra’s algorithm uniquely optimal when putting vertices in the exact order of increasing distance \citep{haeupler2024universal}. However, recent breakthroughs reveal that this barrier is not essential if only distance values are required. The \emph{Bounded Multi-Source Shortest Path} (BMSSP) algorithm \citep{duan_breaking_2025} overcomes this, attaining $O(m\log^{2/3} n)$ complexity by eliminating global sorting and instead processing nodes within bounded distance ranges, resulting in faster performance on sparse graphs. Given arbitrary graphs and the need to convert to constant degree graphs, this is only true for sparse graphs, like many road networks. 
+
+%From Connor: For the modern heap structures, should we ref the original dijkstra fib heap paper: https://ieeexplore.ieee.org/document/715934
+
+Although BMSSP marks a significant theoretical advance, no verified public implementation currently exists. This lack of an accessible software package has hindered reproducibility and practical evaluation. Moreover, several details are left implicit in the theoretical descriptions, e.g., constructing the tight-edge forest, handling ordering when path lengths are not unique, managing the suggested data structure, and coping with unreachable nodes or variable degree distributions. Therefore, a working implementation is essential to address these details, making the algorithm accessible and comparable to current practical methods, particularly in real-world transportation networks \citep{zhan1998shortest}. To that end, we have the following three research questions:
+\begin{itemize}[topsep=0pt, partopsep=0pt, itemsep=0pt, parsep=0pt]
+\item \textbf{RQ1:} How can BMSSP be implemented in a robust and reproducible manner?
+\item \textbf{RQ2:} How can we resolve ambiguities that arise in practical implementations?
+\item \textbf{RQ3:} How does BMSSP perform relative to both vanilla and optimized Dijkstra variants on stylized grid graphs and real geospatial networks?
+\end{itemize}
+
+
+We address these questions with \texttt{BMSSPy}, the first fully open-source Python implementation of BMSSP. Our package transforms the theoretical framework into a practical and extensible tool. The key contributions are:
+\begin{itemize}
+\item  We provide a \emph{reproducible} specification of BMSSP that preserves theoretical runtime guarantees, outputs both shortest-path distances and explicit routes, and \emph{resolves} implicit steps such as tight-edge forest construction, pivot selection, and all needed data structure operations (insert, pull, batch-prepend).
+
+\item We benchmark \texttt{BMSSPy} against popular Dijkstra implementations in \texttt{NetworkX}, \texttt{igraph}, and the high-performance \texttt{SCGraph}. On grid and real-world networks, BMSSPy can be competitive and outperform \texttt{NetworkX} and \texttt{igraph}, while \texttt{SCGraph} remains the fastest overall, underlining both the promise of BMSSP and the gap between theoretical and practical speed.
+\end{itemize}
+
+The rest of the paper is organized as follows:
+Section~\ref{sec:litproj} surveys related literature and existing tools;
+Section~\ref{sec:pack} introduces \texttt{BMSSPy}, its interface, and usage;
+Section~\ref{sec:func} presents implementation details, theoretical alignment, design choices, practical relaxations, operability safeguards, and efficiency improvements;
+Section~\ref{sec:num} reports numerical benchmarks, including break-even analyses with Dijkstra baselines;
+Section~\ref{sec:conc} concludes with a brief summary and open directions.
+
+
+
+% % quick and dirty notes
+% ---
+% There’s a sensational new deterministic shortest path algorithm called the BMSSP, which exploded the TCS community. However, this algo has not been implemented. Then there has been a slew of attempts to no avail. Therefore we do the following:
+% We present BMSSPy: We are the first one to implement such functional algorithm of BMSSP. Unfortunately it turns out the theoretical algorithm has mistakes that make it initially unable to be run in practice, rendering it useless. Fortunately, we are able to fix such mistakes and we even make the algo able to give the path sequence
+% We then compare BMSSP with basic Dijkstra, \texttt{igraph}, Nx, and SCGraph versions of Dijkstra on grid graphs and geospatial graphs.
+% We found out that it basically works! While BMSSP beat basic Dijkstra and some cases of \texttt{igraph}, Nx Dijkstra|
+% However, the SCGraph version of Dijkstra is still generally faster.
+% While faster in Big O time, the number of operations needed to run the BMSSP algorithm mean that it must scale to astronomical levels before it would beat a well implemented Dijkstra!
+% Nevertheless, BMSSP is still a good algo and finally implementable. Which leads to further research to reduce the overhead.
+% ---
+
+% NOTE: We want to talk about a shortest path spanning tree instead of calling this a spanning tree
+
+
+% % Tim's first take
+% In the past decade, there has been remarkable advancements in shortest-path algorithms for large-scale networks! A key milestone is the Bounded Multi-Source Shortest Path (BMSSP) algorithm by \cite{duan_breaking_2025} Duan et al. (2025), which surpasses the $(O(m + n \log n))$ limit of Dijkstra’s algorithm for directed graphs, generating excitement in the computer science community. However, a replicable software implementation of BMSSP is still needed.
+
+% A primary challenge lies in the gap between theory and practice: crucial assumptions and algorithmic decisions in \cite{duan_breaking_2025} Duan 2025 are either unstated, implicitly generalized from special cases, or rely on properties that seldom hold in real-world networks. Attempts at implementation have repeatedly encountered ambiguities, edge-case failures, and practical limitations that hinder reproducibility and applicability [NOTE: SHOULD WE CITE SOME FAILURES]. For example, the original algorithm assumes every node is reachable from the source and that graphs are of constant degree. At the same time, real networks often defy such constraints with varied connectivity and non-uniform degree distributions.
+
+% In this paper, the BMSSPy package is introduced as the first functional and open-source Python implementation of the BMSSP algorithm, bridging the gap between theory and application. BMSSPy achieves this by identifying and correcting mistakes in the original algorithm, making explicit several implicit steps, and suggesting the relaxation of unrealistic assumptions to ensure robustness for general graphs. Key contributions include:
+
+% \begin{itemize}
+%     \item Introducing critical fixes (such as addressing deal-breaking edge cases and handling of trivial networks).
+%     \item Adding predecessor tracking to allow path reconstruction, essential for practical shortest-path applications.
+%     % Note: Predecessor tracking is mentioned in the original paper, but not implemented or used after being mentioned.
+%     \item Improving computational efficiency at the coding level, with improvements that do not alter the algorithm’s asymptotic runtime.
+%     \item Developing clear documentation and pseudo-code for steps that were omitted or only hinted at in the original paper, such as explicit forest construction for pivot-finding and reachability tests.
+%     \item Developing clear documentation and pseudo-code for the data structure.
+% \end{itemize}
+
+% BMSSPy is benchmarked against widely used Dijkstra implementations from \texttt{igraph}, \texttt{NetworkX}, and SCGraph, demonstrating competitive performance and highlighting both efficiency gains and lessons about practical overhead. By providing both methodological clarity and usable software, this work aims to make advanced shortest-path research accessible to applied researchers, practitioners, and the operations research community.
+
+\clearpage
+\section{Related Literature and Software}\label{sec:litproj}
+
+We briefly review relevant literature in Section~\ref{subsec:rellit} and available software in Section~\ref{subsec:relproj}.
+
+\subsection{Related Literature}\label{subsec:rellit}
+% TODO we need to add the new paper by Valko - Tim added it to the references.bib file already.
+The single-source shortest path (SSSP) problem on directed graphs with nonnegative weights is one of the most extensively studied problems in algorithms. The classical solution is Dijkstra’s algorithm \citep{dijkstra1959note}, which runs in \(O(m + n \log n)\) time when implemented with Fibonacci heaps \citep{fredman1987fibonacci}, relaxed heaps \citep{driscoll1988relaxed}, or modern priority queues \citep{chen2007priority}. Faster runtimes are possible when edge weights have additional structure. For undirected graphs with positive integer weights,  \cite{thorup1999undirected} shows a linear-time or \(O(m)\) algorithm. For directed graphs with positive integer weights, \cite{thorup2003integer} shows a running time of \(O(m + n \log\log \min\{n, C\})\), where \(C\) is the maximum edge weight. If the graph contains only \(K\) distinct edge weights,  \cite{orlin2010faster} devise a modified Dijkstra algorithm that runs in \(O(m)\) time when \(nK \le 2m\) and in \(O\!\left(m \log \tfrac{nK}{m}\right)\) otherwise. In all these classical approaches, the \(\log n\) factor reflects the need to order candidate distances, a limitation often referred to as the \emph{sorting barrier}.
+
+Recent work clarifies when the sorting barrier is unavoidable. \cite{haeupler2024universal} show that Dijkstra is \emph{universally optimal} whenever shortest paths must be output in increasing-distance order, even under powerful heap models. This establishes that sorting is inherent to the ordered-output version of SSSP. Practical variants such as A* do not improve worst-case complexity, but can yield major speedups in structured settings like road networks with Euclidean heuristics \citep{hart1968formal}. 
+
+From the early survey of \cite{dreyfus1969appraisal} through the development of BMSSP, Dijkstra’s algorithm has been viewed as the most effective general-purpose method for SSSP. When the output order of vertices is not required, however, its sorting barrier can be avoided. \cite{duan_breaking_2025} develop BMSSP, which attains deterministic \(O(m \log^{2/3} n)\) time by restricting relaxations to bounded distance ranges and reducing global sorting.
+This algorithm combines ideas from Bellman–Ford \citep{bellman1958routing,ford1956network} and Dijkstra. Earlier empirical work by \cite{golden1976shortest} shows cases where Bellman–Ford outperformed Dijkstra on sparse Euclidean graphs. In this context, BMSSP represents the first deterministic SSSP method that circumvents full sorting while supporting directed and undirected graphs with nonnegative real weights.
+
+% Short
+% engineer2012fixed
+
+
+Our work contributes to the practice of SSSP by translating the BMSSP framework into a concrete Python implementation and evaluating its performance on benchmarks from operations research and transportation.
+
+
+
+\subsection{Related Software}\label{subsec:relproj}
+\begin{itemize}
+\item \textbf{NetworkX:} A popular Python library for general graph analysis, offering Dijkstra's~\cite{dijkstra1959note} and $A^*$~\cite{hart1968formal} implementations. It prioritizes usability and flexibility, though its pure Python design limits its efficiency on large graphs~\citep{hagberg2008exploring}.
+\item \textbf{igraph:} Provides high-performance, C-backed algorithms with Python and R bindings~\citep{csardi2006igraph}. \texttt{igraph} excels at classical graph primitives but does not target geospatial applications or implement BMSSP.
+\item \textbf{SCGraph:} A dependency-free Python package focused on road, rail, and maritime routing~\citep{makowski2025scgraph}. \texttt{SCGraph} delivers optimized Dijkstra and $A^*$ methods for large sparse networks, with bundled geospatial datasets geared for practical routing.
+\end{itemize}
+To our knowledge, no prior public implementation contains all components needed for BMSSP to realize its theoretical asymptotic guarantees. \citet{castro2025implementation} provide a promising C++ prototype that relies on hash tables and reports expected rather than worst-case running times.
+Together with this team, we are able to jointly identify a potential hashmap substitution that runs in $O(1)$ time.
+\cite{valko_outperforming_2025} also recently released a Rust implementation evaluated on sparse payment-channel networks such as the Lightning Network. Their version omits several data-structural elements required for the theoretical bounds, which reduces the algorithm to a Dijkstra equivalent worst case runtime. Their experimental results are consistent with this: they observe only small or even negative speedups relative to Dijkstra, and attribute this to recursion overhead, constant factors, and memory-access costs.
+
+Together, these efforts highlight a clear gap between the BMSSP theory and a practical, correct, and fully optimized implementation. Existing Python graph libraries provide strong baselines but do not yet fully support BMSSP. Our \texttt{BMSSPy} framework addresses this gap by delivering a reliable and empirically validated implementation that enables reproducible comparisons with state-of-the-art Dijkstra solvers on grid and geospatial graphs that are central to logistics and transportation applications.
+
+%\clearpage
+
+\section{The BMSSPy Package}\label{sec:pack}
+We first describe the package in Section~\ref{subsec:brief}, then show how to install it (Section~\ref{subsec:install}), and how to use it (Section~\ref{subsec:use}).
+
+\subsection{Brief Description of BMSSPy}\label{subsec:brief}
+\texttt{BMSSPy}~\citep{makowski_bmsspy_2025} is the first practical Python implementation of the \emph{Bounded Multi-Source Shortest Path} (BMSSP) algorithm~\citep{duan_breaking_2025}. Designed to bridge theory and practice, it supports directed graphs with nonnegative edge weights, returning both shortest path \emph{distances} and \emph{predecessors} to enable path reconstruction. Key features include:
+\begin{itemize}
+\item Support for multiple sources: input can be a single origin or a set of origin nodes.
+\item Returns distances and predecessor arrays for explicit paths.
+\item Robust handling of unreachable nodes and graphs with variable node degrees.
+\item Transparent implementation of implicit theoretical steps, such as tight-edge forest construction, pivot selection, and data structure operations.
+\end{itemize}
+
+\subsection{Installation}\label{subsec:install}
+\texttt{BMSSPy} is available on PyPI and requires Python~3.11 or later:
+\begin{lstlisting}[language=bash]
+pip install bmsspy
+\end{lstlisting}
+
+\subsection{Usage Example}\label{subsec:use}
+The following example creates a small directed graph and demonstrates two use cases: computing distances and predecessors from a single source, and extracting a shortest path to a destination. It has the following inputs:
+\begin{itemize}
+  \item \texttt{graph}: list of dictionaries. For node \texttt{u}, \texttt{graph[u]} maps neighbor \texttt{v} to a nonnegative weight \texttt{w}.
+        Undirected graphs can be modeled by inserting edges in both directions.
+  \item \texttt{origin\_id}: an integer node id or a set of ids. If a set is given, all listed nodes are treated as sources with zero distance.
+  \item \texttt{destination\_id}: an integer node id or \texttt{None}. If \texttt{None}, the solver just returns the distance matrix and predecessor matrix.
+\end{itemize}
+
+The solver returns a dictionary with \texttt{origin\_id}, \texttt{destination\_id}, and the following:
+\begin{itemize}
+  \item \texttt{distance\_matrix}: list of distances from the origin (or origin set). Unreachable nodes have distance \texttt{inf}.
+  \item \texttt{predecessor}: list of predecessors for path reconstruction. Unreachable nodes have predecessor \texttt{-1}.
+  \item \texttt{path}: list of node ids on the shortest path when a destination is provided, else \texttt{None}.
+  \item \texttt{length}: length of the returned path when a destination is provided, else \texttt{None}.
+\end{itemize}
+
+\paragraph{Example.} The following code example builds a small directed graph (visualized in Figure \ref{fig:graph}), computes all shortest-path distances and predecessors using \texttt{bmssp}, and then extracts the shortest route to a specified destination. For multi-source queries, you can provide a set of origins; the solver initializes distance zero at each source and returns the shortest distances from the set. If you specify a destination, the resulting path starts at the origin with the minimum distance to that target. The next section details the implementation.
+
+\begin{lstlisting}[language=python]
+from bmsspy import Bmssp
+
+# Graph with 5 nodes: 0..4
+# Adjacency-list representation with nonnegative weights
+graph = [
+    {1: 1, 2: 1},   # 0 -> 1 (1), 0 -> 2 (1)
+    {2: 1, 3: 3},   # 1 -> 2 (1), 1 -> 3 (3)
+    {3: 1, 4: 2},   # 2 -> 3 (1), 2 -> 4 (2)
+    {4: 2},         # 3 -> 4 (2)
+    {}              # 4 has no outgoing edges
+]
+bmssp_graph = Bmssp(graph) # Initialize the graph as a Bmssp graph
+
+# Distances and predecessors from origin 0
+res_0 = bmssp_graph.solve(origin_id=0) 
+print(res_0) #=>
+# {
+#     'origin_id': 0,
+#     'destination_id': None,
+#     'predecessor': [-1, 0, 0, 2, 2],
+#     'distance_matrix': [0, 1, 1, 2, 3],
+#     'path': None,
+#     'length': None
+# }
+
+# Shortest path from 0 to 4
+res_0_4 = bmssp_graph.solve(origin_id=0, destination_id=4) 
+print(res_0_4) #=>
+# {
+#     'origin_id': 0,
+#     'destination_id': 4,
+#     'predecessor': [-1, 0, 0, 2, 2],
+#     'distance_matrix': [0, 1, 1, 2, 3],
+#     'path': [0, 2, 4],
+#     'length': 3
+# }
+\end{lstlisting}
+
+\begin{figure}[!ht]
+\begin{center}
+\caption{Visualization of the 5-node Example Graph}\label{fig:graph}
+\includegraphics[width=0.5\linewidth]{figures/graph.pdf}%
+\end{center}
+\end{figure}
+
+\section{Functional Implementation of BMSSP}\label{sec:func}
+
+This section describes our practical and faithful implementation of the Bounded Multi-Source Shortest Path (BMSSP) algorithm from \citet{duan_breaking_2025}, which is implemented in the \texttt{BMSSPy} package. We retain the original recursive structure and algorithm numbering while addressing missing details and adapting the method for practical use on real-world graphs. At a high level, our key contributions are:
+\begin{enumerate}
+\item \textcolor{Red}{\textbf{End-to-End Framework (E2E)}}:
+We provide a complete workflow returning shortest path distances and predecessor arrays, supporting explicit path reconstruction for any given graph, origin set, and destination.
+
+\item \textcolor{ForestGreen}{\textbf{Predecessor Tracking (PT)}}:
+We explicitly show how to maintain a predecessor array, enabling the construction of full shortest paths beyond simple distance outputs.
+
+\item \textcolor{Brown}{\textbf{Relaxation of Uniqueness Assumption (RUA)}}:
+The original algorithm assumes that all shortest path lengths are unique. The original paper offers a brief explanation that this does not lose generality after Lemma 2.1 in \cite{duan_breaking_2025}. We implement this by using a distance value, a counter for nodes traversed, and a unique edge value system to provide lexicographic ordering.
+
+\item \textcolor{Bittersweet}{\textbf{Explicit Forest and Pivot Construction (EFPC)}}:
+We explicitly construct the tight-edge forest and derive the pivot set with rigorous criteria, clarifying previously implicit algorithmic steps.
+
+\item \textcolor{Blue}{\textbf{Fixes, Improvements, Notations (FIN)}}:
+We implement several notation clarifications and bug fixes that address theoretical and practical issues, ensuring reliable performance on arbitrary graphs. %TODO: should we mention our set work here?
+\end{enumerate}
+
+We first address preliminary assumptions in Section ~\ref{sec:handline_assumptions}. Throughout the algorithmic descriptions in Section~\ref{subsec:alg_glance} (main algorithms) and Section~\ref{subsec:alg_framework} (end-to-end framework), we explicitly indicate where each enhancement is applied. The underlying data structure is discussed in Section~\ref{subsec:data_structure}. All notation follows Table~\ref{tab:notations}.
+
+\subsection{Handling Assumptions}\label{sec:handline_assumptions}
+The original paper assumes two properties of the input graph: (1) all path distances are unique, and (2) the graph has constant degree. The original paper also inherently assumes that common "set" operations happen in $O(1)$ time. In this section, we describe how we address these assumptions so that the algorithm can operate on arbitrary, positively weighted graphs.
+
+\subsubsection{Unique Distances}\label{sec:unique_distances}
+The algorithm requires all path distances to be unique. In the original formulation, this uniqueness is ensured by augmenting each distance value with additional tie-breaking information, such as a counter or endpoint identifiers. Conceptually, one may represent each distance as a tuple
+\[
+\mathit{dist}[v] = (\mathit{length}, \mathit{path\_size}, \mathit{edge\_id}),
+\]
+where $\mathit{length}$ is the cumulative path weight, $\mathit{path\_size}$ records the number of edges used, and $\mathit{edge\_id}$ uniquely identifies the most recently added edge. During relaxation, this tuple updates via
+\[
+\mathit{dist}[v] \leftarrow \big(\mathit{dist}[u][0] + G[u][v], \mathit{dist}[u][1] + 1, G_{\mathit{edge}}[u][v]\big).
+\]
+
+This representation enables lexicographic comparison of distance values and guarantees uniqueness. The original paper proposes a slightly larger composite key:
+\[
+\mathit{dist}[v] = (\mathit{length},\; \mathit{path\_size},\; u,\; v),
+\]
+where the final two components serve as a canonical tie-breaking mechanism.
+
+While tuple-based lexicographic comparison is conceptually clean, it is operationally expensive: creating and accessing each tuple adds operational overhead, every comparison becomes a multi-field comparison, and auxiliary algorithms such as median-of-medians (used internally in \texttt{BMSSPy}) incur additional overhead and require algorithmic modifications. To avoid this, we encode the tuple as a \textit{single scalar value} while preserving the exact lexicographic order.
+
+We first round $\mathit{length}$ to a fixed number of digits provided as $\mathit{precision}$. Then we shift the decimal representation of $\mathit{path\_size}$ and $\mathit{edge\_id}$ sufficiently far to the right so that the three components never overlap. Let
+\begin{equation*}
+\begin{split}
+\mathit{counter} &= 10^{-(\mathit{precision} + \ceil{\log_{10}(2n + 1)})} \\
+\mathit{edge\_adj\_value} &= 10^{-(\mathit{precision} + \ceil{\log_{10}(2n + 1)} + \ceil{\log_{10}(m + 1)})}
+\end{split}
+\end{equation*}
+Note that we use $2n+1$ to allow simple rounding of the distance to the precision level. If instead we chose to truncate the distance to that precision level, we could use $n+1$. Continuing, the scalar distance is then
+\begin{equation*}
+\begin{split}
+\mathit{dist}[v] =\;& \operatorname{round}(\mathit{length}, \mathit{precision}) \\
+&+ \mathit{path\_size} \cdot \mathit{counter} \\
+&+ \mathit{edge\_id} \cdot \mathit{edge\_adj\_value}.
+\end{split}
+\end{equation*}
+
+Because each edge has a fixed unique identifier, we preprocess $G_{\mathit{edge}}[\cdot][\cdot]$ so that it already stores the values $\{\mathit{edge\_adj\_value}, 2\,\mathit{edge\_adj\_value}, \dots, m\,\mathit{edge\_adj\_value}\}$. During relaxation, we update
+\begin{equation*}
+\begin{split}
+\mathit{cdist}[v] &\leftarrow \mathit{cdist}[u] + G[u][v] + \mathit{counter} \\
+\mathit{dist}[v] &\leftarrow \mathit{cdist}[u] + G[u][v] + \mathit{counter} + G_{\mathit{edge}}[u][v],
+\end{split}
+\end{equation*}
+where $\mathit{cdist}$ omits the edge id portion, allowing us to skip rounding operations at each relaxation.
+
+Because this approach relies on large decimal shifts, it is susceptible to floating-point error. Therefore, all computations use Python’s \texttt{Decimal} type to guarantee exact precision. Future implementations may revisit specialized tuple structures to remove the need for fixed precision rounding.
+
+\subsubsection{Constant-Degree Transformation}
+The algorithm’s stated worst-case running time assumes that the input graph is constant degree. If the original graph does not satisfy this, we first transform it into an equivalent constant-degree graph. The conversion procedure is given in Algorithm~\ref{alg:utils_convert_to_constant_out_degree}  in Appendix. After computing the shortest path in the transformed graph, we translate the resulting path back into the original graph in Algorithm~\ref{alg:utils_convert_from_constant_degree} in Appendix. From this point onward, unless explicitly noted, we assume all input graphs used in this section are constant degree.
+
+\subsubsection{Set Functions}\label{subsec:set_functions}
+
+Sets are used extensively in the algorithms below. A naive implementation using hashmaps would yield only expected rather than worst-case running times. To ensure worst-case deterministic performance, we instead implement each set as a simple list augmented with a global counter and a global membership-tracking array. These components jointly provide $O(n)$ one-time initialization, $O(1)$ membership tests, and $O(\lvert S\rvert)$ set-extension operations.
+This approach is feasible because the universe of possible set elements has fixed size $\lvert G\rvert$, and every input element $x$ is an integer that satisfies $0 \le x < \lvert G\rvert$.
+
+For a set $S_a$, let $\mathit{scnt_a} \leftarrow -1$ denote the global set counter and let $\mathit{memb_a}[0..|G|-1] \leftarrow -1$ be the global membership-tracking array, indexed by input elements $x$. For each location in the algorithm that we use a set $S_a$, we need to create the $\mathit{scnt_a}$ and $\mathit{memb_a}$ variables once. Then, each time we would have initialized an empty set, we instead apply $S_a \gets []$ and we increment $\mathit{scnt_a}$. The set itself will be stored as a list, for example,
+\(
+S_a = [\, x_1, x_2, \dotsc \,] .
+\)
+
+For every element $x$, the entry $\mathit{memb_a}[x]$ stores the most recent $\mathit{scnt_a}$ for which $x$ was inserted. When inserting an element $x$ into a set, we check whether $\mathit{memb_a}[x] = \mathit{scnt_a}$.
+If the equality holds, then $x$ is already present in $S_a$. If it does not hold, we append $x$ to $S_a$ and set $\mathit{memb_a}[x] \gets \mathit{scnt_a}$. This constant-time equality test provides an $O(1)$ membership check without auxiliary cleanup and guarantees worst-case performance.
+
+Set extension is performed analogously. To extend a set $S_a$ with a set $S_b$, we iterate over the list representation of $S_b$, for example $S_b = [\, y_1, \dotsc, y_k \,]$, and for each element $y_i$ we test whether $\mathit{memb_a}[y_i] = scnt_a$. If not, we append $y_i$ to $S_a$ and update $\mathit{memb_a}[y_i] \gets scnt_a$. We note that set removal is not used in this paper and is therefore not discussed in detail here.
+
+Expanding the structure by adding $V_a[0..|G|-1] \gets 0$, we can create an equivalent $O(1)$ assignment and lookup dictionary. To assign a value $y$ to a key $x$, just set $V_a[x] \gets y$. Then update $S_a$ and $\mathit{memb_a}$ using the aforementioned process. Retrieving the assigned value for a key $x$ would require checking first for relevance $\mathit{memb_a}[x] = \mathit{scnt_a}$, and if true, returning $V_a[x]$. To invalidate a key $x$ in the dictionary, it would be sufficient to set $\mathit{memb_a}[x] \gets -1$. This invalidation, however, would not remove the $x$ from the underlying $S_a$ list. If you do not need to iterate over the dictionary, $S_a$ can be omitted and removal becomes irrelevant.
+
+It is important to note that each recursion level has its own set $U$ in Algorithm \ref{alg:bmssp_recursive_bmssp} that is unique from other $U$ sets at each recursion level. This requires creating one $\mathit{memb}$ list (with length $n$) and $\mathit{scnt}$ variable per recursion level $l$. Since $l$ can be approximated as $\log(n)^{1/3}$ given the parameters in Algorithm \ref{alg:bmssp_solve}, this yields a one-time initialization cost of
+\(
+O\!\left(n \log(n)^{1/3}\right).
+\)
+This framework enables deterministic worst-case membership checks, set extension, and various dictionary operations while avoiding the variability inherent in hashmap implementations.
+
+
+\subsection{Main Algorithms}\label{subsec:alg_glance}
+BMSSPy is organized around three main algorithms that closely follow Algorithms 1-3 in \citet{duan_breaking_2025}.
+
+
+
+
+
+\paragraph{Algorithm~\ref{alg:bmssp_find_pivots}: Find Pivots.}
+This subroutine expands the current frontier $S$ under a distance bound $B$ and selects a reduced subset of \emph{pivots} $P \subseteq S$ for the next recursion level. It performs $k$ rounds of bounded relaxations (Bellman--Ford style) to build a temporary frontier $W$ of vertices with distance $< B$ from $S$. If $W$ grows too quickly ($|W| > k|S|$), the routine short-circuits and sets $P = S$, capping the work passed downward. Otherwise, it constructs a \emph{tight-edge forest} on $W$ (via the predecessor relation) and chooses as pivots those $u \in S$ that are forest roots with subtree size at least $k$. These pivots summarize the influence of $S$ in the current window, reducing redundant relaxations and avoiding global ordering while preserving the theoretical recursion and batch bounds.
+
+
+Our Find Pivots implementation in \texttt{BMSSPy} refines several steps of the original theoretical description to ensure correctness and clarity on arbitrary weighted graphs:
+\begin{itemize} 
+    \item \textit{Use of evolving frontier variables} (\text{Lines~\ref{alg:bmssp_find_pivots_start}--\ref{alg:bmssp_find_pivots_prev_update}}): We replace indexed frontier arrays ($W_i$) with $W_{\mathrm{curr}}$ and $W_{\mathrm{prev}}$ for clarity and memory efficiency. 
+    \item \textit{Counter-based unique distances} (\text{Lines~\ref{alg:bmssp_find_pivots_counter_dist_update} and ~\ref{alg:bmssp_find_pivots_counter_dist_update2}}): We apply our lightweight tie-breaking mechanism described in Section \ref{sec:unique_distances} using $counter$ and $G_{\text{edge}}$ adjustments so that all effective distances remain unique. The relevant parameters are initialized in Algorithm~\ref{alg:bmssp_wrapper_init}. 
+    \item \textit{Predecessor tracking} (\texttt{Line~\ref{alg:bmssp_find_pivots_pred}}): updates a global \texttt{pred[]} array defined in Algorithm~\ref{alg:bmssp_solve} for path reconstruction and for later pivot determination in the tight-edge forest. 
+    \item \textit{Explicit forest construction} (\text{Lines~\ref{alg:bmssp_find_pivots_forest_init}--\ref{alg:bmssp_find_pivots_forest_loop_end}}): builds the adjacency-list representation of the tight-edge forest $F$ directly from recorded predecessors rather than distance equalities. 
+    \item \textit{Pivot root selection} (\text{Lines~\ref{alg:bmssp_find_pivots_roots_start}--\ref{alg:bmssp_find_pivots_roots_end}}): explicitly checks in-degree $u \notin F^{ID}$ to identify forest roots and calls \textsc{IsPivot} (Appendix - Algorithm~\ref{alg:utils_is_pivot}) to determine whether their subtrees exceed the size threshold $k$. 
+\end{itemize}
+
+\input{formulas/bmssp/find_pivots}
+
+\paragraph{Algorithm~\ref{alg:bmssp_base_case}: Base Case.}
+At recursion depth $l=0$, BMSSP reduces to a bounded single-source search from the unique $x\in S$. We run a Dijkstra-style exploration under the current bound $B$, discovering vertices with distance $<B$ whose shortest paths visit $x$. The search stops as soon as the $(k+1)$st vertex would be explored; its weight becomes the refined boundary $B'$, and the already-settled $k$ vertices form the new frontier below $B'$. If fewer than $k+1$ vertices are found, we return $(B',S')=(B,S')$. Our Base Case implementation in \texttt{BMSSPy} makes the following clarifications to ensure correctness:
+\begin{itemize}
+  \item \textit{Early termination at $k{+}1$} (Line~\ref{alg:bmssp_base_case_early_break}): set $B'$ to the weight of the would-be $(k{+}1)$st vertex and stop, yielding exactly $k$ completed vertices below $B'$. This is done slightly differently than the original algorithm 2 in that we can avoid the extra operational overhead of filtering for only values lower than $B'$ after the main while loop ends.
+  \item \textit{Counter-based unique distances} (Lines~\ref{alg:bmssp_base_case_modified_distance} and \ref{alg:bmssp_base_case_counter_dist_update}): similar to Algorithm \ref{alg:bmssp_find_pivots}.
+  \item \textit{Predecessor tracking} (Line~\ref{alg:bmssp_base_case_pred}): update \texttt{pred[]} on improvement, as in Algorithm \ref{alg:bmssp_find_pivots}.
+\end{itemize}
+
+\input{formulas/bmssp/base_case}
+
+\paragraph{Algorithm~\ref{alg:bmssp_recursive_bmssp}: Recursive BMSSP.}
+For $l>0$, this routine coordinates the whole BMSSP step. The algorithm first compresses the frontier using \textsc{FindPivots} to obtain
+the pivot set $P$ and a temporary frontier $W$. It then initializes a capacity–aware data structure with $M = 2^{(l-1)t}$.
+Following this, it inserts $P$ into the data structure $D$. Then, while the work budget is not exceeded and the frontier is nonempty, it:
+(i) pulls a smallest-key batch $(B_{\mathrm{curr}}, S_{\mathrm{curr}})$,
+(ii) recurses one level down on this batch,
+(iii) relaxes edges out of the newly completed set $U_{\mathrm{curr}}$, and
+(iv) reinserts improved neighbors into the correct distance window, either the current window $[B_{\mathrm{curr}}, B)$ or the lower window $[B_{\mathrm{comp}}, B_{\mathrm{curr}})$ via \texttt{BatchPrepend}.
+It returns the completion bound $B_{\mathrm{comp}}$ and the union of all vertices completed below that bound. Given that we are swapping hashmap sets for our sets defined in Section \ref{subsec:set_functions}, we cannot store tuples in our sets. Instead, we simply store relevant vertices in set $K$.
+We then \texttt{BatchPrepend} their vertices and distances as a list of tuples to match the original function. Our Recursive BMSSP in \texttt{BMSSPy} also incorporates \textit{counter-based unique distances} (Lines~\ref{alg:bmssp_base_case_modified_distance} and~\ref{alg:bmssp_base_case_counter_dist_update}), consistent with Algorithm~\ref{alg:bmssp_find_pivots}, and \textit{predecessor tracking} (Line~\ref{alg:bmssp_base_case_pred}), which updates \texttt{pred[]} if needed, as in Algorithms~\ref{alg:bmssp_find_pivots} and~\ref{alg:bmssp_base_case}.
+
+\input{formulas/bmssp/recursive_bmssp}
+
+
+\subsection{End-to-End Framework}\label{subsec:alg_framework}
+
+In the previous section, the BMSSP framework comprises three main algorithms: Find Pivots (Algorithm~\ref{alg:bmssp_find_pivots}), Base Case (Algorithm~\ref{alg:bmssp_base_case}), and Recursive BMSSP (Algorithm~\ref{alg:bmssp_recursive_bmssp}), where the latter coordinates the first two.
+
+Our main contribution is an end-to-end implementation that utilizes BMSSP to compute shortest-path distances and reconstruct predecessor paths for a given graph~$G$. As illustrated in Figure~\ref{fig:framework}, the workflow proceeds as follows:
+
+\begin{enumerate}
+  \item \textbf{Initialization} - Algorithm~\ref{alg:bmssp_wrapper_init} preprocesses the input graph $G$ (in adjacency-list form) and sets up the precision parameter~$precision$, along with adjustment values (\textit{counter}, $G_{\text{edge}}$) to ensure unique path distances.
+  \item \textbf{Solve phase} - Algorithm~\ref{alg:bmssp_solve} initializes distance and predecessor arrays, sets parameters $k$, $t$, and $l$, and invokes the Recursive BMSSP (Algorithm~\ref{alg:bmssp_recursive_bmssp}).
+  \item \textbf{Post-processing} - Distances are rounded according to the specified precision level, and final paths are reconstructed using Algorithm~\ref{alg:utils_reconstruct_path} in the appendix (or Algorithm \ref{alg:utils_convert_from_constant_degree} in the appendix if the graph is converted to constant degree).
+\end{enumerate}
+
+This end-to-end process returns both shortest-path distances and predecessor paths for the given origin set~$O$ and, optionally, a destination node~$dest$. The following sections describe the remaining algorithms that complete the framework.
+
+\begin{figure}[!ht]
+\begin{center}
+\caption{End-to-End BMSSPy Framework}\label{fig:framework}
+\includegraphics[width=\linewidth]{figures/framework.pdf}
+\end{center}
+\end{figure}
+
+
+\paragraph{Algorithm~\ref{alg:bmssp_solve}: BMSSP Solve.}
+This is the main entry point of the framework. It initializes the distance, counter-distance, and predecessor arrays, sets algorithm parameters 
+($k$, $t$, and $l$ using $\log_2$), and initialize structures for sets and dictionaries here (see Section \ref{subsec:set_functions} and \ref{subsec:data_structure}). We then invoke the Recursive BMSSP (Algorithm~\ref{alg:bmssp_recursive_bmssp}). After computing distances, 
+it rounds them back to the specified precision and optionally reconstructs the shortest path to a target node using Algorithm~\ref{alg:utils_reconstruct_path} in the appendix. 
+Our implementation clarifies the $\log_2$ base used in parameter definitions and integrates explicit path reconstruction, returning both distance and path results.
+\input{formulas/bmssp/solve}
+
+\paragraph{Algorithm~\ref{alg:bmssp_wrapper_init}: BMSSP Initialization.}
+This setup routine preprocesses the input graph and prepares adjustment constants needed to meet the unique path length requirements for the algorithm. 
+It rounds edge weights to the desired precision~$p$, computes unique offset parameters (\texttt{counter} and $G_{\text{edge}}$) to ensure unique distances for paths, 
+and stores these within the BMSSP object. The resulting preprocessed graph supports deterministic, precision-consistent shortest-path calculations.
+
+\input{formulas/bmssp/initialize}
+
+
+\subsection{Data Structure}\label{subsec:data_structure}
+
+The data structure contained several ambiguities and open questions that required clarification during implementation. To support the required operations without changing their asymptotic runtime, we introduced several major and minor adjustments that enable the implementation, although some may be unnecessary under alternative designs.
+
+The first major addition is closely related to the mechanisms described in Section~\ref{subsec:set_functions}. We create $l$ recursion level dictionaries that can perform lookup, assignment, and key invalidation. We need $l$ dictionaries since each recursion level has its own state that is independent of the other recursion level states above it. These are used to access the linked list node as well as the appropriate data buffer in $O(1)$ time.
+
+
+The second major addition is that all linked lists are doubly linked. This includes both the nodes within each block and the blocks within each chain.
+
+We introduce several minor modifications or extensions to support full functionality:
+\begin{itemize}
+    \item The linked-list blocks referenced by the red–black tree were generalized to chains of linked-list blocks. Although not required when using unique path lengths, this generalization is necessary for supporting non-unique values in future variants. It prevents any block from exceeding size $m$ when more than $m$ keys share the same value. Only the ``head'' block referenced by the red–black tree may contain values less than the lower bound, while all subsequent blocks in the chain contain only values equal to the lower bound. This ensures that pull operations remain $O(m)$ and that insert operations do not need to consider later blocks.
+    \item A minimum block size of 2 is enforced, though the return size for the ``pull'' operation may be 1.
+    \item Each block’s linked list has an associated container object that tracks its upper bound and current size.
+    \item The block containing the global upper bound is never removed from the red–black tree, even if it is empty.
+\end{itemize}
+
+
+
+%\clearpage
+
+\section{Numerical Experiments}\label{sec:num}
+We now evaluate the practical performance of BMSSP using our Python implementation, BMSSPy.  
+This section addresses two questions.  
+First, how does BMSSP compare to a range of Dijkstra implementations on both synthetic grid graphs and real geospatial networks?  
+Second, given its better asymptotic complexity, at what (if any) problem size would BMSSP overtake a highly optimized \texttt{SCGraph} Dijkstra implementation?  
+The first question is studied in Section~\ref{subsec:compar}, while the second is examined in the break-even analysis of Section~\ref{subsec:break} using the crossover plot in Figure~\ref{fig:square_grid_crossover}.
+
+
+%\clearpage
+\subsection{Comparison of Run Times on Grid Graphs and Geospatial Graphs}\label{subsec:compar}
+We compare BMSSP (with and without the constant-degree conversion, BMSSP-CD and BMSSP respectively) against four Dijkstra baselines:
+\emph{Vanilla Dijkstra}, a simple no heap pure-Python implementation;
+\emph{SCGraph MD}, an optimized Dijkstra implementation through \texttt{SCGraph};
+\emph{Nx Dijkstra}, the implementation in \texttt{NetworkX}; and
+\emph{iG Dijkstra}, the implementation in \texttt{igraph}.
+For each baseline, we chose the default multi-source supporting Dijkstra algorithm provided by the package.
+
+\paragraph{Setup:}
+We evaluate performance on two families of synthetic grid graphs. Each graph has a wall running from the top center to 5 units from the bottom of the graph, blocking nodes and arcs that would otherwise pass through that area.
+The first family contains square grids of sizes $15\times15$ up to $1000\times1000$.
+The second contains rectangular grids of sizes $15\times50$ up to $100\times2000$.
+For every grid instance, we run three origin cases: Bottom Left (BL), Top Right (TR), and Center (C).
+All experiments were executed on Ubuntu~24.04.3 using Python~3.12.3, running single-threaded on a AMD Ryzen™ Threadripper™ 3970X 32-core 4.5 GHz machine with 128 GiB RAM.
+
+Figure~\ref{fig:shortest_path_trees} illustrates the resulting shortest-path tree structures on a $50\times 50$ square grid for the BL, TR, and C cases when calculated using BMSSP-CD. Note that these trees exhibit alternative shortest paths near some edges. This is related to how the graphs are converted to constant degree graphs paired with our proposed lexographic length calculations on those converted constant degree graphs.
+
+We also include five large real geospatial networks from \texttt{SCGraph} and \texttt{SCGraph\_Data}~\citep{makowski2025scgraph}: Maritime Network (Marnet), North America Rail, Oak Ridge Maritime, US Freeway, and World Highways and Marnet.  
+For each of these geographs we use three origins: Los Angeles (LA), New York (NY), and Seattle (SEA).  
+An example of a shortest-path tree from LA on the North America Rail network is shown in Figure~\ref{fig:na_railway}.
+
+
+
+
+\begin{figure}[!ht]
+\begin{center}
+\caption{Example Construction of Shortest-path Tree for 50×50 Square Gridgraph for Bottom Left (BL), Top Right (TR), and Center (C) Cases}\label{fig:shortest_path_trees}
+\includegraphics[width=\linewidth]{figures/shortest_path_trees1.pdf}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\caption{Example Construction of Shortest-path Tree from Los Angeles for North American Rail}\label{fig:na_railway}
+\includegraphics[width=0.8\linewidth]{figures/north_american.png}
+\end{center}
+\end{figure}
+
+
+\paragraph{Results.}
+Tables~\ref{tab:square_gridgraphs}, \ref{tab:rect_gridgraphs}, and \ref{tab:geospatial} report average runtimes and standard deviations for all graph–origin combinations over 10 iterations.
+Figure~\ref{fig:algorithm_runtimes} visualizes these tables in absolute terms and as relative performance against BMSSP.
+We observe that \texttt{SCGraph}’s Modified Dijkstra (MD) is the fastest method on almost all instances. BMSSP is slower than \texttt{SCGraph} MD but consistently faster than vanilla Dijkstra. \texttt{SCGraph} and \texttt{igraph} implementations of Dijkstra perform well on smaller grids, yet their runtimes grow quickly as the grids become larger and more elongated. In the case of \texttt{NetworkX}, this longer runtime appears partly due to its default handling of multi-source problems, where it constructs paths for every possible node.
+
+The comparison between BMSSP and BMSSP-CD requires care.
+To maintain consistency in the comparison, we report runtimes using the original graph sizes, despite the constant-degree transformation producing larger graphs.
+The constant-degree version is slower at small and medium sizes because the added nodes and edges create more overhead than the sorting savings can offset.
+As the graphs grow, one might expect sorting costs to dominate and eventually favor BMSSP-CD, but we do not see this given the graph sizes that we test.
+BMSSP-CD scales more steeply than BMSSP, and the extra node and edge expansion outweighs its theoretical advantages (again, for the grid sizes and connection patterns we test).
+It is also worth noting that the grid graphs themselves are already close to constant degree, with most nodes having eight incoming and eight outgoing edges, so the transformation provides little structural benefit. Given this, we suspect that increasing the requirement for a constant degree 2 graph to some larger number based on the graph structure, paired with other work budget and algorithmic changes, could yield further improvements to the worst case and real world speeds.
+
+
+\begin{figure}[!ht]
+\begin{center}
+\caption{Algorithm Runtimes for a) Square Gridgraphs, b) Rectangular Gridgraphs, c) Geographs\\
+Relative Times vs BMSSP for d) Square Gridgraphs, e) Rectangular Gridgraphs, f) Geographs}\label{fig:algorithm_runtimes}
+\includegraphics[width=\linewidth]{figures/algorithm_runtimes.pdf}
+\end{center}
+\end{figure}
+
+
+As the square and rectangular grids grow, BMSSP becomes faster on average than both \texttt{NetworkX} and \texttt{igraph}.
+In the large $200\times 1000$ grids and $1000\times 1000$ grids, BMSSP is roughly 1.6 to 2.1 times faster than \texttt{NetworkX} and about 2.4 to 4.2 times faster than \texttt{igraph}.
+Figure~\ref{fig:algorithm_runtimes} illustrates this shift: the relative performance curves for \texttt{NetworkX} and \texttt{igraph} rise above BMSSP on the largest grids, while BMSSP continues to grow more slowly.
+
+\begin{table}[!htp]
+\caption{\textbf{Runtime Comparison on Square Gridgraphs (Mean $\pm$ Standard Deviation ms)}}
+\centering
+\resizebox{\linewidth}{!}{%
+\scriptsize
+\begin{tabular}{
+    l l r r
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+}
+\toprule
+\textbf{Graph} & \textbf{Case} & \textbf{Nodes} & \textbf{Edges} &
+\multicolumn{2}{c}{\textbf{BMSSP-CD}} &
+\multicolumn{2}{c}{\textbf{BMSSP}} &
+\multicolumn{2}{c}{\textbf{Vanilla Dijkstra}} &
+\multicolumn{2}{c}{\textbf{SCGraph MD}} &
+\multicolumn{2}{c}{\textbf{Nx Dijkstra}} &
+\multicolumn{2}{c}{\textbf{iG Dijkstra}} \\
+\midrule
+
+% 15×15
+Square Grid 15×15 & BL & 225 & 1,484 &
+27.96 & 0.19 & 7.92 & 0.05 & 0.83 & 0.01 & 0.17 & 0.01 & 0.42 & 0.02 & 0.11 & 0.03 \\
+Square Grid 15×15 & TR & 225 & 1,484 &
+26.51 & 0.12 & 7.71 & 0.06 & 0.82 & 0.01 & 0.16 & 0.01 & 0.42 & 0.02 & 0.12 & 0.02 \\
+Square Grid 15×15 & C & 225 & 1,484 &
+26.93 & 0.11 & 7.84 & 0.12 & 0.83 & 0.01 & 0.16 & 0.01 & 0.42 & 0.02 & 0.11 & 0.02 \\
+\midrule
+
+% 25×25
+Square Grid 25×25 & BL & 625 & 4,424 &
+77.03 & 0.25 & 11.39 & 0.14 & 5.32 & 0.01 & 0.52 & 0.01 & 1.41 & 0.10 & 0.41 & 0.05 \\
+Square Grid 25×25 & TR & 625 & 4,424 &
+69.39 & 0.20 & 13.85 & 0.20 & 5.37 & 0.06 & 0.47 & 0.01 & 1.39 & 0.10 & 0.49 & 0.07 \\
+Square Grid 25×25 & C & 625 & 4,424 &
+74.51 & 0.14 & 11.59 & 0.16 & 5.38 & 0.02 & 0.49 & 0.01 & 1.42 & 0.09 & 0.42 & 0.05 \\
+\midrule
+
+% 50×50
+Square Grid 50×50 & BL & 2,500 & 18,774 &
+322.46 & 1.22 & 38.23 & 0.48 & 78.08 & 0.08 & 1.97 & 0.01 & 6.04 & 0.36 & 3.07 & 0.21 \\
+Square Grid 50×50 & TR & 2,500 & 18,774 &
+312.41 & 1.17 & 56.81 & 0.50 & 78.49 & 0.12 & 1.92 & 0.01 & 6.12 & 0.40 & 3.80 & 0.27 \\
+Square Grid 50×50 & C & 2,500 & 18,774 &
+322.96 & 0.96 & 41.42 & 0.63 & 78.63 & 0.12 & 1.97 & 0.01 & 6.11 & 0.34 & 2.97 & 0.22 \\
+\midrule
+
+% 75×75
+Square Grid 75×75 & BL & 5,625 & 43,124 &
+718.83 & 3.10 & 82.26 & 0.34 & 403.02 & 0.62 & 4.36 & 0.02 & 15.22 & 0.61 & 10.99 & 0.44 \\
+Square Grid 75×75 & TR & 5,625 & 43,124 &
+771.11 & 188.49 & 98.64 & 0.45 & 402.88 & 0.62 & 4.36 & 0.03 & 16.11 & 0.78 & 19.53 & 0.47 \\
+Square Grid 75×75 & C & 5,625 & 43,124 &
+749.08 & 46.84 & 88.26 & 0.53 & 403.09 & 0.85 & 4.49 & 0.02 & 15.38 & 0.65 & 11.45 & 0.64 \\
+\midrule
+
+% 100×100
+Square Grid 100×100 & BL & 10,000 & 77,474 &
+1,312.97 & 50.00 & 152.90 & 0.25 & 1,353.53 & 7.55 & 7.65 & 0.06 & 48.08 & 46.37 & 35.58 & 0.36 \\
+Square Grid 100×100 & TR & 10,000 & 77,474 &
+1,300.93 & 49.55 & 171.70 & 0.43 & 1,336.40 & 20.16 & 7.62 & 0.25 & 50.86 & 46.41 & 45.35 & 0.19 \\
+Square Grid 100×100 & C & 10,000 & 77,474 &
+1,326.01 & 51.54 & 158.05 & 0.78 & 1,323.14 & 1.56 & 8.01 & 0.21 & 48.74 & 47.48 & 33.16 & 0.36 \\
+\midrule
+
+% 250×250
+Square Grid 250×250 & BL & 62,500 & 493,574 &
+8,748.89 & 108.38 & 899.55 & 2.38 & 57,950.78 & 848.54 & 53.23 & 0.39 & 469.84 & 114.43 & 599.20 & 5.76 \\
+Square Grid 250×250 & TR & 62,500 & 493,574 &
+8,560.52 & 106.72 & 1,072.57 & 72.21 & 56,140.88 & 578.25 & 64.88 & 0.66 & 488.90 & 118.37 & 757.55 & 5.90 \\
+Square Grid 250×250 & C & 62,500 & 493,574 &
+8,724.67 & 89.65 & 1,007.96 & 69.00 & 56,714.30 & 575.72 & 58.88 & 0.55 & 426.37 & 106.84 & 553.02 & 57.02 \\
+\midrule
+
+% 500×500
+Square Grid 500×500 & BL & 250,000 & 1,987,074 &
+37,522.83 & 270.24 & 3,746.24 & 133.60 & \multicolumn{2}{c}{N/A} & 248.66 & 0.55 & 3,021.86 & 269.52 & 4,951.56 & 86.97 \\
+Square Grid 500×500 & TR & 250,000 & 1,987,074 &
+37,000.05 & 226.08 & 4,393.82 & 125.46 & \multicolumn{2}{c}{N/A} & 267.69 & 0.36 & 3,124.22 & 273.12 & 6,972.39 & 31.20 \\
+Square Grid 500×500 & C & 250,000 & 1,987,074 &
+37,301.62 & 269.36 & 4,100.77 & 170.12 & \multicolumn{2}{c}{N/A} & 275.67 & 1.17 & 2,720.93 & 252.34 & 4,613.97 & 100.16 \\
+\midrule
+
+% 750×750
+Square Grid 750×750 & BL & 562,500 & 4,480,574 &
+94,151.30 & 580.32 & 8,147.52 & 237.54 & \multicolumn{2}{c}{N/A} & 596.75 & 1.79 & 11,495.89 & 853.16 & 16,591.28 & 181.74 \\
+Square Grid 750×750 & TR & 562,500 & 4,480,574 &
+93,459.35 & 598.27 & 9,648.46 & 210.56 & \multicolumn{2}{c}{N/A} & 661.56 & 0.85 & 11,232.98 & 780.63 & 26,196.78 & 130.70 \\
+Square Grid 750×750 & C & 562,500 & 4,480,574 &
+93,656.96 & 387.81 & 9,000.94 & 309.02 & \multicolumn{2}{c}{N/A} & 623.15 & 2.27 & 9,689.92 & 693.53 & 15,497.07 & 164.85 \\
+\midrule
+
+% 1000×1000
+Square Grid 1000×1000 & BL & 1,000,000 & 7,974,074 &
+169,904.64 & 818.12 & 14,925.54 & 470.21 & \multicolumn{2}{c}{N/A} & 1,041.37 & 3.10 & 31,843.25 & 3,360.87 & 42,081.52 & 803.65 \\
+Square Grid 1000×1000 & TR & 1,000,000 & 7,974,074 &
+165,895.68 & 937.99 & 17,447.94 & 385.70 & \multicolumn{2}{c}{N/A} & 1,278.06 & 3.74 & 30,890.19 & 2,440.42 & 74,034.14 & 240.44 \\
+Square Grid 1000×1000 & C & 1,000,000 & 7,974,074 &
+169,516.68 & 1,220.73 & 16,315.89 & 417.96 & \multicolumn{2}{c}{N/A} & 1,128.19 & 8.51 & 25,410.46 & 2,179.69 & 38,717.81 & 253.56 \\
+
+\bottomrule
+\end{tabular}
+}
+\label{tab:square_gridgraphs}
+\end{table}
+
+
+\begin{table}[!htp]
+\caption{\textbf{Runtime Comparison on Rectangular Gridgraphs (Mean $\pm$ Standard Deviation ms)}}
+\centering
+\resizebox{\linewidth}{!}{%
+\scriptsize
+\begin{tabular}{
+    l l r r
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+}
+\toprule
+\textbf{Graph} & \textbf{Case} & \textbf{Nodes} & \textbf{Edges} &
+\multicolumn{2}{c}{\textbf{BMSSP-CD}} &
+\multicolumn{2}{c}{\textbf{BMSSP}} &
+\multicolumn{2}{c}{\textbf{Vanilla Dijkstra}} &
+\multicolumn{2}{c}{\textbf{SCGraph MD}} &
+\multicolumn{2}{c}{\textbf{Nx Dijkstra}} &
+\multicolumn{2}{c}{\textbf{iG Dijkstra}} \\
+\midrule
+
+Rectangular Grid 15×50 & BL & 750 & 4,984 &
+77.58 & 0.30 & 12.67 & 0.13 & 7.30 & 0.04 & 0.62 & 0.07 & 1.61 & 0.16 & 0.58 & 0.07 \\
+Rectangular Grid 15×50 & TR & 750 & 4,984 &
+68.18 & 0.17 & 22.43 & 0.14 & 7.38 & 0.12 & 0.53 & 0.01 & 1.61 & 0.12 & 0.89 & 0.11 \\
+Rectangular Grid 15×50 & C & 750 & 4,984 &
+70.06 & 0.20 & 16.77 & 0.21 & 7.41 & 0.12 & 0.53 & 0.01 & 1.61 & 0.11 & 0.67 & 0.08 \\
+\midrule
+
+Rectangular Grid 25×50 & BL & 1,250 & 8,924 &
+149.78 & 0.52 & 19.63 & 0.22 & 19.88 & 0.03 & 1.06 & 0.01 & 2.91 & 0.15 & 1.23 & 0.11 \\
+Rectangular Grid 25×50 & TR & 1,250 & 8,924 &
+133.69 & 0.69 & 30.51 & 0.25 & 20.01 & 0.05 & 0.94 & 0.01 & 2.92 & 0.18 & 1.78 & 0.19 \\
+Rectangular Grid 25×50 & C & 1,250 & 8,924 &
+143.30 & 0.54 & 25.18 & 0.43 & 19.97 & 0.03 & 0.95 & 0.01 & 2.88 & 0.17 & 1.35 & 0.14 \\
+\midrule
+
+Rectangular Grid 25×100 & BL & 2,500 & 17,924 &
+299.23 & 2.15 & 42.76 & 0.40 & 76.76 & 0.08 & 1.98 & 0.01 & 5.97 & 0.32 & 3.91 & 0.37 \\
+Rectangular Grid 25×100 & TR & 2,500 & 17,924 &
+265.25 & 0.61 & 83.54 & 0.62 & 76.78 & 0.20 & 1.82 & 0.01 & 6.26 & 0.41 & 7.05 & 0.73 \\
+Rectangular Grid 25×100 & C & 2,500 & 17,924 &
+283.29 & 0.81 & 71.31 & 0.75 & 77.38 & 0.11 & 1.91 & 0.01 & 6.12 & 0.38 & 4.67 & 0.46 \\
+\midrule
+
+Rectangular Grid 50×100 & BL & 5,000 & 37,774 &
+627.36 & 3.62 & 73.07 & 0.49 & 315.63 & 0.85 & 3.84 & 0.03 & 13.29 & 0.63 & 11.16 & 0.74 \\
+Rectangular Grid 50×100 & TR & 5,000 & 37,774 &
+573.21 & 1.80 & 119.27 & 0.55 & 311.49 & 0.74 & 3.68 & 0.03 & 14.09 & 0.82 & 21.61 & 0.49 \\
+Rectangular Grid 50×100 & C & 5,000 & 37,774 &
+605.55 & 4.56 & 79.51 & 0.67 & 316.54 & 6.14 & 3.88 & 0.02 & 115.78 & 306.40 & 12.85 & 0.79 \\
+\midrule
+
+Rectangular Grid 50×200 & BL & 10,000 & 75,774 &
+1,250.85 & 53.15 & 141.58 & 0.57 & 1,307.76 & 7.18 & 7.35 & 0.26 & 49.26 & 45.10 & 49.31 & 0.28 \\
+Rectangular Grid 50×200 & TR & 10,000 & 75,774 &
+1,124.59 & 6.49 & 241.59 & 0.89 & 1,274.99 & 8.23 & 7.12 & 0.31 & 58.04 & 46.95 & 74.54 & 0.62 \\
+Rectangular Grid 50×200 & C & 10,000 & 75,774 &
+1,195.48 & 47.75 & 150.05 & 0.64 & 1,297.14 & 13.33 & 7.50 & 0.13 & 52.33 & 46.35 & 54.52 & 0.41 \\
+\midrule
+
+Rectangular Grid 100×500 & BL & 50,000 & 389,474 &
+6,621.38 & 100.14 & 707.64 & 1.75 & 36,145.90 & 508.87 & 43.66 & 0.30 & 392.65 & 104.07 & 476.38 & 8.54 \\
+Rectangular Grid 100×500 & TR & 50,000 & 389,474 &
+6,013.42 & 126.09 & 1,251.35 & 62.95 & 33,500.73 & 357.27 & 46.67 & 0.59 & 465.54 & 100.17 & 962.73 & 55.57 \\
+Rectangular Grid 100×500 & C & 50,000 & 389,474 &
+6,149.57 & 148.63 & 735.58 & 0.94 & 34,934.39 & 305.14 & 50.08 & 0.42 & 414.50 & 110.73 & 560.41 & 20.98 \\
+\midrule
+
+Rectangular Grid 100×1000 & BL & 100,000 & 779,474 &
+13,258.77 & 182.86 & 1,356.78 & 4.52 & \multicolumn{2}{c}{N/A} &
+107.11 & 0.35 & 1,197.74 & 130.81 & 2,364.13 & 82.27 \\
+Rectangular Grid 100×1000 & TR & 100,000 & 779,474 &
+12,061.66 & 167.19 & 2,456.90 & 81.72 & \multicolumn{2}{c}{N/A} &
+105.45 & 0.30 & 1,493.55 & 81.62 & 4,397.75 & 61.05 \\
+Rectangular Grid 100×1000 & C & 100,000 & 779,474 &
+12,359.44 & 109.69 & 1,402.35 & 4.01 & \multicolumn{2}{c}{N/A} &
+94.83 & 0.38 & 1,161.87 & 112.41 & 2,745.41 & 11.09 \\
+\midrule
+
+Rectangular Grid 100×1500 & BL & 150,000 & 1,169,474 &
+20,002.83 & 141.77 & 2,050.10 & 93.87 & \multicolumn{2}{c}{N/A} &
+150.44 & 0.42 & 2,498.22 & 201.72 & 5,123.66 & 87.66 \\
+Rectangular Grid 100×1500 & TR & 150,000 & 1,169,474 &
+18,147.45 & 151.07 & 3,709.88 & 125.01 & \multicolumn{2}{c}{N/A} &
+171.14 & 0.32 & 4,269.01 & 338.45 & 10,195.76 & 170.68 \\
+Rectangular Grid 100×1500 & C & 150,000 & 1,169,474 &
+18,580.57 & 222.69 & 2,089.71 & 4.88 & \multicolumn{2}{c}{N/A} &
+154.30 & 0.55 & 2,612.86 & 156.94 & 6,164.88 & 52.26 \\
+\midrule
+
+Rectangular Grid 100×2000 & BL & 200,000 & 1,559,474 &
+26,850.45 & 248.77 & 2,691.37 & 3.68 & \multicolumn{2}{c}{N/A} &
+197.32 & 0.47 & 5,016.44 & 495.68 & 8,881.13 & 177.23 \\
+Rectangular Grid 100×2000 & TR & 200,000 & 1,559,474 &
+24,333.11 & 233.06 & 4,924.44 & 132.85 & \multicolumn{2}{c}{N/A} &
+223.76 & 0.40 & 7,647.16 & 397.67 & 18,529.00 & 154.66 \\
+Rectangular Grid 100×2000 & C & 200,000 & 1,559,474 &
+24,775.74 & 212.44 & 2,798.23 & 111.36 & \multicolumn{2}{c}{N/A} &
+224.18 & 0.79 & 4,683.30 & 426.53 & 10,864.61 & 57.06 \\
+
+\bottomrule
+\end{tabular}
+}
+\label{tab:rect_gridgraphs}
+\end{table}
+
+
+
+
+The geospatial graphs show a different pattern.
+These networks are sparse and irregular, so \texttt{SCGraph} MD again achieves the lowest runtimes.
+BMSSP, \texttt{NetworkX}, and \texttt{igraph} have similar runtimes on medium-sized geographs.
+On the largest geograph (World Highways and Marnet), SCGraph MD is the fastest, followed by \texttt{NetworkX}, \texttt{igraph} and then BMSSP.
+
+
+\begin{table}[!htp]
+\caption{\textbf{Runtime Comparison on Geospatial Graphs (Mean $\pm$ Standard Deviation ms)}}
+\centering
+\resizebox{\linewidth}{!}{%
+\scriptsize
+\begin{tabular}{
+    l l r r
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+    r@{$\,\pm\,$}l
+}
+\toprule
+\textbf{Graph} & \textbf{Case} & \textbf{Nodes} & \textbf{Edges} &
+\multicolumn{2}{c}{\textbf{BMSSP-CD}} &
+\multicolumn{2}{c}{\textbf{BMSSP}} &
+\multicolumn{2}{c}{\textbf{Vanilla Dijkstra}} &
+\multicolumn{2}{c}{\textbf{SCGraph MD}} &
+\multicolumn{2}{c}{\textbf{Nx Dijkstra}} &
+\multicolumn{2}{c}{\textbf{iG Dijkstra}} \\
+\midrule
+
+% ---------------- MARNET ----------------
+Marnet & LA & 11,062 & 34,698 &
+582.78 & 69.54 & 212.67 & 0.98 & 1,663.45 & 24.23 & 8.49 & 1.29 & 45.05 & 45.45 & 55.47 & 2.26 \\
+Marnet & NY & 11,062 & 34,698 &
+583.47 & 56.21 & 219.13 & 3.83 & 1,667.02 & 33.47 & 7.19 & 0.10 & 44.26 & 45.28 & 59.24 & 0.64 \\
+Marnet & SEA & 11,062 & 34,698 &
+545.03 & 48.86 & 207.56 & 0.76 & 1,636.02 & 7.76 & 7.24 & 0.06 & 49.21 & 53.80 & 69.31 & 0.87 \\
+
+\midrule
+
+% ---------------- NORTH AMERICA RAIL ----------------
+North America Rail & LA & 9,929 & 28,915 &
+505.00 & 46.60 & 218.36 & 0.98 & 1,289.22 & 4.16 & 5.89 & 0.09 & 39.93 & 45.24 & 52.51 & 0.63 \\
+North America Rail & NY & 9,929 & 28,915 &
+471.15 & 1.78 & 230.26 & 0.76 & 1,276.90 & 2.52 & 5.76 & 0.03 & 41.65 & 48.25 & 56.16 & 0.22 \\
+North America Rail & SEA & 9,929 & 28,915 &
+476.00 & 1.82 & 241.48 & 45.82 & 1,279.13 & 1.31 & 5.77 & 0.05 & 39.50 & 43.45 & 48.64 & 0.30 \\
+
+\midrule
+
+% ---------------- OAK RIDGE MARITIME ----------------
+Oak Ridge Maritime & LA & 10,661 & 25,036 &
+289.94 & 1.74 & 191.42 & 0.38 & 1,464.56 & 15.11 & 5.78 & 0.05 & 36.61 & 51.34 & 31.66 & 0.81 \\
+Oak Ridge Maritime & NY & 10,661 & 25,036 &
+299.22 & 45.94 & 186.95 & 0.60 & 1,478.70 & 12.10 & 5.57 & 0.03 & 35.29 & 42.94 & 39.53 & 0.32 \\
+Oak Ridge Maritime & SEA & 10,661 & 25,036 &
+290.30 & 0.72 & 192.69 & 0.46 & 1,457.89 & 7.87 & 5.67 & 0.11 & 39.72 & 48.55 & 52.68 & 0.14 \\
+
+\midrule
+
+% ---------------- US FREEWAY ----------------
+US Freeway & LA & 14,591 & 44,232 &
+657.61 & 3.54 & 349.40 & 45.25 & 2,819.43 & 30.46 & 7.13 & 0.10 & 78.79 & 46.35 & 186.30 & 2.73 \\
+US Freeway & NY & 14,591 & 44,232 &
+663.95 & 1.91 & 352.63 & 45.68 & 2,823.42 & 41.62 & 7.19 & 0.20 & 69.31 & 43.45 & 148.48 & 2.04 \\
+US Freeway & SEA & 14,591 & 44,232 &
+676.26 & 2.78 & 348.28 & 46.70 & 2,814.11 & 18.30 & 7.37 & 0.38 & 88.15 & 44.69 & 218.86 & 5.71 \\
+
+\midrule
+
+% ---------------- WORLD HIGHWAYS AND MARNET ----------------
+World Highways and Marnet & LA & 572,009 & 1,689,541 &
+33,465.90 & 401.34 & 14,639.99 & 178.77 & \multicolumn{2}{c}{N/A} &
+476.68 & 1.97 & 8,261.05 & 462.97 & 17,028.90 & 568.46 \\
+World Highways and Marnet & NY & 572,009 & 1,689,541 &
+33,202.17 & 304.31 & 15,287.75 & 212.13 & \multicolumn{2}{c}{N/A} &
+468.30 & 0.88 & 6,470.21 & 452.73 & 16,459.89 & 177.08 \\
+World Highways and Marnet & SEA & 572,009 & 1,689,541 &
+33,502.62 & 441.96 & 14,514.57 & 164.47 & \multicolumn{2}{c}{N/A} &
+481.25 & 1.70 & 5,530.60 & 350.42 & 12,222.92 & 172.31 \\
+
+\bottomrule
+\end{tabular}
+}
+\label{tab:geospatial}
+\end{table}
+
+
+Taken together, Tables~\ref{tab:square_gridgraphs}–\ref{tab:geospatial} and Figure~\ref{fig:algorithm_runtimes} show that BMSSP improves substantially vs Vanilla Dijkstra, becomes competitive with general-purpose libraries on large gridgraphs, and outperforms \texttt{NetworkX} and \texttt{igraph} on larger synthetic grids.
+At the same time, SCGraph MD remains the fastest overall due to its highly optimized implementation.
+
+
+
+
+%\clearpage
+
+
+
+\subsection{Break-Even Analysis: BMSSP vs.\ SCGraph Dijkstra}\label{subsec:break}
+
+To quantify when BMSSP would overtake \texttt{SCGraph} Dijkstra, we model both algorithms using empirical power-law fits of the form $T(x) \approx a\, x^{b}$, where $x = n + m$ is the total graph size. The fitted curves and their intersection are shown in Figure~\ref{fig:square_grid_crossover}. We chose power-law over claimed algorithmic time comparisons since we are not testing on worst case graphs. %TODO: Should we say: We chose power-law over worst case time comparisons since we are not testing on worst case graphs.
+
+BMSSP is well-approximated by
+$T_{\text{BMSSP}}(x) \approx 9.91\times 10^{-3}\, x^{1.03}$,
+while \texttt{SCGraph} Dijkstra follows
+$T_{\text{SCGraph}}(x) \approx 6.41\times 10^{-4}\, x^{1.08}$.
+BMSSP grows slightly more slowly with $x$, but \texttt{SCGraph} has a much smaller constant factor. Solving for the intersection of these two fitted curves yields a crossover point of approximately
+$x^\star \approx 5.08\times 10^{22}$.
+
+This crossover is far beyond any reasonably loadable graph size for a computer in the foreseeable future. As a reference point, the full OpenStreetMap planet graph contains on the order of $10^{8}$ nodes and edges combined, which is many orders of magnitude smaller than $x^\star$. Although BMSSP has the marginally better asymptotic exponent, \texttt{SCGraph} Dijkstra remains faster for all practically realizable sparse graphs. In practice, system-level optimizations dominate, and BMSSP’s theoretical advantage emerges only at scales that cannot be reached in today's memory or storage.
+
+
+
+\begin{figure}[!ht]
+\begin{center}
+\caption{BMSSP vs \texttt{SCGraph} Dijkstra – Estimated Square Gridgraph Crossover Point}\label{fig:square_grid_crossover}
+\includegraphics[width=\linewidth]{figures/square_grid_crossover.pdf}
+\end{center}
+\end{figure}
+
+\section{Conclusion}\label{sec:conc}
+The Bounded Multi-Source Shortest Path (BMSSP) algorithm of \citet{duan_breaking_2025} is a major theoretical breakthrough: it breaks the Dijkstra sorting barrier and achieves a deterministic $O(m\log^{2/3} n)$ time for SSSP on graphs with nonnegative weights. However, until now, this advance has remained largely theoretical, with no public implementation and several key steps left ambiguous in practical settings.
+
+
+This paper takes a first step toward closing that gap by introducing \texttt{BMSSPy}, the first functional, open-source Python implementation of BMSSP. Our \text{robust, reproducible implementation} does more than translate pseudocode into code: it addresses potential bugs, relaxes unrealistic assumptions, and makes implicit components, such as tight-edge forest construction, pivot selection, the underlying data structures, and the set operations, fully explicit. We add features such as stable predecessor tracking, handling unreachable nodes, and irregular degree distributions, turning BMSSP into an end-to-end algorithm that returns both distances and routes on real networks.
+
+% We complement this with \text{comprehensive empirical evaluation} on synthetic gridgraphs and real geospatial networks, comparing BMSSP to Dijkstra implementations in \texttt{NetworkX}, \texttt{igraph}, and the highly optimized \texttt{SCGraph}. BMSSP clearly outperforms a vanilla Python Dijkstra and becomes competitive with general-purpose libraries on large or elongated grids, but SCGraph’s Dijkstra remains substantially faster across all realistic instances. Our break-even analysis shows that the asymptotic advantage of BMSSP would materialize only at astronomically large graph sizes, consistent with the overhead concerns already noted by \citet{duan_breaking_2025}.
+
+We complement this with comprehensive empirical evaluation on synthetic gridgraphs and real geospatial networks, comparing BMSSP to Dijkstra implementations in \texttt{NetworkX}, \texttt{igraph}, and the highly optimized \texttt{SCGraph}. BMSSP clearly outperforms a vanilla Python Dijkstra and becomes competitive with general-purpose libraries on large or elongated grids, but \texttt{SCGraph}’s Dijkstra remains substantially faster across all realistic instances. Our break-even analysis shows that the asymptotic advantage of BMSSP would materialize only at astronomically large graph sizes, consistent with the overhead concerns already noted by \citet{duan_breaking_2025}.
+
+While our current implementation prioritizes algorithmic clarity and theoretical fidelity, this choice naturally incurs runtime and memory overheads compared to optimized libraries like \texttt{SCGraph} and \texttt{igraph}. Consequently, \texttt{BMSSPy} currently serves best as a research instrument and a reference ``blueprint" rather than a drop-in replacement for shortest path implementations. However, we view this as a necessary and exciting milestone: by successfully verifying the complex logic and data structures in Python, we lay a solid foundation for future high-performance ports in other languages. We are optimistic that future research and implementations will dramatically reduce memory footprints and constant-factor delays, allowing the algorithm’s asymptotic power to shine in practice.
+
+Narrowing this gap will require reducing constant factors. This may be achieved through changing the constant degree requirements of the graph, work budget modifications, faster data structures, refined pivot and window policies, or hybrid strategies that combine BMSSP’s bounded-range logic with other heuristics. We hope that \texttt{BMSSPy} will serve as a platform for this next step. The package is fully documented, reproducible, and designed to support future research and implementations.%including time-windowed paths \citep{desaulniers2000shortest}, multi-pair queries \citep{wang2005multiple}, dynamic arc weights \citep{ahuja2003dynamic,buriol2008speeding}.  fixed-charge and resource-constrained variants \citep{engineer2012fixed}, stochastic or risk-averse formulations \citep{bertsekas1991analysis, chicoisne2018risk, bertazzi2024dynamic}, and online environments \citep{lagos2025online}. 
+By providing the first complete, open, and practical implementation of BMSSP, \texttt{BMSSPy} offers a foundation for future algorithmic improvements and makes the BMSSP framework accessible to researchers and practitioners in operations research, transportation, and network analytics.
+% These results underscore the gap that often exists between theoretical complexity and system-level performance. Narrowing this gap for BMSSP will require reducing constant factors through simpler data structures, improved cache behavior, refined pivot and window policies, or hybrid strategies that combine BMSSP’s bounded-range logic with practical Dijkstra heuristics. We hope that \texttt{BMSSPy} will serve as a platform for this next step. The package is fully documented, reproducible, and designed to support extensions to both classical and emerging settings, including time-windowed paths \citep{desaulniers2000shortest}, multi-pair queries \citep{wang2005multiple}, dynamic arc weights \citep{ahuja2003dynamic,buriol2008speeding}, fixed-charge and resource-constrained variants \citep{engineer2012fixed}, stochastic or risk-averse formulations \citep{bertsekas1991analysis, chicoisne2018risk, bertazzi2024dynamic}, and online environments \citep{lagos2025online}. By providing the first complete, open, and practical implementation of BMSSP, \texttt{BMSSPy} offers a foundation for future algorithmic improvements and makes the BMSSP framework accessible to researchers and practitioners in operations research, transportation, and network analytics.
+
+
+
+
+
+% Acknowledgments here
+% \ACKNOWLEDGMENT{%
+% % Enter the text of acknowledgments here
+% }% Leave this (end of acknowledgment)
+
+% --- Appendices (optional) ---
+% Appendix here
+% Options are (1) APPENDIX (with or without general title) or 
+%             (2) APPENDICES (if it has more than one unrelated sections)
+% Outcomment the appropriate case if necessary
+%
+% \begin{APPENDIX}{<Title of the Appendix>}
+% \end{APPENDIX}
+%
+%   or 
+%
+% \begin{APPENDICES}
+% \section{<Title of Section A>}
+% \section{<Title of Section B>}
+% etc
+% \end{APPENDICES}
+
+
+% References here (outcomment the appropriate case) 
+
+% CASE 1: BiBTeX used to constantly update the references 
+%   (while the paper is being written).
+\bibliographystyle{informs2014} % outcomment this and next line in Case 1
+\bibliography{refs/references} % if more than one, comma separated
+
+% CASE 2: BiBTeX used to generate mypaper.bbl (to be further fine tuned)
+%\input{mypaper.bbl} % outcomment this line in Case 2
+
+% Notation Table // Tim
+\clearpage % optional, if you want the notation table to start on a fresh page
+\section*{Appendix}
+
+\begin{longtable}{p{0.22\textwidth}p{0.74\textwidth}}
+\caption{Notation used throughout the paper.}\label{tab:notations}\\
+\hline
+\textbf{Notation} & \textbf{Description} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{Notation} & \textbf{Description} \\
+\hline
+\endhead
+
+\hline
+\endfoot
+
+\hline
+\endlastfoot
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\multicolumn{2}{l}{\textbf{Graph Structure}} \\
+\hline
+$G=(V,E)$ & Directed graph with vertex set $V$ and edge set $E$. \\
+$V$ & Set of vertices. \\
+$E$ & Set of edges. \\
+$n = |V|$ & Number of vertices. \\
+$m = |E|$ & Number of edges. \\
+$u, v \in V$ & Individual vertices. \\
+% $d \in V$ & The destination vertex during path reconstruction. \\
+$w$ & Nonnegative weight of edge $(u,v)$. \\
+\hline
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\multicolumn{2}{l}{\textbf{Distance, Paths, and Predecessors}} \\
+\hline
+$\text{dist}[v]$ & Tentative shortest-path distance from the source to vertex $v$. \\
+$\text{cdist}[v]$ & Counter-adjusted effective distance for tie-breaking. \\
+$\text{pred}[v]$ & Predecessor of vertex $v$ in the shortest-path tree. \\
+$\text{path}$ & Ordered list of vertices forming the shortest path. \\
+$\text{length}$ & Total distance of the shortest path. \\
+$\infty$ & Infinity; indicates unreachable vertices. \\
+$-1$ & Sentinel indicating no predecessor or unreachable nodes. \\
+\hline
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\multicolumn{2}{l}{\textbf{Origins and Destinations}} \\
+\hline
+$O$ & Set of origin vertices. \\
+$o$ & Origin vertex.  \\
+$\text{dest}$ & Destination vertex. \\
+\hline
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\multicolumn{2}{l}{\textbf{Frontier and Recursion Sets}} \\
+\hline
+$S$ & Frontier set at the current recursion level. \\
+$S'$ & New frontier set. \\
+$S_{\mathrm{curr}}$ & The current frontier subset processed. \\
+$U$ & Set of vertices that exceed the distance bound or remain unprocessed. \\
+$U_{\mathrm{curr}}$ & Newly discovered vertices added to $U$ during the current iteration of Algorithm~3. \\
+$W$ & Expanded frontier set containing vertices with $\text{dist} < B$. \\
+$W_{\mathrm{prev}}$ & Previous frontier set in relaxation iterations. \\
+$W_{\mathrm{curr}}$ & Current frontier set during relaxations. \\
+$P$ & Set of pivot vertices chosen for the next recursion level. \\
+$F$ & Directed forest over vertices in $W$, containing edges $(u \rightarrow v)$ where $\text{pred}[v] = u$. Each vertex has at most one parent, so $F$ is a directed acyclic graph (DAG). Used for subtree computations and pivot selection. \\
+$F^{ID}$ & Vertices in this set have an indegree in the frontier; roots are not stored in this set. \\
+
+\hline
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\multicolumn{2}{l}{\textbf{Distance Bounds}} \\
+\hline
+$B$ & Current global distance bound. \\
+$B'$ or $B_{\text{new}}$ & Updated distance bound after refinement. \\
+$B_{\text{curr}}$ & Active window’s distance bound at a recursion stage. \\
+$B_{\text{comp}}$ & Completion bound for fully processed vertices. \\
+\hline
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\multicolumn{2}{l}{\textbf{Algorithm Parameters}} \\
+\hline
+$k = \lfloor (\log_2 n)^{1/3} \rfloor$ & Controls frontier-size threshold and pivot sampling. \\
+$t = \lfloor (\log_2 n)^{2/3} \rfloor$ & Controls subtree-size threshold. \\
+$l = \lceil \log_2(n) / t \rceil$ & Recursion depth; number of hierarchical levels. \\
+$M = 2^{l-1} t$ & Capacity parameter; work budget per recursion level. \\
+% $N$ & Number of key/value pairs inserted into the data structure. \\ % This is N from Duan
+$precision$ & Precision parameter for edge weight rounding. \\
+\hline
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\multicolumn{2}{l}{\textbf{Tie-Breaking and Structural Metadata}} \\
+\hline
+$counter$ & Global tie-break counter ensuring unique effective distances. \\
+$G_{\text{edge}}[u][v]$ & Unique per-edge adjustment used to break ties in distance computations. Ensures lexicographic ordering of effective distances in BMSSPy’s relaxations. \\
+$\text{Heap}$ & Binary min-heap used for priority queue operations. \\
+\hline
+
+% I could not get anyone to look at the notation table - TR made an executive decision to remove these parts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \multicolumn{2}{l}{\textbf{Classical and Comparative Complexity}} \\
+% \hline
+% $\text{BellmanFord}(G, o)$ & Classical single-source shortest-path algorithm based on iterative relaxations; runs in $O(mn)$ time. Used for conceptual comparison to BMSSP’s relaxation steps. \\
+% $O(mn)$ & Time complexity of BellmanFord. \\
+% 
+% $\text{Dijkstra}(G, o)$ & The classical single-source shortest-path algorithm used for baseline comparison. \\
+% $O(m + n \log n)$ & Time complexity of classical Dijkstra. \\
+% $\text{BMSSP}(G, o)$ & The bounded multi-source shortest-path algorithm of Duan et al., using recursive bounded relaxations and pivot selection. \\
+% $O(m \log^{2/3} n)$ & Time complexity of BMSSP. \\
+% \hline
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \multicolumn{2}{l}{\textbf{Mathematical Operators}} \\
+% \hline
+% $\lfloor \cdot \rfloor$ & Floor operator. \\
+% $\lceil \cdot \rceil$ & Ceiling operator. \\
+% $\leftarrow$ & Assignment operator. \\
+% \hline
+
+\end{longtable}
+
+\paragraph{Algorithm~\ref{alg:utils_is_pivot}: Is Pivot.}
+This helper function determines whether a given node qualifies as a pivot by checking the size of its reachable subtree within a directed forest~$F$. 
+Using a simple depth-first traversal, it counts visited nodes until reaching the threshold~$t$, returning \textbf{True} if the limit is met and \textbf{False} otherwise. 
+This ensures efficient identification of influential frontier roots during pivot selection.
+\input{formulas/utils/is_pivot}
+
+\paragraph{Algorithm~\ref{alg:utils_reconstruct_path}: Reconstruct Path.}
+This utility function rebuilds the full shortest path from the destination node~$d$ back to its origin using the predecessor array~$P$. 
+It iteratively traces backward until the source is reached, reverses the sequence, and returns the ordered path. 
+This produces an explicit route corresponding to the computed shortest-path distance.
+\input{formulas/utils/reconstruct_path}
+
+\paragraph{Algorithm~\ref{alg:utils_convert_to_constant_out_degree}: Convert to Constant Out-Degree.}
+This utility function transforms an arbitrary directed graph into an equivalent representation in which every node has at most a specified out-degree~$d$.
+Whenever a node exceeds this limit, it is expanded into a sequence of auxiliary nodes, each responsible for at most $d-1$ of the original outgoing edges.
+These auxiliary nodes are then linked in a zero-weight cycle to preserve reachability and allow traversal through all outgoing edges of the original node.
+The function returns the augmented graph, a mapping that records the correspondence between new and original nodes, and the size of the original graph.
+This conversion enables algorithms that require bounded out-degree without altering the graph’s essential connectivity or path-weight structure.
+\input{formulas/utils/convert_to_constant_out_degree}
+
+\paragraph{Algorithm~\ref{alg:utils_convert_from_constant_degree}: Convert From Constant Out-Degree.}
+This utility function reverses the transformation applied during constant out-degree conversion, restoring shortest-path data from the augmented graph back to the original graph.
+Using the index map produced in the forward conversion, each predecessor entry in the constant-degree graph is traced backward until a valid predecessor from the original graph is identified.
+Auxiliary nodes introduced solely to enforce bounded out-degree are skipped transparently, ensuring that no artificial structure influences the recovered paths.
+Distances are truncated to the original graph size, and a new predecessor matrix is constructed in which every predecessor refers only to an authentic node of the initial graph.
+The function returns the reconstructed distance and predecessor matrices, thereby reestablishing shortest-path information in the original graph topology.
+\input{formulas/utils/convert_from_constant_degree}
+
+\end{document}
