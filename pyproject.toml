@@ -1,19 +1,37 @@
 [tool.black]
 line-length = 80
-target-version = ['py39']
+target-version = ['py311']
 exclude = '/.*(__pycache__).*/'
 
-[tool.setuptools]
-packages = ["bmsspy"]
-
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+requires = ["scikit_build_core", "nanobind"]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+build.verbose = false
+build-dir = "build/{wheel_tag}"
+
+[[tool.scikit-build.overrides]]
+if.failed = true
+wheel.cmake = false
+
+[tool.scikit-build.sdist]
+exclude = ["*"]
+include = [
+    "bmsspy/*.py",
+    "bmsspy/data_structures/*.py",
+    "bmsspy/helpers/*.py",
+    "bmsspy/cpp/*",
+    "pyproject.toml",
+    "CMakeLists.txt",
+    "README.md",
+    "LICENSE",
+]
 
 [project]
 name = "bmsspy"
 version = "2.2.2"
-description = "A pure python bmssp solver for python"
+description = "A pure python and C++ bmssp solver"
 authors = [
     {name="Connor Makowski", email="conmak@mit.edu"}
 ]
@@ -21,6 +39,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: C++",
     'License :: OSI Approved :: MIT License',
     "Operating System :: OS Independent",
 ]
@@ -38,6 +57,8 @@ dev = [
     "nox-uv>=0.8.0",
     "pdoc>=15.0.1",
     "twine>=6.1.0",
+    "scikit-build-core>=1.0.3",
+    "nanobind>=3.0.0",
 ]
 bench = [
     "igraph==0.11.9",
@@ -53,6 +74,10 @@ bench = [
 "Bug Tracker" = "https://github.com/connor-makowski/bmsspy/issues"
 "Documentation" = "https://connor-makowski.github.io/bmsspy/bmsspy.html"
 
+[tool.uv]
+no-build-isolation-package = []
+
 [tool.pytest.ini_options]
 testpaths = ["test"]
 python_files = ["*.py"]
+pythonpath = ["."]

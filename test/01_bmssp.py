@@ -1,46 +1,71 @@
-from bmsspy import Bmssp
+from bmsspy import Bmssp, BmsspC, has_cpp
+
+
+def get_solvers(graph, **kwargs):
+    solvers = [
+        Bmssp(graph, use_constant_degree_graph=True, **kwargs),
+        Bmssp(graph, use_constant_degree_graph=False, **kwargs),
+    ]
+    if has_cpp():
+        solvers.extend(
+            [
+                BmsspC(graph, use_constant_degree_graph=True, **kwargs),
+                BmsspC(graph, use_constant_degree_graph=False, **kwargs),
+            ]
+        )
+    return solvers
 
 
 def test_bmssp_tiny():
-    tiny_graph = Bmssp([{1: 1}, {}])
-    output = tiny_graph.solve(0)
-    assert output["distance_matrix"] == [0, 1]
+    for solver in get_solvers([{1: 1}, {}]):
+        output = solver.solve(0)
+        assert output["distance_matrix"] == [0, 1]
 
 
 def test_bmssp_no_destination():
-    graph = Bmssp(
-        [{1: 1, 2: 1, 3: 10}, {2: 1, 3: 3, 1: 10}, {3: 1, 4: 2}, {4: 2}, {}]
-    )
-    output = graph.solve(0)
-    assert output["distance_matrix"] == [0, 1, 1, 2, 3]
+    graph = [
+        {1: 1, 2: 1, 3: 10},
+        {2: 1, 3: 3, 1: 10},
+        {3: 1, 4: 2},
+        {4: 2},
+        {},
+    ]
+    for solver in get_solvers(graph):
+        output = solver.solve(0)
+        assert output["distance_matrix"] == [0, 1, 1, 2, 3]
 
 
 def test_bmssp_with_destination():
-    graph = Bmssp(
-        [{1: 1, 2: 1, 3: 10}, {2: 1, 3: 3, 1: 10}, {3: 1, 4: 2}, {4: 2}, {}]
-    )
-    output = graph.solve(0, 3)
-    assert output["length"] == 2 and output["path"] == [0, 2, 3]
+    graph = [
+        {1: 1, 2: 1, 3: 10},
+        {2: 1, 3: 3, 1: 10},
+        {3: 1, 4: 2},
+        {4: 2},
+        {},
+    ]
+    for solver in get_solvers(graph):
+        output = solver.solve(0, 3)
+        assert output["length"] == 2 and output["path"] == [0, 2, 3]
 
 
 def test_bmssp_zero_weight():
-    zero_weight_graph = Bmssp([{1: 0}, {2: 0}, {3: 0}, {4: 0}, {}])
-    output = zero_weight_graph.solve(0)
-    assert output["distance_matrix"] == [0, 0, 0, 0, 0]
+    graph = [{1: 0}, {2: 0}, {3: 0}, {4: 0}, {}]
+    for solver in get_solvers(graph):
+        output = solver.solve(0)
+        assert output["distance_matrix"] == [0, 0, 0, 0, 0]
 
 
 def test_bmssp_zero_weight_2():
-    zero_weight_graph2 = Bmssp(
-        [
-            {1: 0, 2: 0, 3: 0, 4: 0},
-            {2: 0, 3: 0},
-            {3: 0, 4: 0},
-            {4: 0, 0: 0},
-            {0: 0, 1: 0},
-        ]
-    )
-    output = zero_weight_graph2.solve(0)
-    assert output["distance_matrix"] == [0, 0, 0, 0, 0]
+    graph = [
+        {1: 0, 2: 0, 3: 0, 4: 0},
+        {2: 0, 3: 0},
+        {3: 0, 4: 0},
+        {4: 0, 0: 0},
+        {0: 0, 1: 0},
+    ]
+    for solver in get_solvers(graph):
+        output = solver.solve(0)
+        assert output["distance_matrix"] == [0, 0, 0, 0, 0]
 
 
 if __name__ == "__main__":

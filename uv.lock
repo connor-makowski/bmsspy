@@ -118,12 +118,14 @@ dev = [
     { name = "autoflake" },
     { name = "black" },
     { name = "build" },
+    { name = "nanobind" },
     { name = "nox" },
     { name = "nox-uv" },
     { name = "pamda" },
     { name = "pdoc" },
     { name = "pytest" },
     { name = "scgraph" },
+    { name = "scikit-build-core" },
     { name = "twine" },
 ]
 
@@ -136,6 +138,7 @@ requires-dist = [
     { name = "igraph", marker = "extra == 'bench'", specifier = "==0.11.9" },
     { name = "ipykernel", marker = "extra == 'bench'", specifier = "==6.30.1" },
     { name = "matplotlib", marker = "extra == 'bench'", specifier = "==3.10.6" },
+    { name = "nanobind", marker = "extra == 'dev'", specifier = ">=3.0.0" },
     { name = "networkx", marker = "extra == 'bench'", specifier = "==3.6" },
     { name = "nox", marker = "extra == 'dev'", specifier = ">=2026.4.10" },
     { name = "nox-uv", marker = "extra == 'dev'", specifier = ">=0.8.0" },
@@ -143,6 +146,7 @@ requires-dist = [
     { name = "pdoc", marker = "extra == 'dev'", specifier = ">=15.0.1" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.0.3" },
     { name = "scgraph", marker = "extra == 'dev'", specifier = "==3.4.1" },
+    { name = "scikit-build-core", marker = "extra == 'dev'", specifier = ">=1.0.3" },
     { name = "scipy", marker = "extra == 'bench'", specifier = "==1.16.2" },
     { name = "twine", marker = "extra == 'dev'", specifier = ">=6.1.0" },
 ]
@@ -1236,6 +1240,15 @@ wheels = [
 ]
 
 [[package]]
+name = "nanobind"
+version = "3.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/07/11/69cf231c4f3ac4fa724a0b1933c3650fb65aff6b9d7a4c2573b9e4e40077/nanobind-3.0.1.tar.gz", hash = "sha256:f7f0a889c8fb80deaacb95e918d88e05148850a32d2b8eda28446291b2bf7c35", size = 1142340, upload-time = "2026-08-27T22:45:21.806Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1c/cf/261b8281d410d99b22ce47559ce56f98c7548dccf8c25ed70a51fbf42d1f/nanobind-3.0.1-py3-none-any.whl", hash = "sha256:4b49491fe8bf483a5e0342125b8fe56237e490ba642c7e296170b8cd256a7764", size = 316363, upload-time = "2026-08-27T22:45:20.155Z" },
+]
+
+[[package]]
 name = "nest-asyncio"
 version = "1.6.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1939,6 +1952,19 @@ dependencies = [
     { name = "requests" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/74/34/cd4697bc1f56fe15fd33e1edab26a1d4881977d1eed48c0f95b1d5c016c4/scgraph-3.4.1.tar.gz", hash = "sha256:87894cecff974ae9a8c32e8dd2a668cd73483e807d0cdfdcc1a7bc53ba6b5fc7", size = 111548, upload-time = "2026-07-20T18:10:55.335Z" }
+
+[[package]]
+name = "scikit-build-core"
+version = "1.0.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+    { name = "pathspec" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8d/7c/0f69b0c7150ce4bcee78c199fe3b7e03a6e01578451bd5d5d1a58beb32f9/scikit_build_core-1.0.3.tar.gz", hash = "sha256:a4d7a05978ee37975c37743510c8991e2debce7ef83afb0a07c0c576fd4f16e8", size = 477539, upload-time = "2026-07-12T05:08:30.298Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b7/b0/7ad8fa9aebb0835b2e20afebf1483cbe175d1612fe01e85042ce9ced8755/scikit_build_core-1.0.3-py3-none-any.whl", hash = "sha256:ae95427b7d3c14a6cf8bbfd4d901f6138ab64c99e20cbe8ea7d75cd26093f085", size = 278294, upload-time = "2026-07-12T05:08:28.725Z" },
+]
 
 [[package]]
 name = "scipy"

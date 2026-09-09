@@ -266,3 +266,25 @@ def convert_from_constant_degree(
         "distance_matrix": distance_matrix[:cd_original_graph_len],
         "predecessor_matrix": predecessor_matrix_converted,
     }
+
+
+def has_cpp() -> bool:
+    """
+    Check if the compiled C++ extension is available.
+    """
+    try:
+        from bmsspy._cpp import BmsspC  # noqa: F401
+
+        return True
+    except ImportError:
+        return False
+
+
+def cpp_check() -> None:
+    """
+    Print whether C++ acceleration or pure Python implementation is being used.
+    """
+    if has_cpp():
+        print("Using C++ & Python implementation of bmsspy.")
+    else:
+        print("Using Pure Python implementation of bmsspy.")
