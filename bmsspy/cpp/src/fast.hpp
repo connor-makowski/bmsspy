@@ -14,13 +14,13 @@ public:
     std::vector<int> memb;
     std::vector<int> data;
 
-    FastSet(int n = 0) : size(n), scnt(0), memb(n, 0) {
+    FastSet(int n = 0) : size(n), scnt(1), memb(n, 0) {
         data.reserve(std::min(n, 1024));
     }
 
     void init(int n) {
         size = n;
-        scnt = 0;
+        scnt = 1;
         memb.assign(n, 0);
         data.clear();
         data.reserve(std::min(n, 1024));
@@ -83,13 +83,13 @@ public:
     std::vector<T> vals;
     std::vector<int> data;
 
-    FastDict(int n = 0) : size(n), scnt(0), memb(n, 0), vals(n) {
+    FastDict(int n = 0) : size(n), scnt(1), memb(n, 0), vals(n) {
         data.reserve(std::min(n, 1024));
     }
 
     void init(int n) {
         size = n;
-        scnt = 0;
+        scnt = 1;
         memb.assign(n, 0);
         vals.assign(n, T{});
         data.clear();
@@ -155,11 +155,11 @@ public:
     std::vector<int> memb;
     std::vector<T> vals;
 
-    FastLookup(int n = 0) : size(n), scnt(0), memb(n, 0), vals(n) {}
+    FastLookup(int n = 0) : size(n), scnt(1), memb(n, 0), vals(n) {}
 
     void init(int n) {
         size = n;
-        scnt = 0;
+        scnt = 1;
         memb.assign(n, 0);
         vals.assign(n, T{});
     }

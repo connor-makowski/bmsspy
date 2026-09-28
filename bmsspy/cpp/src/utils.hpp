@@ -21,6 +21,98 @@ struct ConstantDegreeResult {
     size_t original_graph_len;
 };
 
+inline ConstantDegreeResult convert_to_constant_degree(const AdjGraph& original_graph) {
+    bool two_in_two_out = true;
+    size_t original_graph_len = original_graph.size();
+    AdjGraph graph = original_graph;
+    AdjGraph in_graph(original_graph_len);
+
+    for (size_t node_idx = 0; node_idx < original_graph_len; ++node_idx) {
+        for (const auto& edge : graph[node_idx]) {
+            in_graph[edge.target].push_back({static_cast<int>(node_idx), edge.weight});
+        }
+    }
+
+    std::vector<std::pair<size_t, size_t>> nodes_to_partition;
+    for (size_t node_idx = 0; node_idx < original_graph_len; ++node_idx) {
+        size_t indegree = in_graph[node_idx].size();
+        size_t outdegree = graph[node_idx].size();
+        if (indegree > 2 || outdegree > 2 || (indegree + outdegree) > 3) {
+            size_t num_partitions = two_in_two_out ? std::max(indegree, outdegree) : (indegree + outdegree);
+            nodes_to_partition.push_back({node_idx, num_partitions});
+        }
+    }
+
+    std::vector<int> idx_map(original_graph_len);
+    for (size_t i = 0; i < original_graph_len; ++i) {
+        idx_map[i] = static_cast<int>(i);
+    }
+
+    for (const auto& [node_idx, num_partitions] : nodes_to_partition) {
+        std::vector<int> local_idx_mapping;
+        local_idx_mapping.reserve(num_partitions);
+        local_idx_mapping.push_back(static_cast<int>(node_idx));
+
+        size_t curr_len = graph.size();
+        for (size_t p = 1; p < num_partitions; ++p) {
+            local_idx_mapping.push_back(static_cast<int>(curr_len + p - 1));
+        }
+
+        graph.resize(curr_len + num_partitions - 1);
+        in_graph.resize(curr_len + num_partitions - 1);
+        idx_map.resize(curr_len + num_partitions - 1, static_cast<int>(node_idx));
+
+        std::vector<Edge> out_edges = std::move(graph[node_idx]);
+        std::vector<Edge> in_edges = std::move(in_graph[node_idx]);
+
+        graph[node_idx].clear();
+        in_graph[node_idx].clear();
+
+        size_t local_idx = 0;
+        for (const auto& edge : out_edges) {
+            int new_idx = local_idx_mapping[local_idx];
+            graph[new_idx].push_back(edge);
+
+            auto& in_vec = in_graph[edge.target];
+            for (auto it = in_vec.begin(); it != in_vec.end(); ++it) {
+                if (it->target == static_cast<int>(node_idx)) {
+                    in_vec.erase(it);
+                    break;
+                }
+            }
+            in_vec.push_back({new_idx, edge.weight});
+            ++local_idx;
+        }
+
+        if (two_in_two_out) {
+            local_idx = 0;
+        }
+        for (const auto& edge : in_edges) {
+            int new_idx = local_idx_mapping[local_idx];
+            in_graph[new_idx].push_back(edge);
+
+            auto& out_vec = graph[edge.target];
+            for (auto it = out_vec.begin(); it != out_vec.end(); ++it) {
+                if (it->target == static_cast<int>(node_idx)) {
+                    out_vec.erase(it);
+                    break;
+                }
+            }
+            out_vec.push_back({new_idx, edge.weight});
+            ++local_idx;
+        }
+
+        for (size_t item_idx = 0; item_idx < local_idx_mapping.size(); ++item_idx) {
+            int from_idx = local_idx_mapping[item_idx];
+            int to_idx = local_idx_mapping[(item_idx + 1) % local_idx_mapping.size()];
+            graph[from_idx].push_back({to_idx, 0.0});
+            in_graph[to_idx].push_back({from_idx, 0.0});
+        }
+    }
+
+    return {graph, idx_map, original_graph_len};
+}
+
 inline ConstantDegreeResult convert_to_constant_out_degree(const AdjGraph& original_graph, int out_degree = 2) {
     size_t original_graph_len = original_graph.size();
     AdjGraph graph = original_graph;

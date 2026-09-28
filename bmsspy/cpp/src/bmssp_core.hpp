@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <utility>
 #include <stdexcept>
+#include <iostream>
 #include "fast.hpp"
 #include "data_structure.hpp"
 #include "utils.hpp"
@@ -249,7 +250,8 @@ public:
         const std::vector<int>& frontier
     ) {
         if (recursion_depth == 0) {
-            return base_case(upper_bound, frontier);
+            auto res = base_case(upper_bound, frontier);
+            return res;
         }
 
         auto [pivots, temp_frontier] = find_pivots(upper_bound, frontier);

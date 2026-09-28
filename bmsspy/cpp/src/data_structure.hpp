@@ -11,8 +11,8 @@
 
 namespace bmsspy {
 
-using dist_t = __float128;
-constexpr dist_t INF_VAL = __builtin_infq();
+using dist_t = __int128_t;
+constexpr dist_t INF_VAL = static_cast<__int128_t>((static_cast<unsigned __int128>(1) << 126) - 1);
 
 struct LinkedList;
 
@@ -23,8 +23,8 @@ struct LinkedListNode {
     LinkedListNode* next = nullptr;
     LinkedListNode* prev = nullptr;
 
-    LinkedListNode(int k = 0, dist_t v = 0.0L, LinkedList* parent = nullptr)
-        : key(k), value(v), parent_list(parent), next(nullptr), prev(nullptr) {}
+    LinkedListNode(int key_val = 0, dist_t val = 0, LinkedList* parent = nullptr)
+        : key(key_val), value(val), parent_list(parent), next(nullptr), prev(nullptr) {}
 };
 
 struct LinkedList {
@@ -87,6 +87,7 @@ public:
     size_t subset_size;
     size_t pull_size;
     dist_t upper_bound;
+    size_t total_keys = 0;
     FastLookup<std::pair<int, LinkedListNode*>>* keys; // shared per depth
     LinkedList* D0 = nullptr;
     RBTree<dist_t, LinkedList*> D1;
@@ -96,7 +97,7 @@ public:
         size_t subset_sz,
         dist_t ub,
         FastLookup<std::pair<int, LinkedListNode*>>* lookup
-    ) : upper_bound(ub), keys(lookup) {
+    ) : upper_bound(ub), total_keys(0), keys(lookup) {
         subset_size = std::max(size_t(2), subset_sz);
         pull_size = std::max(size_t(1), subset_sz);
         D0 = new LinkedList();
@@ -118,6 +119,7 @@ public:
         std::pair<int, LinkedListNode*> item;
         if (!keys->get(key, item)) return;
         keys->invalidate(key);
+        --total_keys;
         LinkedListNode* list_node = item.second;
         if (!list_node) return;
         LinkedList* linked_list = list_node->parent_list;
@@ -146,6 +148,7 @@ public:
         std::pair<int, LinkedListNode*> item;
         if (!keys->get(key, item)) return;
         keys->invalidate(key);
+        --total_keys;
         LinkedListNode* list_node = item.second;
         if (!list_node) return;
         LinkedList* linked_list = list_node->parent_list;
@@ -176,6 +179,7 @@ public:
                 delete_d1(key);
             }
         }
+        ++total_keys;
 
         auto* block = D1.find(value, "upper");
         if (!block) {
@@ -247,6 +251,7 @@ public:
         }
 
         if (filtered.empty()) return;
+        total_keys += filtered.size();
 
         if (filtered.size() <= subset_size) {
             LinkedList* old_head = D0;
@@ -373,9 +378,7 @@ public:
     }
 
     bool is_empty() const {
-        bool d0_empty = (!D0 || D0->is_empty());
-        bool d1_empty = (!D1.root || (D1.root->val && D1.root->val->is_empty() && D1.get_min(D1.root) == D1.root));
-        return d0_empty && d1_empty;
+        return total_keys == 0;
     }
 };
 

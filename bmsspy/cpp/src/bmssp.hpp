@@ -24,16 +24,19 @@ public:
     AdjGraph original_graph;
     int precision;
     bool use_constant_degree_graph;
+    std::string constant_degree_mode;
 
     ConstantDegreeResult cd_info;
     AdjGraph used_graph;
     AdjGraphWithAdj edge_adj_graph;
     dist_t counter_value;
+    dist_t weight_multiplier;
 
     CppBmssp(
         const AdjGraph& graph,
         int prec = 6,
-        bool use_cd = true
+        bool use_cd = true,
+        const std::string& cd_mode = "degree"
     );
 
     BmsspSolveResult solve(

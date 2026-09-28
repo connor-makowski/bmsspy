@@ -156,6 +156,7 @@ from bmsspy.helpers.utils import has_cpp, cpp_check
 try:
     from bmsspy._cpp import BmsspC
 except ImportError:
+
     class BmsspC:  # type: ignore
         def __init__(self, *args, **kwargs):
             raise ImportError(

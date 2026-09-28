@@ -208,3 +208,35 @@ def test_bmssp_c_helper_bindings():
     assert len(sub) == 2
     assert sub == [3, 1]
     assert rem == 20.0
+
+
+def test_bmssp_c_constant_degree_options():
+    if not has_cpp():
+        pytest.skip("C++ extension not available")
+    graph = [
+        {1: 1.0, 2: 2.0, 3: 5.0},
+        {2: 1.0, 3: 2.0},
+        {3: 1.0},
+        {},
+    ]
+    # Test all variations of constant degree mode options
+    modes = [
+        True,
+        "constant_degree",
+        "degree",
+        "constant_out_degree",
+        "out_degree",
+        False,
+        None,
+    ]
+    for mode in modes:
+        py_sol = Bmssp(graph, use_constant_degree_graph=mode).solve(0)
+        c_sol = BmsspC(graph, use_constant_degree_graph=mode).solve(0)
+        validate(c_sol["distance_matrix"], py_sol["distance_matrix"])
+        assert c_sol["predecessor"] == py_sol["predecessor"]
+
+    # Invalid mode should raise ValueError / std::invalid_argument
+    with pytest.raises(Exception):
+        Bmssp(graph, use_constant_degree_graph="invalid_mode")
+    with pytest.raises(Exception):
+        BmsspC(graph, use_constant_degree_graph="invalid_mode")

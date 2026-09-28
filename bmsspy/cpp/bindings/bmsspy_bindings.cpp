@@ -40,8 +40,36 @@ public:
     CppBmssp solver;
     bool is_single_origin = true;
 
-    PyBmsspWrapper(nb::handle py_graph, int precision = 6, bool use_cd = true)
-        : solver(py_graph_to_cpp(py_graph), precision, use_cd) {}
+    static std::pair<bool, std::string> parse_use_cd(nb::handle use_cd) {
+        if (!use_cd.is_valid() || use_cd.is_none()) {
+            if (!use_cd.is_valid()) {
+                return {true, "degree"};
+            }
+            return {false, "none"};
+        } else if (nb::isinstance<nb::bool_>(use_cd)) {
+            bool val = nb::cast<bool>(use_cd);
+            return {val, val ? "degree" : "none"};
+        } else if (nb::isinstance<nb::str>(use_cd)) {
+            std::string s = nb::cast<std::string>(use_cd);
+            if (s == "out_degree" || s == "constant_out_degree" || s == "out") {
+                return {true, "out_degree"};
+            } else if (s == "degree" || s == "constant_degree" || s == "in_and_out" || s == "both") {
+                return {true, "degree"};
+            } else if (s == "none" || s == "false" || s == "") {
+                return {false, "none"};
+            } else {
+                throw std::invalid_argument("Invalid value for use_constant_degree_graph: " + s + ". Expected True, False, 'constant_degree', or 'constant_out_degree'.");
+            }
+        } else {
+            throw std::invalid_argument("use_constant_degree_graph must be a bool, str, or None");
+        }
+    }
+
+    PyBmsspWrapper(nb::handle py_graph, int precision = 6, nb::handle use_cd = nb::handle())
+        : solver([&]() {
+            auto parsed = parse_use_cd(use_cd);
+            return CppBmssp(py_graph_to_cpp(py_graph), precision, parsed.first, parsed.second);
+        }()) {}
 
     nb::dict solve(
         nb::handle origin_id,
@@ -139,9 +167,7 @@ public:
     ListBmsspDataStructure ds;
 
     PyListBmsspDataStructure(size_t subset_sz, double ub, size_t lookup_sz = 100000)
-        : ds(subset_sz, static_cast<dist_t>(ub), &lookup) {
-        lookup.init(lookup_sz);
-    }
+        : lookup(lookup_sz), ds(subset_sz, static_cast<dist_t>(ub), &lookup) {}
 
     void insert_key_value(int key, double value) {
         ds.insert_key_value(key, static_cast<dist_t>(value));
@@ -175,10 +201,10 @@ NB_MODULE(_cpp, m) {
 
     nb::class_<bmsspy::PyBmsspWrapper> bmssp_cls(m, "BmsspC");
     bmssp_cls
-        .def(nb::init<nb::handle, int, bool>(),
+        .def(nb::init<nb::handle, int, nb::handle>(),
              nb::arg("graph"),
              nb::arg("precision") = 6,
-             nb::arg("use_constant_degree_graph") = true)
+             nb::arg("use_constant_degree_graph").none() = true)
         .def("solve", &bmsspy::PyBmsspWrapper::solve,
              nb::arg("origin_id"),
              nb::arg("destination_id") = nb::none(),
@@ -209,5 +235,49 @@ NB_MODULE(_cpp, m) {
     m.def("median_of_medians", [](std::vector<double> arr, size_t split_size, bool split) {
         return bmsspy::median_of_medians<double>(arr, split_size, split);
     }, nb::arg("arr"), nb::arg("split_size") = 5, nb::arg("split") = true);
+
+    m.def("convert_to_constant_degree", [](nb::handle py_graph) {
+        bmsspy::AdjGraph g = bmsspy::py_graph_to_cpp(py_graph);
+        auto res = bmsspy::convert_to_constant_degree(g);
+        nb::list graph_list;
+        for (const auto& neighbors : res.graph) {
+            nb::dict d;
+            for (const auto& edge : neighbors) {
+                d[nb::cast(edge.target)] = nb::cast(edge.weight);
+            }
+            graph_list.append(d);
+        }
+        nb::list idx_list;
+        for (int idx : res.idx_map) {
+            idx_list.append(idx);
+        }
+        nb::dict out;
+        out["graph"] = graph_list;
+        out["idx_map"] = idx_list;
+        out["original_graph_len"] = res.original_graph_len;
+        return out;
+    }, nb::arg("graph"));
+
+    m.def("convert_to_constant_out_degree", [](nb::handle py_graph, int out_degree) {
+        bmsspy::AdjGraph g = bmsspy::py_graph_to_cpp(py_graph);
+        auto res = bmsspy::convert_to_constant_out_degree(g, out_degree);
+        nb::list graph_list;
+        for (const auto& neighbors : res.graph) {
+            nb::dict d;
+            for (const auto& edge : neighbors) {
+                d[nb::cast(edge.target)] = nb::cast(edge.weight);
+            }
+            graph_list.append(d);
+        }
+        nb::list idx_list;
+        for (int idx : res.idx_map) {
+            idx_list.append(idx);
+        }
+        nb::dict out;
+        out["graph"] = graph_list;
+        out["idx_map"] = idx_list;
+        out["original_graph_len"] = res.original_graph_len;
+        return out;
+    }, nb::arg("graph"), nb::arg("out_degree") = 2);
 }
 
