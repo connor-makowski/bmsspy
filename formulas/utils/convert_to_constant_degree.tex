@@ -1,0 +1,61 @@
+\begin{algorithm}[!htbp]
+\SingleSpacedXI
+\small
+\caption{{\color{Fuchsia}Convert to Constant Degree (\texttt{convert\_to\_constant\_degree})}}
+\label{alg:utils_convert_to_constant_degree}
+\SetAlgoLined
+\KwIn{graph $G$ (adjacency maps)}
+\KwOut{dictionary with converted graph, index map, and original graph length}
+
+$n \leftarrow |G|$; 
+{\color{Fuchsia}$G' \leftarrow \textsc{Copy}(G)$\tcp*{FIN: preserve the original input graph}}
+$G_{\text{in}} \leftarrow [\,\{\},\dots,\{\}\,]$ \tcp*{initialize $n$ empty maps for incoming edges}
+\For{$u \leftarrow 0$ \KwTo $n-1$}{
+  \ForEach{$(v,w) \in G'[u]$}{
+    $G_{\text{in}}[v][u] \leftarrow w$\;
+  }
+}
+$M \leftarrow [0,1,\dots,n-1]$\;
+
+\For{$u \leftarrow 0$ \KwTo $n-1$}{
+  $d_{\text{in}} \leftarrow |G_{\text{in}}[u]|$; $d_{\text{out}} \leftarrow |G'[u]|$\;
+  \If{$d_{\text{in}} > 2$ \textbf{or} $d_{\text{out}} > 2$ \textbf{or} $(d_{\text{in}} + d_{\text{out}}) > 3$}{
+    $k \leftarrow \max(d_{\text{in}}, d_{\text{out}})$\tcp*{number of partitions}
+    $\textit{parts} \leftarrow [u,\, |G'|,\, |G'|+1,\,\dots,\, |G'|+k-2]$\;
+    extend $G'$ and $G_{\text{in}}$ with $(k-1)$ empty maps\;
+    extend $M$ with $(k-1)$ copies of $u$\;
+
+    $\textit{out\_edges} \leftarrow G'[u]$; $\textit{in\_edges} \leftarrow G_{\text{in}}[u]$\;
+    $G'[u] \leftarrow \{\}$; $G_{\text{in}}[u] \leftarrow \{\}$ \tcp*{clear original node's edges}
+
+    \tcp{Assign one outgoing edge per partition node}
+    $i \leftarrow 0$\;
+    \ForEach{$(v,w) \in \textit{out\_edges}$}{
+      $p \leftarrow \textit{parts}[i]$\;
+      $G'[p][v] \leftarrow w$\;
+      $G_{\text{in}}[v].\textsc{Remove}(u)$\;
+      $G_{\text{in}}[v][p] \leftarrow w$\;
+      $i \leftarrow i + 1$\;
+    }
+
+    \tcp{Assign one incoming edge per partition node}
+    $i \leftarrow 0$\;
+    \ForEach{$(v,w) \in \textit{in\_edges}$}{
+      $p \leftarrow \textit{parts}[i]$\;
+      $G_{\text{in}}[p][v] \leftarrow w$\;
+      $G'[v].\textsc{Remove}(u)$\;
+      $G'[v][p] \leftarrow w$\;
+      $i \leftarrow i + 1$\;
+    }
+
+    \tcp{Add cycle edges of weight $0$ between all partition nodes}
+    \For{$j \leftarrow 0$ \KwTo $k-1$}{
+      $u_{\text{from}} \leftarrow \textit{parts}[j]$\;
+      $u_{\text{to}} \leftarrow \textit{parts}[(j+1)\bmod k]$\;
+      $G'[u_{\text{from}}][u_{\text{to}}] \leftarrow 0$\;
+      $G_{\text{in}}[u_{\text{to}}][u_{\text{from}}] \leftarrow 0$\;
+    }
+  }
+}
+\Return $C \gets \{\textit{graph} \leftarrow G', \textit{idx\_map} \leftarrow M, \textit{original\_graph\_len} \leftarrow n\}$\;
+\end{algorithm}
