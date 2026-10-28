@@ -21,6 +21,8 @@ def test_bmssp_with_destination():
     )
     output = graph.solve(0, 3)
     assert output["length"] == 2 and output["path"] == [0, 2, 3]
+    output = Bmssp([{1: 1}, {0: 1}]).solve(1, 0)
+    assert output["length"] == 1 and output["path"] == [1, 0]
 
 
 def test_bmssp_zero_weight():

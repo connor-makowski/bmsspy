@@ -197,10 +197,12 @@ class Bmssp:
                 reconstruct_path(
                     destination_id=destination_id, predecessor=predecessor
                 )
-                if destination_id
+                if destination_id is not None
                 else None
             ),
             "length": (
-                distance_matrix[destination_id] if destination_id else None
+                distance_matrix[destination_id]
+                if destination_id is not None
+                else None
             ),
         }
