@@ -5,6 +5,7 @@
 #include <limits>
 #include <algorithm>
 #include <utility>
+#include <cstddef>
 
 namespace bmsspy {
 

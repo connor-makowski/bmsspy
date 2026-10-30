@@ -1,5 +1,6 @@
 #include "bmssp.hpp"
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 
 namespace bmsspy {

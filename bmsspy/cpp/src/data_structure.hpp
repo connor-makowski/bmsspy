@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <stdexcept>
 #include <utility>
+#include <cstddef>
+#include <cstdint>
 #include "fast.hpp"
 #include "rbtree.hpp"
 #include "quicksplit.hpp"

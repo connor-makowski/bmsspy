@@ -8,6 +8,8 @@
 #include <utility>
 #include <stdexcept>
 #include <iostream>
+#include <cstddef>
+#include <cstdint>
 #include "fast.hpp"
 #include "data_structure.hpp"
 #include "utils.hpp"
