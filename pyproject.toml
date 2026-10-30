@@ -89,7 +89,7 @@ pythonpath = ["."]
 
 [tool.cibuildwheel]
 build = "cp311-* cp312-* cp313-* cp314-*"
-skip = "*-win32 *_i686 pp*"
+skip = "*-win32 *_i686"
 test-command = "pytest {project}/test"
 test-requires = ["pytest>=9.0.3"]
 
