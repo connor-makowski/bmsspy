@@ -1,10 +1,11 @@
 \begin{algorithm}[!htbp]
 \SingleSpacedXI
+\small
 \caption{{\color{Bittersweet}Is Pivot (\texttt{is\_pivot})}}
 \label{alg:utils_is_pivot}
 \SetAlgoLined
-\KwIn{root $r$, directed forest $F$ (adjacency list: $F[v]$ = children of $v$), threshold $t$}
-\KwOut{\textbf{True} if number of nodes reachable from $r$ is $\geq t$; \textbf{False} otherwise}
+\KwIn{root $r$, directed forest $F$ (adjacency list: $F[v]$ = children of $v$), threshold $k$}
+\KwOut{\textbf{True} if number of nodes reachable from $r$ is $\geq k$; \textbf{False} otherwise}
 
 \BlankLine
 $\textit{seen} \leftarrow \emptyset$; $\textit{stack} \leftarrow [\,r\,]$; $cnt \leftarrow 0$\;
@@ -13,7 +14,7 @@ $\textit{seen} \leftarrow \emptyset$; $\textit{stack} \leftarrow [\,r\,]$; $cnt 
   $x \leftarrow$ \textsc{pop}(\textit{stack})\;
   \If{$x \in \textit{seen}$}{\textbf{continue}}
   $cnt \leftarrow cnt + 1$\;
-  \If{$cnt \geq t$}{\Return{\textbf{True}}}
+  \If{$cnt \geq k$}{\Return{\textbf{True}}}
   $\textit{seen} \leftarrow \textit{seen} \cup \{x\}$\;
   \ForEach{$y \in F[x]$}{
     \textsc{push}(\textit{stack}, $y$)\;

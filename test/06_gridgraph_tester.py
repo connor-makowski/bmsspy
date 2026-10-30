@@ -1,6 +1,6 @@
 from scgraph import GridGraph, Graph
 from scgraph.utils import hard_round
-from bmsspy.entrypoint import Bmssp
+from bmsspy import Bmssp, BmsspC, has_cpp
 
 
 def make_gridgraph(x_size, y_size):
@@ -36,20 +36,37 @@ def validate(realized, expected):
 
 
 def check_correctness(graph, origin_id):
-    bmssp_graph = Bmssp(graph=graph)
-    bmssp_graph_output = bmssp_graph.solve(origin_id=origin_id)
     dm_sp_tree = Graph(graph).get_shortest_path_tree(origin_id=origin_id)
+    expected = dm_sp_tree["distance_matrix"][: len(graph)]
+
+    bmssp_graph = Bmssp(graph=graph, use_constant_degree_graph=True)
+    bmssp_graph_output = bmssp_graph.solve(origin_id=origin_id)
     validate(
         realized=bmssp_graph_output["distance_matrix"],
-        expected=dm_sp_tree["distance_matrix"][: len(graph)],
+        expected=expected,
     )
 
     bmmssp_no_cd = Bmssp(graph=graph, use_constant_degree_graph=False)
     bmssp_no_cd_output = bmmssp_no_cd.solve(origin_id=origin_id)
     validate(
         realized=bmssp_no_cd_output["distance_matrix"],
-        expected=dm_sp_tree["distance_matrix"][: len(graph)],
+        expected=expected,
     )
+
+    if has_cpp():
+        bmssp_c_graph = BmsspC(graph=graph, use_constant_degree_graph=True)
+        bmssp_c_output = bmssp_c_graph.solve(origin_id=origin_id)
+        validate(
+            realized=bmssp_c_output["distance_matrix"],
+            expected=expected,
+        )
+
+        bmssp_c_no_cd = BmsspC(graph=graph, use_constant_degree_graph=False)
+        bmssp_c_no_cd_output = bmssp_c_no_cd.solve(origin_id=origin_id)
+        validate(
+            realized=bmssp_c_no_cd_output["distance_matrix"],
+            expected=expected,
+        )
 
 
 def test_gridgraph():

@@ -1,7 +1,7 @@
 from scgraph import GeoGraph, Graph
 from scgraph.utils import hard_round
 from pamda import pamda
-from bmsspy import Bmssp
+from bmsspy import Bmssp, BmsspC, has_cpp
 
 marnet_graph = GeoGraph.load_geograph("marnet").graph
 us_freeway_graph = GeoGraph.load_geograph("us_freeway").graph
@@ -31,19 +31,37 @@ def validate(realized, expected):
 
 
 def check_correctness(graph, origin_id):
-    bmssp_graph = Bmssp(graph=graph)
     dm_sp_tree = Graph(graph).get_shortest_path_tree(origin_id=origin_id)
+    expected = dm_sp_tree["distance_matrix"][: len(graph)]
+
+    bmssp_graph = Bmssp(graph=graph, use_constant_degree_graph=True)
     validate(
         realized=bmssp_graph.solve(origin_id=origin_id)["distance_matrix"],
-        expected=dm_sp_tree["distance_matrix"][: len(graph)],
+        expected=expected,
     )
 
     bmssp_no_cd = Bmssp(graph=graph, use_constant_degree_graph=False)
-    dm_sp_tree_no_cd = Graph(graph).get_shortest_path_tree(origin_id=origin_id)
     validate(
         realized=bmssp_no_cd.solve(origin_id=origin_id)["distance_matrix"],
-        expected=dm_sp_tree_no_cd["distance_matrix"][: len(graph)],
+        expected=expected,
     )
+
+    if has_cpp():
+        bmssp_c_graph = BmsspC(graph=graph, use_constant_degree_graph=True)
+        validate(
+            realized=bmssp_c_graph.solve(origin_id=origin_id)[
+                "distance_matrix"
+            ],
+            expected=expected,
+        )
+
+        bmssp_c_no_cd = BmsspC(graph=graph, use_constant_degree_graph=False)
+        validate(
+            realized=bmssp_c_no_cd.solve(origin_id=origin_id)[
+                "distance_matrix"
+            ],
+            expected=expected,
+        )
 
 
 def test_comprehensive_bmssp():
@@ -95,6 +113,26 @@ def test_bmssp_time():
     Graph(us_freeway_graph).get_shortest_path_tree(origin_id=0)
     # Graph(world_highways_and_marnet_graph).get_shortest_path_tree(origin_id=0)
 
+    if has_cpp():
+        marnet_cpp = BmsspC(graph=marnet_graph)
+        us_freeway_cpp = BmsspC(graph=us_freeway_graph)
+        marnet_cpp_no_cd = BmsspC(
+            graph=marnet_graph, use_constant_degree_graph=False
+        )
+        us_freeway_cpp_no_cd = BmsspC(
+            graph=us_freeway_graph, use_constant_degree_graph=False
+        )
+
+        marnet_cpp.solve(origin_id=0, destination_id=5)
+        marnet_cpp.solve(origin_id=100, destination_id=7999)
+        marnet_cpp.solve(origin_id=4022, destination_id=8342)
+
+        us_freeway_cpp.solve(origin_id=0, destination_id=5)
+        us_freeway_cpp.solve(origin_id=4022, destination_id=8342)
+
+        marnet_cpp_no_cd.solve(origin_id=0, destination_id=5)
+        us_freeway_cpp_no_cd.solve(origin_id=0, destination_id=5)
+
 
 if __name__ == "__main__":
     import time
@@ -133,7 +171,9 @@ if __name__ == "__main__":
         )
 
         bmssp_no_cd = Bmssp(graph=graph, use_constant_degree_graph=False)
-        dm_sp_tree_no_cd = Graph(graph).get_shortest_path_tree(origin_id=origin_id)
+        dm_sp_tree_no_cd = Graph(graph).get_shortest_path_tree(
+            origin_id=origin_id
+        )
         validate_print(
             name=name + "(Not Constant Degree)",
             realized=bmssp_no_cd.solve(origin_id=origin_id)["distance_matrix"],

@@ -1,5 +1,12 @@
 import random
-from bmsspy.helpers.quicksplit import quicksplit, sortsplit, quicksplit_dict
+from bmsspy.helpers.quicksplit import (
+    quicksplit,
+    sortsplit,
+    quicksplit_dict,
+    median as py_median,
+    median_of_medians as py_mom,
+)
+from bmsspy import has_cpp
 
 
 def test_quicksplit():
@@ -26,6 +33,35 @@ def test_quicksplit():
             == sortsplit_output["higher"]
         )
         assert quicksplit_output["pivot"] == sortsplit_output["pivot"]
+
+
+def test_median_and_mom():
+    random.seed(42)
+    test_arrays = [
+        [5.0, 2.0, 9.0, 1.0, 7.0],
+        [1.0, 2.0, 3.0, 4.0],
+        [random.random() for _ in range(15)],
+        [random.random() for _ in range(100)],
+    ]
+    for arr in test_arrays:
+        for split in [True, False]:
+            val = py_median(arr, split=split)
+            if has_cpp():
+                from bmsspy.cpp import median as cpp_median
+
+                assert abs(cpp_median(arr, split=split) - val) < 1e-9
+
+    mom_arrays = [
+        [5.0, 2.0, 9.0, 1.0, 7.0],
+        [random.random() for _ in range(25)],
+        [random.random() for _ in range(100)],
+    ]
+    for arr in mom_arrays:
+        val = py_mom(arr, 5, True)
+        if has_cpp():
+            from bmsspy.cpp import median_of_medians as cpp_mom
+
+            assert abs(cpp_mom(arr, 5, True) - val) < 1e-9
 
 
 if __name__ == "__main__":

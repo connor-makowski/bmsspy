@@ -1,6 +1,7 @@
 \begin{algorithm}[!htbp]
 \SingleSpacedXI
-\caption{{\color{BLue}Convert from Constant Out-Degree (\texttt{convert\_from\_constant\_out\_degree})}}
+\small
+\caption{{\color{Fuchsia}Convert from Constant Degree (\texttt{convert\_from\_constant\_degree})}}
 \label{alg:utils_convert_from_constant_degree}
 \SetAlgoLined
 \KwIn{$\text{dist}_{\text{cd}}$ (distance matrix), $\text{pred}_{\text{cd}}$ (predecessor matrix), constant-degree dictionary $C$}
@@ -29,5 +30,5 @@ $\text{pred} \leftarrow [\,]$ \tcp*{initialize empty predecessor matrix}
   }
 }
 
-\Return $\{\textit{distance\_matrix} \leftarrow \text{dist}_{\text{cd}}[0\!\!:\!\!n], \textit{predecessor\_matrix} \leftarrow \text{pred}\}$\;
+\Return $\{\textit{distance\_matrix} \leftarrow \text{dist}_{\text{cd}}[0..n-1], \textit{predecessor\_matrix} \leftarrow \text{pred}\}$\;
 \end{algorithm}
