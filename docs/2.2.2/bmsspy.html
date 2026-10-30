@@ -23,13 +23,26 @@
 
             <h2>Contents</h2>
             <ul>
-  <li><a href="#bmsspy">BMSSPy</a></li>
-  <li><a href="#setup">Setup</a></li>
-  <li><a href="#contributing">Contributing</a>
+  <li><a href="#bmsspy">BMSSPy</a>
   <ul>
-    <li><a href="#development">Development</a></li>
-    <li><a href="#making-changes">Making Changes</a></li>
-    <li><a href="#development-commands">Development Commands</a></li>
+    <li><a href="#citation">Citation</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#quick-start">Quick Start</a></li>
+  </ul></li>
+  <li><a href="#core-concepts">Core Concepts</a>
+  <ul>
+    <li><a href="#graph-structure">Graph Structure</a></li>
+  </ul></li>
+  <li><a href="#usage-guide">Usage Guide</a>
+  <ul>
+    <li><a href="#solvers-c-vs-pure-python">Solvers: C++ vs Pure Python</a></li>
+    <li><a href="#multi-source-shortest-path-mssp">Multi-Source Shortest Path (MSSP)</a></li>
+    <li><a href="#constant-degree-graph-conversion">Constant-Degree Graph Conversion</a></li>
+    <li><a href="#algorithm-parameters-tuning">Algorithm Parameters &amp; Tuning</a></li>
+  </ul></li>
+  <li><a href="#development">Development</a>
+  <ul>
+    <li><a href="#references">References</a></li>
   </ul></li>
 </ul>
 
@@ -37,15 +50,30 @@
             <h2>Submodules</h2>
             <ul>
                     <li><a href="bmsspy/core.html">core</a></li>
+                    <li><a href="bmsspy/cpp.html">cpp</a></li>
                     <li><a href="bmsspy/data_structures.html">data_structures</a></li>
                     <li><a href="bmsspy/entrypoint.html">entrypoint</a></li>
                     <li><a href="bmsspy/helpers.html">helpers</a></li>
             </ul>
 
+            <h2>API Documentation</h2>
+                <ul class="memberlist">
+            <li>
+                    <a class="class" href="#BmsspC">BmsspC</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#BmsspC.__init__">BmsspC</a>
+                        </li>
+                </ul>
+
+            </li>
+    </ul>
+
 
 <footer>
 <select id="version-selector">
     <option value="latest">latest</option>
+        <option value="2.3.0">2.3.0</option>
         <option value="2.2.2">2.2.2</option>
         <option value="2.1.1">2.1.1</option>
         <option value="2.0.1">2.0.1</option>
@@ -95,179 +123,459 @@ bmsspy    </h1>
 
 <p><a href="https://badge.fury.io/py/bmsspy"><img src="https://badge.fury.io/py/bmsspy.svg" alt="PyPI version" /></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
-<!-- <a href="https://pypi.org/project/bmsspy/"><img src="https://img.shields.io/pypi/dm/bmsspy.svg?label=PyPI%20downloads" alt="PyPI Downloads" /></a> --></p>
+<a href="https://pepy.tech/project/bmsspy/"><img src="https://static.pepy.tech/badge/bmsspy" alt="PyPI Downloads" /></a></p>
 
-<p>A pure python bmssp implementation.</p>
+<p><strong>A high-performance Python and C++ implementation of the Bounded Multi-Source Shortest Path (BMSSP) algorithm.</strong></p>
 
-<h1 id="setup">Setup</h1>
-
-<p>Make sure you have Python 3.11.x (or higher) installed on your system. You can download it <a href="https://www.python.org/downloads/">here</a>.</p>
-
-<h3 id="installation">Installation</h3>
-
-<pre><code>pip install bmsspy
-</code></pre>
-
-<h3 id="documentation">Documentation</h3>
+<p>BMSSPy implements the Bounded Multi-Source Shortest Path (BMSSP) algorithm (<a href="https://arxiv.org/abs/2504.17033">Duan et al., 2025</a>), breaking Dijkstra's long-standing sorting barrier for shortest paths on directed graphs. It provides both an accessible pure-Python implementation and an optimized C++ extension powered by nanobind. BMSSPy supports single-source shortest paths (SSSP), multi-source shortest paths (MSSP), point-to-point queries, predecessor tree extraction, and optional constant-degree graph transformations.</p>
 
 <ul>
-<li>Github: <a href="https://github.com/connor-makowski/bmsspy">https://github.com/connor-makowski/bmsspy</a></li>
-<li>Docs: <a href="https://connor-makowski.github.io/bmsspy/bmsspy.html">https://connor-makowski.github.io/bmsspy/bmsspy.html</a></li>
-<li>Paper: <a href="https://ssrn.com/abstract=5777186">https://ssrn.com/abstract=5777186</a></li>
+<li><strong>Docs</strong>: <a href="https://connor-makowski.github.io/bmsspy/bmsspy.html">https://connor-makowski.github.io/bmsspy/bmsspy.html</a></li>
+<li><strong>GitHub</strong>: <a href="https://github.com/connor-makowski/bmsspy">https://github.com/connor-makowski/bmsspy</a></li>
+<li><strong>Bmsspy Paper</strong>: <a href="https://ssrn.com/abstract=5777186">https://ssrn.com/abstract=5777186</a></li>
+<li><strong>Original Algorithm Paper</strong>: <a href="https://arxiv.org/abs/2504.17033">https://arxiv.org/abs/2504.17033</a></li>
 </ul>
 
-<h3 id="how-to-cite-bmsspy-in-your-research">How to Cite BMSSPy in your Research</h3>
+<hr />
 
-<p>If you use BMSSPy for your research, please consider citing the following paper:</p>
+<h2 id="citation">Citation</h2>
+
+<p>If you use BMSSPy in your research, please cite:</p>
 
 <blockquote>
   <p>Makowski, Connor and Guter, Willem and Russell, Tim and Saragih, Austin, BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm (November 19, 2025). MIT Center for Transportation &amp; Logistics Research Paper No. 2025/034, Available at SSRN: <a href="https://ssrn.com/abstract=5777186">https://ssrn.com/abstract=5777186</a></p>
 </blockquote>
 
-<p>Or by using the BibTeX entry:</p>
-
-<pre><code>@article{makowski2025bmsspy,
-  title={BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm},
-  author={Makowski, Connor and Guter, Willem and Russell, Tim and Saragih, Austin},
-  journal={MIT Center for Transportation &amp; Logistics Research Paper Series},
-  number={2025-034},
-  year={2025},
-  url={https://ssrn.com/abstract=5777186}
-}
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="nc">@article</span><span class="p">{</span><span class="nl">makowski2025bmsspy</span><span class="p">,</span>
+<span class="w">  </span><span class="na">title</span><span class="p">=</span><span class="s">{BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">author</span><span class="p">=</span><span class="s">{Makowski, Connor and Guter, Willem and Russell, Tim and Saragih, Austin}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">journal</span><span class="p">=</span><span class="s">{MIT Center for Transportation &amp; Logistics Research Paper Series}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">number</span><span class="p">=</span><span class="s">{2025-034}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">year</span><span class="p">=</span><span class="s">{2025}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">url</span><span class="p">=</span><span class="s">{https://ssrn.com/abstract=5777186}</span>
+<span class="p">}</span>
 </code></pre>
+</div>
 
-<h3 id="use">Use</h3>
+<hr />
 
-<p>The example use cases in this section are based on the following graph:</p>
+<h2 id="installation">Installation</h2>
+
+<p>Make sure you have Python 3.11 or higher installed.</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bmsspy
+</code></pre>
+</div>
+
+<p>Pre-built binary wheels with C++ acceleration are provided for Linux, macOS, and Windows.</p>
+
+<h3 id="pure-python-installation-skip-binary-builds">Pure Python Installation (Skip Binary Builds)</h3>
+
+<p>If you want to install <code><a href="">bmsspy</a></code> in pure Python mode without compiling or using binary extensions (or in environments without a C++ compiler):</p>
+
+<ul>
+<li><p><strong>Linux / macOS / WSL2</strong>:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="nv">BMSSPY_NO_BUILD</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-binary<span class="w"> </span>bmsspy<span class="w"> </span>bmsspy
+</code></pre>
+</div>
+
+<p>Or with <code>uv</code>:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="nv">BMSSPY_NO_BUILD</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-binary<span class="w"> </span>bmsspy<span class="w"> </span>bmsspy
+</code></pre>
+</div></li>
+
+<li><p><strong>Windows (PowerShell)</strong>:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="nv">$env:BMSSPY_NO_BUILD</span><span class="p">=</span><span class="s2">&quot;1&quot;</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="p">-</span><span class="n">-no-binary</span> <span class="n">bmsspy</span> <span class="n">bmsspy</span>
+</code></pre>
+</div></li>
+
+<li><p><strong>Windows (CMD)</strong>:</p>
+
+<pre><code>set BMSSPY_NO_BUILD=1
+pip install --no-binary bmsspy bmsspy
+</code></pre></li>
+</ul>
+
+<h4 id="verifying-backend">Verifying Backend</h4>
+
+<p>Check whether C++ acceleration or the pure Python backend is active:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_cpp</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">has_cpp</span><span class="p">())</span>  <span class="c1"># True if compiled C++ extension is loaded, False otherwise</span>
+</code></pre>
+</div>
+
+<hr />
+
+<h2 id="quick-start">Quick Start</h2>
+
+<p>Solve single-source and point-to-point shortest paths on a directed weighted graph:</p>
 
 <p><img src="https://raw.githubusercontent.com/connor-makowski/bmsspy/main/static/readme_graph.png" alt="readme_graph" /></p>
 
 <div class="pdoc-code codehilite">
-<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bmssp</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bmssp</span><span class="p">,</span> <span class="n">BmsspC</span><span class="p">,</span> <span class="n">has_cpp</span>
 
-<span class="c1"># Graph with 5 nodes: 0..4</span>
-<span class="c1"># Adjacency-list representation with nonnegative weights</span>
+<span class="c1"># Directed graph with 5 nodes (0..4) represented as an adjacency list of dicts:</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>   <span class="c1"># 0 -&gt; 1 (1), 0 -&gt; 2 (1)</span>
-    <span class="p">{</span><span class="mi">2</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>   <span class="c1"># 1 -&gt; 2 (1), 1 -&gt; 3 (3)</span>
-    <span class="p">{</span><span class="mi">3</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>   <span class="c1"># 2 -&gt; 3 (1), 2 -&gt; 4 (2)</span>
-    <span class="p">{</span><span class="mi">4</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>         <span class="c1"># 3 -&gt; 4 (2)</span>
-    <span class="p">{}</span>              <span class="c1"># 4 has no outgoing edges</span>
+    <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>   <span class="c1"># 0 -&gt; 1 (w=1), 0 -&gt; 2 (w=1)</span>
+    <span class="p">{</span><span class="mi">2</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>   <span class="c1"># 1 -&gt; 2 (w=1), 1 -&gt; 3 (w=3)</span>
+    <span class="p">{</span><span class="mi">3</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>   <span class="c1"># 2 -&gt; 3 (w=1), 2 -&gt; 4 (w=2)</span>
+    <span class="p">{</span><span class="mi">4</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>         <span class="c1"># 3 -&gt; 4 (w=2)</span>
+    <span class="p">{},</span>             <span class="c1"># 4 has no outgoing edges</span>
 <span class="p">]</span>
 
-<span class="n">bmssp_graph</span> <span class="o">=</span> <span class="n">Bmssp</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span> <span class="c1"># Initialize the graph as a Bmssp graph</span>
+<span class="c1"># Use C++ acceleration if available, otherwise pure Python:</span>
+<span class="n">solver_cls</span> <span class="o">=</span> <span class="n">BmsspC</span> <span class="k">if</span> <span class="n">has_cpp</span><span class="p">()</span> <span class="k">else</span> <span class="n">Bmssp</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="n">solver_cls</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 
-<span class="c1"># Distances and predecessors from origin 0</span>
-<span class="n">res_0</span> <span class="o">=</span> <span class="n">bmssp_graph</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">origin_id</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">res_0</span><span class="p">)</span> <span class="c1">#=&gt;</span>
-<span class="c1"># {</span>
-<span class="c1">#     &#39;origin_id&#39;: 0,</span>
-<span class="c1">#     &#39;destination_id&#39;: None,</span>
-<span class="c1">#     &#39;predecessor&#39;: [-1, 0, 0, 2, 2],</span>
-<span class="c1">#     &#39;distance_matrix&#39;: [0.0, 1.0, 1.0, 2.0, 3.0],</span>
-<span class="c1">#     &#39;path&#39;: None,</span>
-<span class="c1">#     &#39;length&#39;: None</span>
-<span class="c1"># }</span>
+<span class="c1"># Single-source shortest path from origin 0:</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">origin_id</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;distance_matrix&quot;</span><span class="p">])</span>  <span class="c1">#=&gt; [0.0, 1.0, 1.0, 2.0, 3.0]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;predecessor&quot;</span><span class="p">])</span>      <span class="c1">#=&gt; [-1, 0, 0, 2, 2]</span>
 
-<span class="c1"># Shortest path from 0 to 4</span>
-<span class="n">res_0_4</span> <span class="o">=</span> <span class="n">bmssp_graph</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">origin_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">destination_id</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">res_0_4</span><span class="p">)</span> <span class="c1">#=&gt;</span>
-<span class="c1"># {</span>
-<span class="c1">#     &#39;origin_id&#39;: 0,</span>
-<span class="c1">#     &#39;destination_id&#39;: 4,</span>
-<span class="c1">#     &#39;predecessor&#39;: [-1, 0, 0, 2, 2],</span>
-<span class="c1">#     &#39;distance_matrix&#39;: [0.0, 1.0, 1.0, 2.0, 3.0],</span>
-<span class="c1">#     &#39;path&#39;: [0, 2, 4],</span>
-<span class="c1">#     &#39;length&#39;: 3</span>
-<span class="c1"># }</span>
+<span class="c1"># Point-to-point shortest path from 0 to 4:</span>
+<span class="n">res_p2p</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">origin_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">destination_id</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res_p2p</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span>    <span class="c1">#=&gt; [0, 2, 4]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res_p2p</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">])</span>  <span class="c1">#=&gt; 3.0</span>
 </code></pre>
 </div>
 
-<p>In the example above, we only use a single orign, however multiple origins are supported if passed as a set:</p>
+<h3 id="result-dictionary-structure">Result Dictionary Structure</h3>
+
+<p>The <code>.solve()</code> method returns a dictionary with the following keys:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>origin_id</code></td>
+  <td>Origin node ID (or list of origin IDs if a set was supplied)</td>
+</tr>
+<tr>
+  <td><code>destination_id</code></td>
+  <td>Destination node ID, or <code>None</code> if calculating the full shortest path tree</td>
+</tr>
+<tr>
+  <td><code>distance_matrix</code></td>
+  <td>List of shortest path distances from origin(s) to every node in the graph</td>
+</tr>
+<tr>
+  <td><code>predecessor</code></td>
+  <td>Predecessor list where <code>predecessor[i]</code> is the node visited immediately before <code>i</code></td>
+</tr>
+<tr>
+  <td><code>path</code></td>
+  <td>Reconstructed shortest path <code>[origin, ..., destination]</code>, or <code>None</code> if <code>destination_id</code> was not provided</td>
+</tr>
+<tr>
+  <td><code>length</code></td>
+  <td>Total distance along the shortest path to <code>destination_id</code>, or <code>None</code> if <code>destination_id</code> was not provided</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h1 id="core-concepts">Core Concepts</h1>
+
+<h2 id="graph-structure">Graph Structure</h2>
+
+<p>Graphs are represented as zero-indexed adjacency lists (a Python list of dictionaries):</p>
 
 <div class="pdoc-code codehilite">
-<pre><span></span><code><span class="c1"># Pass orgin_id as a set of ids</span>
-<span class="n">res_02</span> <span class="o">=</span> <span class="n">bmssp_graph</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">origin_id</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">res_02</span><span class="p">)</span> <span class="c1">#=&gt;</span>
-<span class="c1"># {</span>
-<span class="c1">#     &#39;origin_id&#39;: [0, 2],</span>
-<span class="c1">#     &#39;destination_id&#39;: None,</span>
-<span class="c1">#     &#39;predecessor&#39;: [-1, 0, -1, 2, 2],</span>
-<span class="c1">#     &#39;distance_matrix&#39;: [0.0, 1.0, 0.0, 1.0, 2.0],</span>
-<span class="c1">#     &#39;path&#39;: None,</span>
-<span class="c1">#     &#39;length&#39;: None</span>
-<span class="c1"># }</span>
+<pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">},</span>   <span class="c1"># Node 0 connects to node 1 (weight 5.0) and node 2 (weight 1.2)</span>
+    <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="mf">2.1</span><span class="p">},</span>   <span class="c1"># Node 1 connects to node 0 and node 2</span>
+    <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mf">2.1</span><span class="p">},</span>   <span class="c1"># Node 2 connects to node 0 and node 1</span>
+<span class="p">]</span>
 </code></pre>
 </div>
 
-<p>By default graphs that are given are converted to constant degree such that worst case asymtotic run times are based on the constant degree converted graphs. Before returning a result, the constant degree conversion is undone such that the results are in the original passed graph format.</p>
+<ul>
+<li>Each index in the list corresponds to a node ID (<code>0</code> to <code>n - 1</code>).</li>
+<li>Each dictionary maps neighbor IDs to non-negative edge weights (integer or float).</li>
+</ul>
 
-<p>Most real world graphs are not constant degree. Converting to constant degree graphs can add substantial operational overhead during pre and post processing as well as during the actual algorithmic runtime.</p>
+<hr />
 
-<p>To skip the constant degree conversion:</p>
+<h1 id="usage-guide">Usage Guide</h1>
+
+<h2 id="solvers-c-vs-pure-python">Solvers: C++ vs Pure Python</h2>
+
+<p>BMSSPy provides two solver implementations that share an identical interface:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Solver</th>
+  <th>Backend</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code><a href="#BmsspC">BmsspC</a></code></td>
+  <td>C++20 (<code>nanobind</code>)</td>
+  <td>Highly optimized native implementation for maximum performance on production workloads and benchmarks.</td>
+</tr>
+<tr>
+  <td><code>Bmssp</code></td>
+  <td>Pure Python</td>
+  <td>Reference implementation with zero binary dependencies, ideal for inspection, debugging, and environments without C++ toolchains.</td>
+</tr>
+</tbody>
+</table>
 
 <div class="pdoc-code codehilite">
-<pre><span></span><code><span class="c1"># Set use_constant_degree_graph=False</span>
-<span class="n">bmssp_graph</span> <span class="o">=</span> <span class="n">Bmssp</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span> <span class="n">use_constant_degree_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bmssp</span><span class="p">,</span> <span class="n">BmsspC</span><span class="p">,</span> <span class="n">has_cpp</span>
+
+<span class="c1"># Instantiate whichever solver suits your environment:</span>
+<span class="k">if</span> <span class="n">has_cpp</span><span class="p">():</span>
+    <span class="n">solver</span> <span class="o">=</span> <span class="n">BmsspC</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">solver</span> <span class="o">=</span> <span class="n">Bmssp</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 </code></pre>
 </div>
 
-<h1 id="contributing">Contributing</h1>
+<h2 id="multi-source-shortest-path-mssp">Multi-Source Shortest Path (MSSP)</h2>
 
-<p>Contributions are welcome! Please open an issue or submit a pull request.</p>
+<p>Pass a set of node IDs to <code>origin_id</code> to compute shortest paths originating simultaneously from multiple source vertices:</p>
 
-<h2 id="development">Development</h2>
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="n">solver</span> <span class="o">=</span> <span class="n">Bmssp</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 
-<p>To avoid extra development overhead, we expect all developers to use a unix based environment (Linux or Mac). If you use Windows, please use WSL2.</p>
+<span class="c1"># Compute distances from origin set {0, 2}</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">origin_id</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">})</span>
 
-<p>For development, we use <a href="https://docs.astral.sh/uv/">uv</a> to manage dependencies and run tests.</p>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;origin_id&quot;</span><span class="p">])</span>        <span class="c1">#=&gt; [0, 2]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;distance_matrix&quot;</span><span class="p">])</span>  <span class="c1">#=&gt; [0.0, 1.0, 0.0, 1.0, 2.0]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;predecessor&quot;</span><span class="p">])</span>      <span class="c1">#=&gt; [-1, 0, -1, 2, 2]</span>
+</code></pre>
+</div>
 
-<h2 id="making-changes">Making Changes</h2>
+<h2 id="constant-degree-graph-conversion">Constant-Degree Graph Conversion</h2>
 
-<p>1) Fork the repo and clone it locally.
-2) Make your modifications.
-3) Run tests and make sure they pass.
-4) Prettify your code.
-5) <strong>DO NOT GENERATE DOCS</strong>.
-    - We will generate the docs and update the version number when we are ready to release a new version.
-6) Only commit relevant changes and add clear commit messages.
-    - Atomic commits are preferred.
-7) Submit a pull request.</p>
+<p>The theoretical asymptotic complexity of BMSSP assumes the graph has bounded degree (constant maximum degree $\le 2$). By default, BMSSPy automatically transforms arbitrary-degree graphs into constant-degree graphs, runs the algorithm, and projects the resulting distances and predecessors back to the original graph structure.</p>
 
-<h2 id="development-commands">Development Commands</h2>
+<p>Most real-world networks are not constant-degree, and the conversion phase can introduce operational overhead. You can configure or disable this behavior via <code>use_constant_degree_graph</code>:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="c1"># Skip constant-degree conversion for faster practical runtimes:</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="n">Bmssp</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span> <span class="n">use_constant_degree_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="supported-conversion-modes">Supported Conversion Modes</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Value</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>True</code> / <code>'constant_degree'</code> / <code>'degree'</code> <em>(Default)</em></td>
+  <td>Converts graph to constant in- and out-degree ($\le 2$ incoming and outgoing edges per node).</td>
+</tr>
+<tr>
+  <td><code>'constant_out_degree'</code> / <code>'out_degree'</code></td>
+  <td>Converts graph to constant out-degree only ($\le 2$ outgoing edges per node).</td>
+</tr>
+<tr>
+  <td><code>False</code> / <code>None</code></td>
+  <td>Disables degree conversion; runs BMSSP directly on the input graph.</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="algorithm-parameters-tuning">Algorithm Parameters &amp; Tuning</h2>
+
+<p>You can fine-tune the solver during initialization or at query time:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code><span class="n">solver</span> <span class="o">=</span> <span class="n">Bmssp</span><span class="p">(</span>
+    <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
+    <span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>                    <span class="c1"># Decimal precision for unique path perturbations</span>
+    <span class="n">use_constant_degree_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span>
+    <span class="n">origin_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">destination_id</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">pivot_relaxation_steps</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>       <span class="c1"># Custom relaxation step count k</span>
+    <span class="n">target_tree_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>            <span class="c1"># Custom search tree depth t</span>
+<span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="solver-initialization-parameters">Solver Initialization Parameters</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Parameter</th>
+  <th>Type</th>
+  <th>Default</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>graph</code></td>
+  <td><code>list[dict[int, int | float]]</code></td>
+  <td><em>Required</em></td>
+  <td>Adjacency list representation of the graph.</td>
+</tr>
+<tr>
+  <td><code>precision</code></td>
+  <td><code>int</code></td>
+  <td><code>6</code></td>
+  <td>Decimal precision for rounding edge weights. Tiny unique values are added to guarantee distinct path lengths.</td>
+</tr>
+<tr>
+  <td><code>use_constant_degree_graph</code></td>
+  <td><code>bool | str</code></td>
+  <td><code>True</code></td>
+  <td>Strategy for constant-degree conversion (<code>True</code>, <code>False</code>, <code>'constant_out_degree'</code>).</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="solve-parameters"><code>.solve()</code> Parameters</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Parameter</th>
+  <th>Type</th>
+  <th>Default</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>origin_id</code></td>
+  <td><code>int | set[int]</code></td>
+  <td><em>Required</em></td>
+  <td>Starting node ID, or set of IDs for multi-source routing.</td>
+</tr>
+<tr>
+  <td><code>destination_id</code></td>
+  <td><code>int | None</code></td>
+  <td><code>None</code></td>
+  <td>Target node ID for point-to-point queries. If <code>None</code>, computes the full shortest path tree.</td>
+</tr>
+<tr>
+  <td><code>pivot_relaxation_steps</code></td>
+  <td><code>int | None</code></td>
+  <td><code>None</code> ($k pprox \lceil\log_2(n)^{1/3}</td>
+</tr>
+<tr>
+  <td>ceil$)</td>
+  <td>Number of relaxation steps to execute when identifying pivots.</td>
+</tr>
+<tr>
+  <td><code>target_tree_depth</code></td>
+  <td><code>int | None</code></td>
+  <td><code>None</code> ($t pprox \lfloor\log_2(n)^{2/3}</td>
+</tr>
+<tr>
+  <td>floor$)</td>
+  <td>Target depth of the search tree.</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h1 id="development">Development</h1>
+
+<p>For local development, we expect a Unix-based environment (Linux, macOS, or WSL2 on Windows) and use <a href="https://docs.astral.sh/uv/">uv</a> for project and dependency management.</p>
+
+<h3 id="setup">Setup</h3>
+
+<p>Clone the repository and install dev dependencies:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code>uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>--reinstall
+</code></pre>
+</div>
+
+<h3 id="common-commands">Common Commands</h3>
 
 <table>
 <thead>
 <tr>
   <th>Command</th>
-  <th>What it does</th>
+  <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-  <td><code>uv run nox</code></td>
-  <td>Run tests across Python 3.11, 3.12, 3.13, 3.14</td>
-</tr>
-<tr>
-  <td><code>uv run nox -s tests-3.14</code></td>
-  <td>Run tests on a single Python version</td>
-</tr>
-<tr>
   <td><code>uv run pytest</code></td>
-  <td>Run tests in the local venv</td>
+  <td>Run all unit tests in the current virtual environment</td>
 </tr>
 <tr>
   <td><code>uv run pytest -v</code></td>
   <td>Run tests with verbose output</td>
 </tr>
 <tr>
+  <td><code>uv run pytest test/01_bmssp.py</code></td>
+  <td>Run a specific test file</td>
+</tr>
+<tr>
+  <td><code>uv run nox</code></td>
+  <td>Run test matrix across Python 3.11, 3.12, 3.13, 3.14, and PyPy (both C++ and pure-Python)</td>
+</tr>
+<tr>
+  <td><code>uv run nox -s tests-3.14</code></td>
+  <td>Run tests on a specific Python version</td>
+</tr>
+<tr>
   <td><code>uv run python utils/prettify.py</code></td>
-  <td>Format with autoflake + black</td>
+  <td>Format code using autoflake and black</td>
 </tr>
 </tbody>
 </table>
 
-<p>Dev dependencies are in <code>[project.optional-dependencies] dev</code> in <code>pyproject.toml</code>. Install with <code>uv sync --extra dev</code>.</p>
+<h3 id="making-changes">Making Changes</h3>
+
+<ol>
+<li>Fork the repository and create a feature branch.</li>
+<li>Make your modifications.</li>
+<li>Run tests across backends to verify functionality (<code>uv run pytest</code> or <code>uv run nox</code>).</li>
+<li>Format code using <code>uv run python utils/prettify.py</code>.</li>
+<li><strong>DO NOT GENERATE DOCS</strong> (documentation is compiled and versioned during official releases).</li>
+<li>Create atomic commits with descriptive messages and open a pull request.</li>
+</ol>
+
+<hr />
+
+<h2 id="references">References</h2>
+
+<ul>
+<li><strong>BMSSP Breakthrough Paper</strong>: Duan, R., Mao, J., Shu, C., &amp; Yin, L. (2025). <em>Breaking the Sorting Barrier for Shortest Paths on Directed Graphs</em>. <a href="https://arxiv.org/abs/2504.17033">arXiv:2504.17033</a>.</li>
+<li><strong>BMSSPy Empirical Study</strong>: Makowski, C., Guter, W., Russell, T., &amp; Saragih, A. (2025). <em>BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm</em>. MIT CTL Research Paper Series. <a href="https://ssrn.com/abstract=5777186">SSRN:5777186</a>.</li>
+<li><strong>SCGraph</strong>: A Python library for shortest path routing on geographic and supply chain networks integrating BMSSPy: <a href="https://github.com/connor-makowski/scgraph">scgraph</a>.</li>
+</ul>
 </div>
 
                         <input id="mod-bmsspy-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
@@ -278,159 +586,343 @@ bmsspy    </h1>
 </span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a><span class="sd"># BMSSPy</span>
 </span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a><span class="sd">[![PyPI version](https://badge.fury.io/py/bmsspy.svg)](https://badge.fury.io/py/bmsspy)</span>
 </span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a><span class="sd">[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)</span>
-</span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="sd">&lt;!-- [![PyPI Downloads](https://img.shields.io/pypi/dm/bmsspy.svg?label=PyPI%20downloads)](https://pypi.org/project/bmsspy/) --&gt;</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="sd">[![PyPI Downloads](https://static.pepy.tech/badge/bmsspy)](https://pepy.tech/project/bmsspy/)</span>
 </span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a>
-</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="sd">A pure python bmssp implementation.</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="sd">**A high-performance Python and C++ implementation of the Bounded Multi-Source Shortest Path (BMSSP) algorithm.**</span>
 </span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a>
-</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a><span class="sd"># Setup</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a><span class="sd">BMSSPy implements the Bounded Multi-Source Shortest Path (BMSSP) algorithm ([Duan et al., 2025](https://arxiv.org/abs/2504.17033)), breaking Dijkstra&#39;s long-standing sorting barrier for shortest paths on directed graphs. It provides both an accessible pure-Python implementation and an optimized C++ extension powered by nanobind. BMSSPy supports single-source shortest paths (SSSP), multi-source shortest paths (MSSP), point-to-point queries, predecessor tree extraction, and optional constant-degree graph transformations.</span>
 </span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a>
-</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="sd">Make sure you have Python 3.11.x (or higher) installed on your system. You can download it [here](https://www.python.org/downloads/).</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>
-</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="sd">### Installation</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>
-</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="sd">```</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a><span class="sd">pip install bmsspy</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a><span class="sd">```</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>
-</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="sd">### Documentation</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="sd">- Github: https://github.com/connor-makowski/bmsspy</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="sd">- Docs: https://connor-makowski.github.io/bmsspy/bmsspy.html</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">- Paper: https://ssrn.com/abstract=5777186</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>
-</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="sd">### How to Cite BMSSPy in your Research</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>
-</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a><span class="sd">If you use BMSSPy for your research, please consider citing the following paper:</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>
-</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="sd">&gt; Makowski, Connor and Guter, Willem and Russell, Tim and Saragih, Austin, BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm (November 19, 2025). MIT Center for Transportation &amp; Logistics Research Paper No. 2025/034, Available at SSRN: https://ssrn.com/abstract=5777186</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>
-</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a><span class="sd">Or by using the BibTeX entry:</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="sd">- **Docs**: https://connor-makowski.github.io/bmsspy/bmsspy.html</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="sd">- **GitHub**: https://github.com/connor-makowski/bmsspy</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="sd">- **Bmsspy Paper**: https://ssrn.com/abstract=5777186</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a><span class="sd">- **Original Algorithm Paper**: https://arxiv.org/abs/2504.17033</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a><span class="sd">---</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a><span class="sd">## Citation</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a><span class="sd">If you use BMSSPy in your research, please cite:</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="sd">&gt; Makowski, Connor and Guter, Willem and Russell, Tim and Saragih, Austin, BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm (November 19, 2025). MIT Center for Transportation &amp; Logistics Research Paper No. 2025/034, Available at SSRN: https://ssrn.com/abstract=5777186</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a><span class="sd">```bibtex</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="sd">@article{makowski2025bmsspy,</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a><span class="sd">  title={BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm},</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a><span class="sd">  author={Makowski, Connor and Guter, Willem and Russell, Tim and Saragih, Austin},</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a><span class="sd">  journal={MIT Center for Transportation &amp; Logistics Research Paper Series},</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="sd">  number={2025-034},</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="sd">  year={2025},</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a><span class="sd">  url={https://ssrn.com/abstract=5777186}</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a><span class="sd">}</span>
 </span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="sd">```</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a><span class="sd">@article{makowski2025bmsspy,</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a><span class="sd">  title={BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm},</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a><span class="sd">  author={Makowski, Connor and Guter, Willem and Russell, Tim and Saragih, Austin},</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a><span class="sd">  journal={MIT Center for Transportation &amp; Logistics Research Paper Series},</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="sd">  number={2025-034},</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a><span class="sd">  year={2025},</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a><span class="sd">  url={https://ssrn.com/abstract=5777186}</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="sd">}</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd">```</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>
-</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a><span class="sd">### Use</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>
-</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a><span class="sd">The example use cases in this section are based on the following graph:</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>
-</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd">![readme_graph](https://raw.githubusercontent.com/connor-makowski/bmsspy/main/static/readme_graph.png)</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>
-</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="sd">```python</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="sd">from bmsspy import Bmssp</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>
-</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="sd"># Graph with 5 nodes: 0..4</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a><span class="sd"># Adjacency-list representation with nonnegative weights</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="sd">graph = [</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a><span class="sd">    {1: 1, 2: 1},   # 0 -&gt; 1 (1), 0 -&gt; 2 (1)</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">    {2: 1, 3: 3},   # 1 -&gt; 2 (1), 1 -&gt; 3 (3)</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">    {3: 1, 4: 2},   # 2 -&gt; 3 (1), 2 -&gt; 4 (2)</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a><span class="sd">    {4: 2},         # 3 -&gt; 4 (2)</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">    {}              # 4 has no outgoing edges</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="sd">]</span>
-</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>
-</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="sd">bmssp_graph = Bmssp(graph) # Initialize the graph as a Bmssp graph</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>
-</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="sd"># Distances and predecessors from origin 0</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a><span class="sd">res_0 = bmssp_graph.solve(origin_id=0)</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">print(res_0) #=&gt;</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a><span class="sd"># {</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">#     &#39;origin_id&#39;: 0,</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">#     &#39;destination_id&#39;: None,</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">#     &#39;predecessor&#39;: [-1, 0, 0, 2, 2],</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">#     &#39;distance_matrix&#39;: [0.0, 1.0, 1.0, 2.0, 3.0],</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">#     &#39;path&#39;: None,</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="sd">#     &#39;length&#39;: None</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="sd"># }</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>
-</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd"># Shortest path from 0 to 4</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">res_0_4 = bmssp_graph.solve(origin_id=0, destination_id=4)</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">print(res_0_4) #=&gt;</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd"># {</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">#     &#39;origin_id&#39;: 0,</span>
-</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="sd">#     &#39;destination_id&#39;: 4,</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a><span class="sd">#     &#39;predecessor&#39;: [-1, 0, 0, 2, 2],</span>
-</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">#     &#39;distance_matrix&#39;: [0.0, 1.0, 1.0, 2.0, 3.0],</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">#     &#39;path&#39;: [0, 2, 4],</span>
-</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">#     &#39;length&#39;: 3</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd"># }</span>
-</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">```</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>
-</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">In the example above, we only use a single orign, however multiple origins are supported if passed as a set:</span>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">```python</span>
-</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a><span class="sd"># Pass orgin_id as a set of ids</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">res_02 = bmssp_graph.solve(origin_id={0,2})</span>
-</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a><span class="sd">print(res_02) #=&gt;</span>
-</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="sd"># {</span>
-</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="sd">#     &#39;origin_id&#39;: [0, 2],</span>
-</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">#     &#39;destination_id&#39;: None,</span>
-</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="sd">#     &#39;predecessor&#39;: [-1, 0, -1, 2, 2],</span>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="sd">#     &#39;distance_matrix&#39;: [0.0, 1.0, 0.0, 1.0, 2.0],</span>
-</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a><span class="sd">#     &#39;path&#39;: None,</span>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">#     &#39;length&#39;: None</span>
-</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a><span class="sd"># }</span>
-</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd">```</span>
-</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>
-</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a><span class="sd">By default graphs that are given are converted to constant degree such that worst case asymtotic run times are based on the constant degree converted graphs. Before returning a result, the constant degree conversion is undone such that the results are in the original passed graph format.</span>
-</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>
-</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="sd">Most real world graphs are not constant degree. Converting to constant degree graphs can add substantial operational overhead during pre and post processing as well as during the actual algorithmic runtime.</span>
-</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>
-</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a><span class="sd">To skip the constant degree conversion:</span>
-</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="sd">```python</span>
-</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="sd"># Set use_constant_degree_graph=False</span>
-</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="sd">bmssp_graph = Bmssp(graph=graph, use_constant_degree_graph=False)</span>
-</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a><span class="sd">```</span>
-</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a><span class="sd">---</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a><span class="sd">## Installation</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a><span class="sd">Make sure you have Python 3.11 or higher installed.</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="sd">```bash</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd">pip install bmsspy</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a><span class="sd">```</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="sd">Pre-built binary wheels with C++ acceleration are provided for Linux, macOS, and Windows.</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a><span class="sd">### Pure Python Installation (Skip Binary Builds)</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a><span class="sd">If you want to install `bmsspy` in pure Python mode without compiling or using binary extensions (or in environments without a C++ compiler):</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="sd">- **Linux / macOS / WSL2**:</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a><span class="sd">  ```bash</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="sd">  BMSSPY_NO_BUILD=1 pip install --no-binary bmsspy bmsspy</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a><span class="sd">  ```</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="sd">  Or with `uv`:</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a><span class="sd">  ```bash</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">  BMSSPY_NO_BUILD=1 uv pip install --no-binary bmsspy bmsspy</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">  ```</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">- **Windows (PowerShell)**:</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="sd">  ```powershell</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a><span class="sd">  $env:BMSSPY_NO_BUILD=&quot;1&quot;</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="sd">  pip install --no-binary bmsspy bmsspy</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="sd">  ```</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a><span class="sd">- **Windows (CMD)**:</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">  ```cmd</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a><span class="sd">  set BMSSPY_NO_BUILD=1</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">  pip install --no-binary bmsspy bmsspy</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">  ```</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">#### Verifying Backend</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">Check whether C++ acceleration or the pure Python backend is active:</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="sd">```python</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">from bmsspy import has_cpp</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd">print(has_cpp())  # True if compiled C++ extension is loaded, False otherwise</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">```</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">---</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="sd">## Quick Start</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">Solve single-source and point-to-point shortest paths on a directed weighted graph:</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">![readme_graph](https://raw.githubusercontent.com/connor-makowski/bmsspy/main/static/readme_graph.png)</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">```python</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">from bmsspy import Bmssp, BmsspC, has_cpp</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd"># Directed graph with 5 nodes (0..4) represented as an adjacency list of dicts:</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">graph = [</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a><span class="sd">    {1: 1, 2: 1},   # 0 -&gt; 1 (w=1), 0 -&gt; 2 (w=1)</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">    {2: 1, 3: 3},   # 1 -&gt; 2 (w=1), 1 -&gt; 3 (w=3)</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a><span class="sd">    {3: 1, 4: 2},   # 2 -&gt; 3 (w=1), 2 -&gt; 4 (w=2)</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="sd">    {4: 2},         # 3 -&gt; 4 (w=2)</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="sd">    {},             # 4 has no outgoing edges</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">]</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="sd"># Use C++ acceleration if available, otherwise pure Python:</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a><span class="sd">solver_cls = BmsspC if has_cpp() else Bmssp</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">solver = solver_cls(graph)</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd"># Single-source shortest path from origin 0:</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">res = solver.solve(origin_id=0)</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a><span class="sd">print(res[&quot;distance_matrix&quot;])  #=&gt; [0.0, 1.0, 1.0, 2.0, 3.0]</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="sd">print(res[&quot;predecessor&quot;])      #=&gt; [-1, 0, 0, 2, 2]</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a><span class="sd"># Point-to-point shortest path from 0 to 4:</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a><span class="sd">res_p2p = solver.solve(origin_id=0, destination_id=4)</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="sd">print(res_p2p[&quot;path&quot;])    #=&gt; [0, 2, 4]</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="sd">print(res_p2p[&quot;length&quot;])  #=&gt; 3.0</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="sd">```</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">### Result Dictionary Structure</span>
 </span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>
-</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>
-</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd"># Contributing</span>
-</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a>
-</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">Contributions are welcome! Please open an issue or submit a pull request.</span>
-</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>
-</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">## Development</span>
-</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>
-</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">To avoid extra development overhead, we expect all developers to use a unix based environment (Linux or Mac). If you use Windows, please use WSL2.</span>
-</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>
-</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a><span class="sd">For development, we use [uv](https://docs.astral.sh/uv/) to manage dependencies and run tests.</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a><span class="sd">The `.solve()` method returns a dictionary with the following keys:</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">| Key | Description |</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">|---|---|</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">| `origin_id` | Origin node ID (or list of origin IDs if a set was supplied) |</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">| `destination_id` | Destination node ID, or `None` if calculating the full shortest path tree |</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a><span class="sd">| `distance_matrix` | List of shortest path distances from origin(s) to every node in the graph |</span>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">| `predecessor` | Predecessor list where `predecessor[i]` is the node visited immediately before `i` |</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a><span class="sd">| `path` | Reconstructed shortest path `[origin, ..., destination]`, or `None` if `destination_id` was not provided |</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a><span class="sd">| `length` | Total distance along the shortest path to `destination_id`, or `None` if `destination_id` was not provided |</span>
 </span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>
-</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="sd">## Making Changes</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="sd">---</span>
 </span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>
-</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">1) Fork the repo and clone it locally.</span>
-</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a><span class="sd">2) Make your modifications.</span>
-</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">3) Run tests and make sure they pass.</span>
-</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a><span class="sd">4) Prettify your code.</span>
-</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="sd">5) **DO NOT GENERATE DOCS**.</span>
-</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a><span class="sd">    - We will generate the docs and update the version number when we are ready to release a new version.</span>
-</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">6) Only commit relevant changes and add clear commit messages.</span>
-</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a><span class="sd">    - Atomic commits are preferred.</span>
-</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="sd">7) Submit a pull request.</span>
-</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a>
-</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="sd">## Development Commands</span>
-</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a>
-</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="sd">| Command | What it does |</span>
-</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a><span class="sd">|---|---|</span>
-</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a><span class="sd">| `uv run nox` | Run tests across Python 3.11, 3.12, 3.13, 3.14 |</span>
-</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a><span class="sd">| `uv run nox -s tests-3.14` | Run tests on a single Python version |</span>
-</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a><span class="sd">| `uv run pytest` | Run tests in the local venv |</span>
-</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a><span class="sd">| `uv run pytest -v` | Run tests with verbose output |</span>
-</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a><span class="sd">| `uv run python utils/prettify.py` | Format with autoflake + black |</span>
-</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a>
-</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a><span class="sd">Dev dependencies are in `[project.optional-dependencies] dev` in `pyproject.toml`. Install with `uv sync --extra dev`.</span>
-</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd"># Core Concepts</span>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">## Graph Structure</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="sd">Graphs are represented as zero-indexed adjacency lists (a Python list of dictionaries):</span>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">```python</span>
+</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a><span class="sd">graph = [</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="sd">    {1: 5.0, 2: 1.2},   # Node 0 connects to node 1 (weight 5.0) and node 2 (weight 1.2)</span>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a><span class="sd">    {0: 5.0, 2: 2.1},   # Node 1 connects to node 0 and node 2</span>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="sd">    {0: 1.2, 1: 2.1},   # Node 2 connects to node 0 and node 1</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="sd">]</span>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="sd">```</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a><span class="sd">- Each index in the list corresponds to a node ID (`0` to `n - 1`).</span>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a><span class="sd">- Each dictionary maps neighbor IDs to non-negative edge weights (integer or float).</span>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a><span class="sd">---</span>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a>
+</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a><span class="sd"># Usage Guide</span>
+</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a>
+</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="sd">## Solvers: C++ vs Pure Python</span>
 </span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a>
-</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy.entrypoint</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bmssp</span>
+</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="sd">BMSSPy provides two solver implementations that share an identical interface:</span>
+</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a>
+</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a><span class="sd">| Solver | Backend | Description |</span>
+</span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a><span class="sd">|---|---|---|</span>
+</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a><span class="sd">| `BmsspC` | C++20 (`nanobind`) | Highly optimized native implementation for maximum performance on production workloads and benchmarks. |</span>
+</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a><span class="sd">| `Bmssp` | Pure Python | Reference implementation with zero binary dependencies, ideal for inspection, debugging, and environments without C++ toolchains. |</span>
+</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a>
+</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a><span class="sd">```python</span>
+</span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a><span class="sd">from bmsspy import Bmssp, BmsspC, has_cpp</span>
+</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a>
+</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="sd"># Instantiate whichever solver suits your environment:</span>
+</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="sd">if has_cpp():</span>
+</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a><span class="sd">    solver = BmsspC(graph)</span>
+</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a><span class="sd">else:</span>
+</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a><span class="sd">    solver = Bmssp(graph)</span>
+</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a><span class="sd">```</span>
+</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a>
+</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a><span class="sd">## Multi-Source Shortest Path (MSSP)</span>
+</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a>
+</span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a><span class="sd">Pass a set of node IDs to `origin_id` to compute shortest paths originating simultaneously from multiple source vertices:</span>
+</span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a>
+</span><span id="L-174"><a href="#L-174"><span class="linenos">174</span></a><span class="sd">```python</span>
+</span><span id="L-175"><a href="#L-175"><span class="linenos">175</span></a><span class="sd">solver = Bmssp(graph)</span>
+</span><span id="L-176"><a href="#L-176"><span class="linenos">176</span></a>
+</span><span id="L-177"><a href="#L-177"><span class="linenos">177</span></a><span class="sd"># Compute distances from origin set {0, 2}</span>
+</span><span id="L-178"><a href="#L-178"><span class="linenos">178</span></a><span class="sd">res = solver.solve(origin_id={0, 2})</span>
+</span><span id="L-179"><a href="#L-179"><span class="linenos">179</span></a>
+</span><span id="L-180"><a href="#L-180"><span class="linenos">180</span></a><span class="sd">print(res[&quot;origin_id&quot;])        #=&gt; [0, 2]</span>
+</span><span id="L-181"><a href="#L-181"><span class="linenos">181</span></a><span class="sd">print(res[&quot;distance_matrix&quot;])  #=&gt; [0.0, 1.0, 0.0, 1.0, 2.0]</span>
+</span><span id="L-182"><a href="#L-182"><span class="linenos">182</span></a><span class="sd">print(res[&quot;predecessor&quot;])      #=&gt; [-1, 0, -1, 2, 2]</span>
+</span><span id="L-183"><a href="#L-183"><span class="linenos">183</span></a><span class="sd">```</span>
+</span><span id="L-184"><a href="#L-184"><span class="linenos">184</span></a>
+</span><span id="L-185"><a href="#L-185"><span class="linenos">185</span></a><span class="sd">## Constant-Degree Graph Conversion</span>
+</span><span id="L-186"><a href="#L-186"><span class="linenos">186</span></a>
+</span><span id="L-187"><a href="#L-187"><span class="linenos">187</span></a><span class="sd">The theoretical asymptotic complexity of BMSSP assumes the graph has bounded degree (constant maximum degree $\le 2$). By default, BMSSPy automatically transforms arbitrary-degree graphs into constant-degree graphs, runs the algorithm, and projects the resulting distances and predecessors back to the original graph structure.</span>
+</span><span id="L-188"><a href="#L-188"><span class="linenos">188</span></a>
+</span><span id="L-189"><a href="#L-189"><span class="linenos">189</span></a><span class="sd">Most real-world networks are not constant-degree, and the conversion phase can introduce operational overhead. You can configure or disable this behavior via `use_constant_degree_graph`:</span>
+</span><span id="L-190"><a href="#L-190"><span class="linenos">190</span></a>
+</span><span id="L-191"><a href="#L-191"><span class="linenos">191</span></a><span class="sd">```python</span>
+</span><span id="L-192"><a href="#L-192"><span class="linenos">192</span></a><span class="sd"># Skip constant-degree conversion for faster practical runtimes:</span>
+</span><span id="L-193"><a href="#L-193"><span class="linenos">193</span></a><span class="sd">solver = Bmssp(graph=graph, use_constant_degree_graph=False)</span>
+</span><span id="L-194"><a href="#L-194"><span class="linenos">194</span></a><span class="sd">```</span>
+</span><span id="L-195"><a href="#L-195"><span class="linenos">195</span></a>
+</span><span id="L-196"><a href="#L-196"><span class="linenos">196</span></a><span class="sd">### Supported Conversion Modes</span>
+</span><span id="L-197"><a href="#L-197"><span class="linenos">197</span></a>
+</span><span id="L-198"><a href="#L-198"><span class="linenos">198</span></a><span class="sd">| Value | Description |</span>
+</span><span id="L-199"><a href="#L-199"><span class="linenos">199</span></a><span class="sd">|---|---|</span>
+</span><span id="L-200"><a href="#L-200"><span class="linenos">200</span></a><span class="sd">| `True` / `&#39;constant_degree&#39;` / `&#39;degree&#39;` *(Default)* | Converts graph to constant in- and out-degree ($\le 2$ incoming and outgoing edges per node). |</span>
+</span><span id="L-201"><a href="#L-201"><span class="linenos">201</span></a><span class="sd">| `&#39;constant_out_degree&#39;` / `&#39;out_degree&#39;` | Converts graph to constant out-degree only ($\le 2$ outgoing edges per node). |</span>
+</span><span id="L-202"><a href="#L-202"><span class="linenos">202</span></a><span class="sd">| `False` / `None` | Disables degree conversion; runs BMSSP directly on the input graph. |</span>
+</span><span id="L-203"><a href="#L-203"><span class="linenos">203</span></a>
+</span><span id="L-204"><a href="#L-204"><span class="linenos">204</span></a><span class="sd">## Algorithm Parameters &amp; Tuning</span>
+</span><span id="L-205"><a href="#L-205"><span class="linenos">205</span></a>
+</span><span id="L-206"><a href="#L-206"><span class="linenos">206</span></a><span class="sd">You can fine-tune the solver during initialization or at query time:</span>
+</span><span id="L-207"><a href="#L-207"><span class="linenos">207</span></a>
+</span><span id="L-208"><a href="#L-208"><span class="linenos">208</span></a><span class="sd">```python</span>
+</span><span id="L-209"><a href="#L-209"><span class="linenos">209</span></a><span class="sd">solver = Bmssp(</span>
+</span><span id="L-210"><a href="#L-210"><span class="linenos">210</span></a><span class="sd">    graph=graph,</span>
+</span><span id="L-211"><a href="#L-211"><span class="linenos">211</span></a><span class="sd">    precision=6,                    # Decimal precision for unique path perturbations</span>
+</span><span id="L-212"><a href="#L-212"><span class="linenos">212</span></a><span class="sd">    use_constant_degree_graph=False,</span>
+</span><span id="L-213"><a href="#L-213"><span class="linenos">213</span></a><span class="sd">)</span>
+</span><span id="L-214"><a href="#L-214"><span class="linenos">214</span></a>
+</span><span id="L-215"><a href="#L-215"><span class="linenos">215</span></a><span class="sd">res = solver.solve(</span>
+</span><span id="L-216"><a href="#L-216"><span class="linenos">216</span></a><span class="sd">    origin_id=0,</span>
+</span><span id="L-217"><a href="#L-217"><span class="linenos">217</span></a><span class="sd">    destination_id=4,</span>
+</span><span id="L-218"><a href="#L-218"><span class="linenos">218</span></a><span class="sd">    pivot_relaxation_steps=3,       # Custom relaxation step count k</span>
+</span><span id="L-219"><a href="#L-219"><span class="linenos">219</span></a><span class="sd">    target_tree_depth=2,            # Custom search tree depth t</span>
+</span><span id="L-220"><a href="#L-220"><span class="linenos">220</span></a><span class="sd">)</span>
+</span><span id="L-221"><a href="#L-221"><span class="linenos">221</span></a><span class="sd">```</span>
+</span><span id="L-222"><a href="#L-222"><span class="linenos">222</span></a>
+</span><span id="L-223"><a href="#L-223"><span class="linenos">223</span></a><span class="sd">### Solver Initialization Parameters</span>
+</span><span id="L-224"><a href="#L-224"><span class="linenos">224</span></a>
+</span><span id="L-225"><a href="#L-225"><span class="linenos">225</span></a><span class="sd">| Parameter | Type | Default | Description |</span>
+</span><span id="L-226"><a href="#L-226"><span class="linenos">226</span></a><span class="sd">|---|---|---|---|</span>
+</span><span id="L-227"><a href="#L-227"><span class="linenos">227</span></a><span class="sd">| `graph` | `list[dict[int, int \| float]]` | *Required* | Adjacency list representation of the graph. |</span>
+</span><span id="L-228"><a href="#L-228"><span class="linenos">228</span></a><span class="sd">| `precision` | `int` | `6` | Decimal precision for rounding edge weights. Tiny unique values are added to guarantee distinct path lengths. |</span>
+</span><span id="L-229"><a href="#L-229"><span class="linenos">229</span></a><span class="sd">| `use_constant_degree_graph` | `bool \| str` | `True` | Strategy for constant-degree conversion (`True`, `False`, `&#39;constant_out_degree&#39;`). |</span>
+</span><span id="L-230"><a href="#L-230"><span class="linenos">230</span></a>
+</span><span id="L-231"><a href="#L-231"><span class="linenos">231</span></a><span class="sd">### `.solve()` Parameters</span>
+</span><span id="L-232"><a href="#L-232"><span class="linenos">232</span></a>
+</span><span id="L-233"><a href="#L-233"><span class="linenos">233</span></a><span class="sd">| Parameter | Type | Default | Description |</span>
+</span><span id="L-234"><a href="#L-234"><span class="linenos">234</span></a><span class="sd">|---|---|---|---|</span>
+</span><span id="L-235"><a href="#L-235"><span class="linenos">235</span></a><span class="sd">| `origin_id` | `int \| set[int]` | *Required* | Starting node ID, or set of IDs for multi-source routing. |</span>
+</span><span id="L-236"><a href="#L-236"><span class="linenos">236</span></a><span class="sd">| `destination_id` | `int \| None` | `None` | Target node ID for point-to-point queries. If `None`, computes the full shortest path tree. |</span>
+</span><span id="L-237"><a href="#L-237"><span class="linenos">237</span></a><span class="sd">| `pivot_relaxation_steps` | `int \| None` | `None` ($k \approx \lceil\log_2(n)^{1/3}\rceil$) | Number of relaxation steps to execute when identifying pivots. |</span>
+</span><span id="L-238"><a href="#L-238"><span class="linenos">238</span></a><span class="sd">| `target_tree_depth` | `int \| None` | `None` ($t \approx \lfloor\log_2(n)^{2/3}\rfloor$) | Target depth of the search tree. |</span>
+</span><span id="L-239"><a href="#L-239"><span class="linenos">239</span></a>
+</span><span id="L-240"><a href="#L-240"><span class="linenos">240</span></a><span class="sd">---</span>
+</span><span id="L-241"><a href="#L-241"><span class="linenos">241</span></a>
+</span><span id="L-242"><a href="#L-242"><span class="linenos">242</span></a><span class="sd"># Development</span>
+</span><span id="L-243"><a href="#L-243"><span class="linenos">243</span></a>
+</span><span id="L-244"><a href="#L-244"><span class="linenos">244</span></a><span class="sd">For local development, we expect a Unix-based environment (Linux, macOS, or WSL2 on Windows) and use [uv](https://docs.astral.sh/uv/) for project and dependency management.</span>
+</span><span id="L-245"><a href="#L-245"><span class="linenos">245</span></a>
+</span><span id="L-246"><a href="#L-246"><span class="linenos">246</span></a><span class="sd">### Setup</span>
+</span><span id="L-247"><a href="#L-247"><span class="linenos">247</span></a>
+</span><span id="L-248"><a href="#L-248"><span class="linenos">248</span></a><span class="sd">Clone the repository and install dev dependencies:</span>
+</span><span id="L-249"><a href="#L-249"><span class="linenos">249</span></a>
+</span><span id="L-250"><a href="#L-250"><span class="linenos">250</span></a><span class="sd">```bash</span>
+</span><span id="L-251"><a href="#L-251"><span class="linenos">251</span></a><span class="sd">uv sync --extra dev --reinstall</span>
+</span><span id="L-252"><a href="#L-252"><span class="linenos">252</span></a><span class="sd">```</span>
+</span><span id="L-253"><a href="#L-253"><span class="linenos">253</span></a>
+</span><span id="L-254"><a href="#L-254"><span class="linenos">254</span></a><span class="sd">### Common Commands</span>
+</span><span id="L-255"><a href="#L-255"><span class="linenos">255</span></a>
+</span><span id="L-256"><a href="#L-256"><span class="linenos">256</span></a><span class="sd">| Command | Description |</span>
+</span><span id="L-257"><a href="#L-257"><span class="linenos">257</span></a><span class="sd">|---|---|</span>
+</span><span id="L-258"><a href="#L-258"><span class="linenos">258</span></a><span class="sd">| `uv run pytest` | Run all unit tests in the current virtual environment |</span>
+</span><span id="L-259"><a href="#L-259"><span class="linenos">259</span></a><span class="sd">| `uv run pytest -v` | Run tests with verbose output |</span>
+</span><span id="L-260"><a href="#L-260"><span class="linenos">260</span></a><span class="sd">| `uv run pytest test/01_bmssp.py` | Run a specific test file |</span>
+</span><span id="L-261"><a href="#L-261"><span class="linenos">261</span></a><span class="sd">| `uv run nox` | Run test matrix across Python 3.11, 3.12, 3.13, 3.14, and PyPy (both C++ and pure-Python) |</span>
+</span><span id="L-262"><a href="#L-262"><span class="linenos">262</span></a><span class="sd">| `uv run nox -s tests-3.14` | Run tests on a specific Python version |</span>
+</span><span id="L-263"><a href="#L-263"><span class="linenos">263</span></a><span class="sd">| `uv run python utils/prettify.py` | Format code using autoflake and black |</span>
+</span><span id="L-264"><a href="#L-264"><span class="linenos">264</span></a>
+</span><span id="L-265"><a href="#L-265"><span class="linenos">265</span></a><span class="sd">### Making Changes</span>
+</span><span id="L-266"><a href="#L-266"><span class="linenos">266</span></a>
+</span><span id="L-267"><a href="#L-267"><span class="linenos">267</span></a><span class="sd">1. Fork the repository and create a feature branch.</span>
+</span><span id="L-268"><a href="#L-268"><span class="linenos">268</span></a><span class="sd">2. Make your modifications.</span>
+</span><span id="L-269"><a href="#L-269"><span class="linenos">269</span></a><span class="sd">3. Run tests across backends to verify functionality (`uv run pytest` or `uv run nox`).</span>
+</span><span id="L-270"><a href="#L-270"><span class="linenos">270</span></a><span class="sd">4. Format code using `uv run python utils/prettify.py`.</span>
+</span><span id="L-271"><a href="#L-271"><span class="linenos">271</span></a><span class="sd">5. **DO NOT GENERATE DOCS** (documentation is compiled and versioned during official releases).</span>
+</span><span id="L-272"><a href="#L-272"><span class="linenos">272</span></a><span class="sd">6. Create atomic commits with descriptive messages and open a pull request.</span>
+</span><span id="L-273"><a href="#L-273"><span class="linenos">273</span></a>
+</span><span id="L-274"><a href="#L-274"><span class="linenos">274</span></a><span class="sd">---</span>
+</span><span id="L-275"><a href="#L-275"><span class="linenos">275</span></a>
+</span><span id="L-276"><a href="#L-276"><span class="linenos">276</span></a><span class="sd">## References</span>
+</span><span id="L-277"><a href="#L-277"><span class="linenos">277</span></a>
+</span><span id="L-278"><a href="#L-278"><span class="linenos">278</span></a><span class="sd">- **BMSSP Breakthrough Paper**: Duan, R., Mao, J., Shu, C., &amp; Yin, L. (2025). *Breaking the Sorting Barrier for Shortest Paths on Directed Graphs*. [arXiv:2504.17033](https://arxiv.org/abs/2504.17033).</span>
+</span><span id="L-279"><a href="#L-279"><span class="linenos">279</span></a><span class="sd">- **BMSSPy Empirical Study**: Makowski, C., Guter, W., Russell, T., &amp; Saragih, A. (2025). *BMSSPy: A Python Package and Empirical Comparison of Bounded Multi-Source Shortest Path Algorithm*. MIT CTL Research Paper Series. [SSRN:5777186](https://ssrn.com/abstract=5777186).</span>
+</span><span id="L-280"><a href="#L-280"><span class="linenos">280</span></a><span class="sd">- **SCGraph**: A Python library for shortest path routing on geographic and supply chain networks integrating BMSSPy: [scgraph](https://github.com/connor-makowski/scgraph).</span>
+</span><span id="L-281"><a href="#L-281"><span class="linenos">281</span></a>
+</span><span id="L-282"><a href="#L-282"><span class="linenos">282</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-283"><a href="#L-283"><span class="linenos">283</span></a>
+</span><span id="L-284"><a href="#L-284"><span class="linenos">284</span></a>
+</span><span id="L-285"><a href="#L-285"><span class="linenos">285</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy.entrypoint</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bmssp</span>
+</span><span id="L-286"><a href="#L-286"><span class="linenos">286</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy.helpers.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_cpp</span><span class="p">,</span> <span class="n">cpp_check</span>
+</span><span id="L-287"><a href="#L-287"><span class="linenos">287</span></a>
+</span><span id="L-288"><a href="#L-288"><span class="linenos">288</span></a><span class="k">try</span><span class="p">:</span>
+</span><span id="L-289"><a href="#L-289"><span class="linenos">289</span></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy.cpp</span><span class="w"> </span><span class="kn">import</span> <span class="n">BmsspC</span>
+</span><span id="L-290"><a href="#L-290"><span class="linenos">290</span></a><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span id="L-291"><a href="#L-291"><span class="linenos">291</span></a>    <span class="k">class</span><span class="w"> </span><span class="nc">BmsspC</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+</span><span id="L-292"><a href="#L-292"><span class="linenos">292</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="L-293"><a href="#L-293"><span class="linenos">293</span></a>            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+</span><span id="L-294"><a href="#L-294"><span class="linenos">294</span></a>                <span class="s2">&quot;C++ implementation &#39;BmsspC&#39; is not available. Please install the C++ supported wheels or build the C++ extension.&quot;</span>
+</span><span id="L-295"><a href="#L-295"><span class="linenos">295</span></a>            <span class="p">)</span>
 </span></pre></div>
 
 
             </section>
+                <section id="BmsspC">
+                            <input id="BmsspC-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">BmsspC</span>:
+
+                <label class="view-source-button" for="BmsspC-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#BmsspC"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BmsspC-292"><a href="#BmsspC-292"><span class="linenos">292</span></a>    <span class="k">class</span><span class="w"> </span><span class="nc">BmsspC</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+</span><span id="BmsspC-293"><a href="#BmsspC-293"><span class="linenos">293</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="BmsspC-294"><a href="#BmsspC-294"><span class="linenos">294</span></a>            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+</span><span id="BmsspC-295"><a href="#BmsspC-295"><span class="linenos">295</span></a>                <span class="s2">&quot;C++ implementation &#39;BmsspC&#39; is not available. Please install the C++ supported wheels or build the C++ extension.&quot;</span>
+</span><span id="BmsspC-296"><a href="#BmsspC-296"><span class="linenos">296</span></a>            <span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            <div id="BmsspC.__init__" class="classattr">
+                                        <input id="BmsspC.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">BmsspC</span><span class="signature pdoc-code condensed">(<span class="param"><span class="o">*</span><span class="n">args</span>, </span><span class="param"><span class="o">**</span><span class="n">kwargs</span></span>)</span>
+
+                <label class="view-source-button" for="BmsspC.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#BmsspC.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BmsspC.__init__-293"><a href="#BmsspC.__init__-293"><span class="linenos">293</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="BmsspC.__init__-294"><a href="#BmsspC.__init__-294"><span class="linenos">294</span></a>            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+</span><span id="BmsspC.__init__-295"><a href="#BmsspC.__init__-295"><span class="linenos">295</span></a>                <span class="s2">&quot;C++ implementation &#39;BmsspC&#39; is not available. Please install the C++ supported wheels or build the C++ extension.&quot;</span>
+</span><span id="BmsspC.__init__-296"><a href="#BmsspC.__init__-296"><span class="linenos">296</span></a>            <span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                </section>
     </main>
 <script>
     function escapeHTML(html) {

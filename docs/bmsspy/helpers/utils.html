@@ -48,12 +48,19 @@
             <li>
                     <a class="function" href="#convert_from_constant_degree">convert_from_constant_degree</a>
             </li>
+            <li>
+                    <a class="function" href="#has_cpp">has_cpp</a>
+            </li>
+            <li>
+                    <a class="function" href="#cpp_check">cpp_check</a>
+            </li>
     </ul>
 
 
 <footer>
 <select id="version-selector">
     <option value="latest">latest</option>
+        <option value="2.3.0">2.3.0</option>
         <option value="2.2.2">2.2.2</option>
         <option value="2.1.1">2.1.1</option>
         <option value="2.0.1">2.0.1</option>
@@ -372,6 +379,27 @@
 </span><span id="L-266"><a href="#L-266"><span class="linenos">266</span></a>        <span class="s2">&quot;distance_matrix&quot;</span><span class="p">:</span> <span class="n">distance_matrix</span><span class="p">[:</span><span class="n">cd_original_graph_len</span><span class="p">],</span>
 </span><span id="L-267"><a href="#L-267"><span class="linenos">267</span></a>        <span class="s2">&quot;predecessor_matrix&quot;</span><span class="p">:</span> <span class="n">predecessor_matrix_converted</span><span class="p">,</span>
 </span><span id="L-268"><a href="#L-268"><span class="linenos">268</span></a>    <span class="p">}</span>
+</span><span id="L-269"><a href="#L-269"><span class="linenos">269</span></a>
+</span><span id="L-270"><a href="#L-270"><span class="linenos">270</span></a>
+</span><span id="L-271"><a href="#L-271"><span class="linenos">271</span></a><span class="k">def</span><span class="w"> </span><span class="nf">has_cpp</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-272"><a href="#L-272"><span class="linenos">272</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-273"><a href="#L-273"><span class="linenos">273</span></a><span class="sd">    Check if the compiled C++ extension is available.</span>
+</span><span id="L-274"><a href="#L-274"><span class="linenos">274</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-275"><a href="#L-275"><span class="linenos">275</span></a>    <span class="k">try</span><span class="p">:</span>
+</span><span id="L-276"><a href="#L-276"><span class="linenos">276</span></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy.cpp</span><span class="w"> </span><span class="kn">import</span> <span class="n">BmsspC</span>  <span class="c1"># noqa: F401</span>
+</span><span id="L-277"><a href="#L-277"><span class="linenos">277</span></a>        <span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-278"><a href="#L-278"><span class="linenos">278</span></a>    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span id="L-279"><a href="#L-279"><span class="linenos">279</span></a>        <span class="k">return</span> <span class="kc">False</span>
+</span><span id="L-280"><a href="#L-280"><span class="linenos">280</span></a>
+</span><span id="L-281"><a href="#L-281"><span class="linenos">281</span></a>
+</span><span id="L-282"><a href="#L-282"><span class="linenos">282</span></a><span class="k">def</span><span class="w"> </span><span class="nf">cpp_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-283"><a href="#L-283"><span class="linenos">283</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-284"><a href="#L-284"><span class="linenos">284</span></a><span class="sd">    Print whether C++ acceleration or pure Python implementation is being used.</span>
+</span><span id="L-285"><a href="#L-285"><span class="linenos">285</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-286"><a href="#L-286"><span class="linenos">286</span></a>    <span class="k">if</span> <span class="n">has_cpp</span><span class="p">():</span>
+</span><span id="L-287"><a href="#L-287"><span class="linenos">287</span></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using C++ &amp; Python implementation of bmsspy.&quot;</span><span class="p">)</span>
+</span><span id="L-288"><a href="#L-288"><span class="linenos">288</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="L-289"><a href="#L-289"><span class="linenos">289</span></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using Pure Python implementation of bmsspy.&quot;</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -830,6 +858,61 @@
 <li>'predecessor_matrix' (list of int): The converted predecessor matrix for the original graph.</li>
 </ul></li>
 </ul>
+</div>
+
+
+                </section>
+                <section id="has_cpp">
+                            <input id="has_cpp-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">has_cpp</span><span class="signature pdoc-code condensed">(<span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+
+                <label class="view-source-button" for="has_cpp-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#has_cpp"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="has_cpp-272"><a href="#has_cpp-272"><span class="linenos">272</span></a><span class="k">def</span><span class="w"> </span><span class="nf">has_cpp</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="has_cpp-273"><a href="#has_cpp-273"><span class="linenos">273</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="has_cpp-274"><a href="#has_cpp-274"><span class="linenos">274</span></a><span class="sd">    Check if the compiled C++ extension is available.</span>
+</span><span id="has_cpp-275"><a href="#has_cpp-275"><span class="linenos">275</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="has_cpp-276"><a href="#has_cpp-276"><span class="linenos">276</span></a>    <span class="k">try</span><span class="p">:</span>
+</span><span id="has_cpp-277"><a href="#has_cpp-277"><span class="linenos">277</span></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy.cpp</span><span class="w"> </span><span class="kn">import</span> <span class="n">BmsspC</span>  <span class="c1"># noqa: F401</span>
+</span><span id="has_cpp-278"><a href="#has_cpp-278"><span class="linenos">278</span></a>        <span class="k">return</span> <span class="kc">True</span>
+</span><span id="has_cpp-279"><a href="#has_cpp-279"><span class="linenos">279</span></a>    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span id="has_cpp-280"><a href="#has_cpp-280"><span class="linenos">280</span></a>        <span class="k">return</span> <span class="kc">False</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Check if the compiled C++ extension is available.</p>
+</div>
+
+
+                </section>
+                <section id="cpp_check">
+                            <input id="cpp_check-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">cpp_check</span><span class="signature pdoc-code condensed">(<span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
+
+                <label class="view-source-button" for="cpp_check-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#cpp_check"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="cpp_check-283"><a href="#cpp_check-283"><span class="linenos">283</span></a><span class="k">def</span><span class="w"> </span><span class="nf">cpp_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="cpp_check-284"><a href="#cpp_check-284"><span class="linenos">284</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="cpp_check-285"><a href="#cpp_check-285"><span class="linenos">285</span></a><span class="sd">    Print whether C++ acceleration or pure Python implementation is being used.</span>
+</span><span id="cpp_check-286"><a href="#cpp_check-286"><span class="linenos">286</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="cpp_check-287"><a href="#cpp_check-287"><span class="linenos">287</span></a>    <span class="k">if</span> <span class="n">has_cpp</span><span class="p">():</span>
+</span><span id="cpp_check-288"><a href="#cpp_check-288"><span class="linenos">288</span></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using C++ &amp; Python implementation of bmsspy.&quot;</span><span class="p">)</span>
+</span><span id="cpp_check-289"><a href="#cpp_check-289"><span class="linenos">289</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="cpp_check-290"><a href="#cpp_check-290"><span class="linenos">290</span></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using Pure Python implementation of bmsspy.&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Print whether C++ acceleration or pure Python implementation is being used.</p>
 </div>
 
 
