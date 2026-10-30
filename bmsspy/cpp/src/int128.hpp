@@ -30,6 +30,8 @@ struct Int128 {
     constexpr Int128(long long v) : hi(v < 0 ? -1 : 0), lo(static_cast<uint64_t>(v)) {}
     constexpr Int128(unsigned long long v) : hi(0), lo(v) {}
 
+    Int128(float f) : Int128(static_cast<double>(f)) {}
+
     Int128(double d) {
         if (d <= 0.0) {
             hi = 0;
@@ -38,6 +40,19 @@ struct Int128 {
             constexpr double two64 = 18446744073709551616.0;
             double h = std::floor(d / two64);
             double l = d - h * two64;
+            hi = static_cast<int64_t>(h);
+            lo = static_cast<uint64_t>(l);
+        }
+    }
+
+    Int128(long double d) {
+        if (d <= 0.0L) {
+            hi = 0;
+            lo = 0;
+        } else {
+            constexpr long double two64 = 18446744073709551616.0L;
+            long double h = std::floor(d / two64);
+            long double l = d - h * two64;
             hi = static_cast<int64_t>(h);
             lo = static_cast<uint64_t>(l);
         }
@@ -101,7 +116,7 @@ struct Int128 {
 #endif
     }
 
-    friend constexpr Int128 operator*(const Int128& a, const Int128& b) {
+    friend inline Int128 operator*(const Int128& a, const Int128& b) {
         uint64_t hi, lo;
         mul64(a.lo, b.lo, hi, lo);
         hi += static_cast<uint64_t>(a.hi) * b.lo + a.lo * static_cast<uint64_t>(b.hi);
@@ -113,7 +128,7 @@ struct Int128 {
         return *this;
     }
 
-    friend constexpr Int128 operator/(const Int128& a, const Int128& b) {
+    friend inline Int128 operator/(const Int128& a, const Int128& b) {
         if (b.hi == 0 && b.lo == 0) throw std::domain_error("Division by zero");
         if (a < b) return Int128(0);
         if (a == b) return Int128(1);

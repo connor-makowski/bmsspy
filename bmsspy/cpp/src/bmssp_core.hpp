@@ -67,8 +67,8 @@ public:
 
         for (int o : origin_ids) {
             if (o >= 0 && static_cast<size_t>(o) < graph_len) {
-                counter_and_edge_distance_matrix[o] = 0.0L;
-                counter_distance_matrix[o] = 0.0L;
+                counter_and_edge_distance_matrix[o] = dist_t(0);
+                counter_distance_matrix[o] = dist_t(0);
             }
         }
 
