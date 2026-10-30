@@ -1,6 +1,6 @@
 from scgraph import GeoGraph, Graph
 from scgraph.utils import hard_round
-from bmsspy import Bmssp
+from bmsspy import Bmssp, BmsspC, has_cpp
 
 us_freeway_graph = GeoGraph.load_geograph("us_freeway").graph
 
@@ -15,10 +15,19 @@ def eq(a, b):
 def test_path_graph_pivot_relaxation():
     path_graph = [{1: 1}, {2: 1}, {3: 1}, {}]
     for k in [1, 2, 3, 4, 5]:
-        dm = Bmssp(path_graph, use_constant_degree_graph=False).solve(
-            origin_id=0, pivot_relaxation_steps=k
-        )["distance_matrix"]
-        assert dm == [0, 1, 2, 3]
+        for use_cd in [False, True]:
+            dm = Bmssp(path_graph, use_constant_degree_graph=use_cd).solve(
+                origin_id=0, pivot_relaxation_steps=k
+            )["distance_matrix"]
+            assert dm == [0, 1, 2, 3]
+
+            if has_cpp():
+                dm_c = BmsspC(
+                    path_graph, use_constant_degree_graph=use_cd
+                ).solve(origin_id=0, pivot_relaxation_steps=k)[
+                    "distance_matrix"
+                ]
+                assert dm_c == [0.0, 1.0, 2.0, 3.0]
 
 
 def test_us_freeway_pivot_relaxation():
@@ -26,10 +35,19 @@ def test_us_freeway_pivot_relaxation():
         "distance_matrix"
     ][: len(us_freeway_graph)]
     for k in [2, 3, 4, 6]:
-        dm = Bmssp(us_freeway_graph, use_constant_degree_graph=False).solve(
-            origin_id=1, pivot_relaxation_steps=k
-        )["distance_matrix"]
-        assert all(eq(a, b) for a, b in zip(dm, expected))
+        for use_cd in [False, True]:
+            dm = Bmssp(
+                us_freeway_graph, use_constant_degree_graph=use_cd
+            ).solve(origin_id=1, pivot_relaxation_steps=k)["distance_matrix"]
+            assert all(eq(a, b) for a, b in zip(dm, expected))
+
+            if has_cpp():
+                dm_c = BmsspC(
+                    us_freeway_graph, use_constant_degree_graph=use_cd
+                ).solve(origin_id=1, pivot_relaxation_steps=k)[
+                    "distance_matrix"
+                ]
+                assert all(eq(a, b) for a, b in zip(dm_c, expected))
 
 
 if __name__ == "__main__":
@@ -64,4 +82,3 @@ if __name__ == "__main__":
 
     if failed:
         raise Exception("Pivot Relaxation Steps (k) test failed")
-

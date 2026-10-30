@@ -2,6 +2,7 @@ from .core import BmsspCore
 from .helpers.utils import (
     input_check,
     reconstruct_path,
+    convert_to_constant_degree,
     convert_to_constant_out_degree,
     convert_from_constant_degree,
     inf,
@@ -17,7 +18,7 @@ class Bmssp:
         self,
         graph: list[dict[int, int | float]],
         precision: int = 6,
-        use_constant_degree_graph: bool = True,
+        use_constant_degree_graph: bool | str = True,
     ):
         """
         Function:
@@ -41,11 +42,13 @@ class Bmssp:
             - What: The decimal precision to round edge weights to for calculations
                 - Note: This is necessary to ensure that the unique values added to each edge weight do not cause issues with expected returned path lengths.
         - `use_constant_degree_graph`:
-            - Type: bool
+            - Type: bool | str
             - Default: True
-            - What: Whether to convert the input graph to a constant degree graph to match the original BMSSP algorithm requirements.
-            - Note: It appears that this is not necessary for solving the algorithm, but is used to achieve big O complexity targets.
-                    This is default to True even though it appears to be slower in practice for all the graphs we have tested thus far.
+            - What: Whether and how to convert the input graph to a constant degree graph to match the original BMSSP algorithm requirements.
+                - If `True` or `'constant_degree'` / `'degree'`, converts to a constant degree graph (<= 2 in and <= 2 out edges per node).
+                - If `'constant_out_degree'` or `'out_degree'`, converts to a constant out-degree graph (<= 2 out edges per node).
+                - If `False` or `None`, skips constant degree conversion and uses the original graph.
+            - Note: Constant degree conversion is default to True even though it appears to be slower in practice for all the graphs we have tested thus far.
         """
         self.graph = [
             {k: round(Decimal(v), precision) for k, v in i.items()}
@@ -54,13 +57,42 @@ class Bmssp:
         self.precision = precision
         self.use_constant_degree_graph = use_constant_degree_graph
 
-        if self.use_constant_degree_graph:
+        if (
+            self.use_constant_degree_graph is True
+            or self.use_constant_degree_graph
+            in (
+                "degree",
+                "constant_degree",
+                "in_and_out",
+                "both",
+            )
+        ):
+            self.constant_degree_dict = convert_to_constant_degree(self.graph)
+            self.used_graph = self.constant_degree_dict["graph"]
+            self._using_cd = True
+        elif self.use_constant_degree_graph in (
+            "out_degree",
+            "constant_out_degree",
+            "out",
+        ):
             self.constant_degree_dict = convert_to_constant_out_degree(
                 self.graph, out_degree=2
             )
             self.used_graph = self.constant_degree_dict["graph"]
-        else:
+            self._using_cd = True
+        elif (
+            self.use_constant_degree_graph is False
+            or self.use_constant_degree_graph is None
+            or self.use_constant_degree_graph in ("none", "false", "")
+        ):
+            self.constant_degree_dict = None
             self.used_graph = self.graph
+            self._using_cd = False
+        else:
+            raise ValueError(
+                f"Invalid value for use_constant_degree_graph: {self.use_constant_degree_graph}. "
+                "Expected True, False, 'constant_degree', or 'constant_out_degree'."
+            )
 
         ######################
         # Unique Path Length Adjustment Setup
@@ -168,7 +200,7 @@ class Bmssp:
                     "Something went wrong, the origin and destination nodes are not connected."
                 )
 
-        if self.use_constant_degree_graph:
+        if self._using_cd:
             converted_outputs = convert_from_constant_degree(
                 distance_matrix=solver.counter_distance_matrix,
                 predecessor_matrix=solver.predecessor,

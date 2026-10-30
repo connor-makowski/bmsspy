@@ -1,5 +1,6 @@
 \begin{algorithm}[!htbp]
 \SingleSpacedXI
+\small
 \caption{{\color{Red}BMSSP Solve (E2E) (\texttt{BmsspCore.\_\_init\_\_} \& \texttt{Bmssp.solve})}}
 \label{alg:bmssp_solve}
 \SetAlgoLined
@@ -16,10 +17,10 @@ $\textit{dist}[0..|G|-1] \leftarrow \infty$\;
 }
 
 \BlankLine
-{\color{blue}$k \leftarrow \lfloor \log_2(|G|)^{1/3} \rfloor$ \tcp*{FIN: Use $log_2$}\label{alg:bmssp_solve_k}}
+{\color{Fuchsia}$k \leftarrow \left\lfloor(\log_2 |G|)^{1/3}\right\rfloor$ \tcp*{FIN: Use $log_2$}\label{alg:bmssp_solve_k}}
 
-{\color{blue}$t \leftarrow \lfloor \log_2(|G|)^{2/3} \rfloor$ \tcp*{FIN: Use $log_2$}\label{alg:bmssp_solve_t}}
-{\color{blue}$l \leftarrow \left\lceil \dfrac{\log_2(|G|)}{t} \right\rceil$\  \tcp*{FIN: Use $log_2$}\label{alg:bmssp_solve_l}}
+{\color{Fuchsia}$t \leftarrow \left\lfloor(\log_2 |G|)^{2/3}\right\rfloor$ \tcp*{FIN: Use $log_2$}\label{alg:bmssp_solve_t}}
+{\color{Fuchsia}$l \leftarrow \left\lceil \dfrac{\log_2(|G|)}{t} \right\rceil$\  \tcp*{FIN: Use $log_2$}\label{alg:bmssp_solve_l}}
 
 \BlankLine
 
@@ -28,7 +29,7 @@ $(B, U) \leftarrow$ \textsc{RecursiveBMSSP}($l, \infty, O$) \tcp*{Algorithm \ref
 
 \BlankLine
 {\color{Brown}
-  \ForEach{$i \in \textit{dist}$}{
+  \ForEach{$i \in \{0,\ldots,|G|-1\}$}{
     \If{$\textit{dist}[i] \neq \infty$}{
       $\textit{dist}[i] \leftarrow \text{round}(\textit{dist}[i], precision)$\tcp*{RUA: Convert back to original precision}\label{alg:bmssp_solve_precision_adjustment}
     }
@@ -37,10 +38,17 @@ $(B, U) \leftarrow$ \textsc{RecursiveBMSSP}($l, \infty, O$) \tcp*{Algorithm \ref
 
 \BlankLine
 {\color{Red}
-  \eIf{$dest \neq \text{None}$}{
-    {\color{ForestGreen}$\textit{path} \leftarrow \textsc{ReconstructPath}(dest, \textit{pred})$\tcp*{PT: Algorithm \ref{alg:utils_reconstruct_path}}}
+  \uIf{$dest \neq \text{None}$ \textbf{and} $\textit{dist}[dest] \neq \infty$}{
+    {\color{ForestGreen}
+    $\textit{path} \leftarrow \textsc{ReconstructPath}(dest, \textit{pred})$
+    \tcp*{PT: Algorithm~\ref{alg:utils_reconstruct_path}}}
     $\textit{length} \leftarrow \textit{dist}[dest]$\;
-  }{
+  }
+  \ElseIf{$dest \neq \text{None}$}{
+    {\color{ForestGreen}$\textit{path} \leftarrow \text{None}$\;}
+    $\textit{length} \leftarrow \infty$\;
+  }
+  \Else{
     {\color{ForestGreen}$\textit{path} \leftarrow \text{None}$\;}
     $\textit{length} \leftarrow \text{None}$\;
   }

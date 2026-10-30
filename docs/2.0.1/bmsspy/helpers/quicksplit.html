@@ -40,6 +40,9 @@
                     <a class="function" href="#quicksplit">quicksplit</a>
             </li>
             <li>
+                    <a class="function" href="#quicksplit_tuple">quicksplit_tuple</a>
+            </li>
+            <li>
                     <a class="function" href="#quicksplit_dict">quicksplit_dict</a>
             </li>
             <li>
@@ -51,6 +54,7 @@
 <footer>
 <select id="version-selector">
     <option value="latest">latest</option>
+        <option value="2.3.0">2.3.0</option>
         <option value="2.2.2">2.2.2</option>
         <option value="2.1.1">2.1.1</option>
         <option value="2.0.1">2.0.1</option>
@@ -249,17 +253,17 @@
 </span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="n">lower</span><span class="p">,</span> <span class="s2">&quot;higher&quot;</span><span class="p">:</span> <span class="n">higher</span><span class="p">,</span> <span class="s2">&quot;pivot&quot;</span><span class="p">:</span> <span class="n">pivot</span><span class="p">}</span>
 </span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a>
 </span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a>
-</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a><span class="k">def</span><span class="w"> </span><span class="nf">quicksplit_dict</span><span class="p">(</span>
-</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a>    <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">lower_bucket_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a><span class="k">def</span><span class="w"> </span><span class="nf">quicksplit_tuple</span><span class="p">(</span>
+</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a>    <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">lower_bucket_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
 </span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 </span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="sd">    Function:</span>
 </span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a>
-</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a><span class="sd">    - Splits a dictionary of values into two dicts using a variant of the Quickselect algorithm.</span>
+</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a><span class="sd">    - Splits a list of tuples into two lists using a variant of the Quickselect algorithm.</span>
 </span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a>
 </span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a><span class="sd">    Required Arguments:</span>
 </span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a>
-</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a><span class="sd">    - data: A dictionary where keys are any hashable type and values are lists of integers or floats to be split.</span>
+</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a><span class="sd">    - data: A list of tuples where each tuple contains a key (any hashable type) and a value (integer or float) to be split.</span>
 </span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a>
 </span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a><span class="sd">    Optional Arguments:</span>
 </span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a>
@@ -269,8 +273,8 @@
 </span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a><span class="sd">    Returns:</span>
 </span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a>
 </span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a><span class="sd">    - A dictionary with three keys:</span>
-</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a><span class="sd">        - &#39;lower&#39;: A dict of the lower bucket of elements.</span>
-</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a><span class="sd">        - &#39;higher&#39;: A dict of the higher bucket of elements.</span>
+</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a><span class="sd">        - &#39;lower&#39;: A list of tuples in the lower bucket.</span>
+</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a><span class="sd">        - &#39;higher&#39;: A list of tuples in the higher bucket.</span>
 </span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a><span class="sd">        - &#39;pivot&#39;: The max value in the lower bucket or None if the lower bucket is empty (i.e., lower_bucket_size is 0).</span>
 </span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a>    <span class="c1"># If no lower bucket size is given, split in half or as close as possible</span>
@@ -282,7 +286,7 @@
 </span><span id="L-179"><a href="#L-179"><span class="linenos">179</span></a>    <span class="p">),</span> <span class="s2">&quot;lower_bucket_size must be positive and less than or equal to the length of the array&quot;</span>
 </span><span id="L-180"><a href="#L-180"><span class="linenos">180</span></a>    <span class="n">higher</span> <span class="o">=</span> <span class="p">[]</span>
 </span><span id="L-181"><a href="#L-181"><span class="linenos">181</span></a>    <span class="n">lower</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="L-182"><a href="#L-182"><span class="linenos">182</span></a>    <span class="n">arr</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+</span><span id="L-182"><a href="#L-182"><span class="linenos">182</span></a>    <span class="n">arr</span> <span class="o">=</span> <span class="n">data</span>
 </span><span id="L-183"><a href="#L-183"><span class="linenos">183</span></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
 </span><span id="L-184"><a href="#L-184"><span class="linenos">184</span></a>        <span class="n">pivot</span> <span class="o">=</span> <span class="n">median_of_medians</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">],</span> <span class="n">split</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </span><span id="L-185"><a href="#L-185"><span class="linenos">185</span></a>        <span class="c1"># Loop over the array once to partition into three lists</span>
@@ -312,48 +316,117 @@
 </span><span id="L-209"><a href="#L-209"><span class="linenos">209</span></a>            <span class="k">if</span> <span class="n">pivot_split_idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 </span><span id="L-210"><a href="#L-210"><span class="linenos">210</span></a>                <span class="n">pivot</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">below</span><span class="p">])</span>
 </span><span id="L-211"><a href="#L-211"><span class="linenos">211</span></a>            <span class="k">return</span> <span class="p">{</span>
-</span><span id="L-212"><a href="#L-212"><span class="linenos">212</span></a>                <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">lower</span><span class="p">),</span>
-</span><span id="L-213"><a href="#L-213"><span class="linenos">213</span></a>                <span class="s2">&quot;higher&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">higher</span><span class="p">),</span>
+</span><span id="L-212"><a href="#L-212"><span class="linenos">212</span></a>                <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="n">lower</span><span class="p">,</span>
+</span><span id="L-213"><a href="#L-213"><span class="linenos">213</span></a>                <span class="s2">&quot;higher&quot;</span><span class="p">:</span> <span class="n">higher</span><span class="p">,</span>
 </span><span id="L-214"><a href="#L-214"><span class="linenos">214</span></a>                <span class="s2">&quot;pivot&quot;</span><span class="p">:</span> <span class="n">pivot</span><span class="p">,</span>
 </span><span id="L-215"><a href="#L-215"><span class="linenos">215</span></a>            <span class="p">}</span>
 </span><span id="L-216"><a href="#L-216"><span class="linenos">216</span></a>
 </span><span id="L-217"><a href="#L-217"><span class="linenos">217</span></a>
-</span><span id="L-218"><a href="#L-218"><span class="linenos">218</span></a><span class="k">def</span><span class="w"> </span><span class="nf">sortsplit</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">lower_bucket_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-</span><span id="L-219"><a href="#L-219"><span class="linenos">219</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-220"><a href="#L-220"><span class="linenos">220</span></a><span class="sd">    Function:</span>
-</span><span id="L-221"><a href="#L-221"><span class="linenos">221</span></a>
-</span><span id="L-222"><a href="#L-222"><span class="linenos">222</span></a><span class="sd">    - Splits an array into two buckets by sorting the array and dividing it at a specified index.</span>
+</span><span id="L-218"><a href="#L-218"><span class="linenos">218</span></a><span class="k">def</span><span class="w"> </span><span class="nf">quicksplit_dict</span><span class="p">(</span>
+</span><span id="L-219"><a href="#L-219"><span class="linenos">219</span></a>    <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">lower_bucket_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="L-220"><a href="#L-220"><span class="linenos">220</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="L-221"><a href="#L-221"><span class="linenos">221</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-222"><a href="#L-222"><span class="linenos">222</span></a><span class="sd">    Function:</span>
 </span><span id="L-223"><a href="#L-223"><span class="linenos">223</span></a>
-</span><span id="L-224"><a href="#L-224"><span class="linenos">224</span></a><span class="sd">    Required Arguments:</span>
+</span><span id="L-224"><a href="#L-224"><span class="linenos">224</span></a><span class="sd">    - Splits a dictionary of values into two dicts using a variant of the Quickselect algorithm.</span>
 </span><span id="L-225"><a href="#L-225"><span class="linenos">225</span></a>
-</span><span id="L-226"><a href="#L-226"><span class="linenos">226</span></a><span class="sd">    - arr: A list of integers or floats to be split.</span>
+</span><span id="L-226"><a href="#L-226"><span class="linenos">226</span></a><span class="sd">    Required Arguments:</span>
 </span><span id="L-227"><a href="#L-227"><span class="linenos">227</span></a>
-</span><span id="L-228"><a href="#L-228"><span class="linenos">228</span></a><span class="sd">    Optional Arguments:</span>
+</span><span id="L-228"><a href="#L-228"><span class="linenos">228</span></a><span class="sd">    - data: A dictionary where keys are any hashable type and values are lists of integers or floats to be split.</span>
 </span><span id="L-229"><a href="#L-229"><span class="linenos">229</span></a>
-</span><span id="L-230"><a href="#L-230"><span class="linenos">230</span></a><span class="sd">    - lower_bucket_size: The desired size of the lower bucket.</span>
-</span><span id="L-231"><a href="#L-231"><span class="linenos">231</span></a><span class="sd">        - If not provided, the function will split the array into two equal halves (or as close as possible).</span>
-</span><span id="L-232"><a href="#L-232"><span class="linenos">232</span></a>
-</span><span id="L-233"><a href="#L-233"><span class="linenos">233</span></a><span class="sd">    Returns:</span>
+</span><span id="L-230"><a href="#L-230"><span class="linenos">230</span></a><span class="sd">    Optional Arguments:</span>
+</span><span id="L-231"><a href="#L-231"><span class="linenos">231</span></a>
+</span><span id="L-232"><a href="#L-232"><span class="linenos">232</span></a><span class="sd">    - lower_bucket_size: The desired size of the lower bucket.</span>
+</span><span id="L-233"><a href="#L-233"><span class="linenos">233</span></a><span class="sd">        - If not provided, the function will split the array into two equal halves (or as close as possible).</span>
 </span><span id="L-234"><a href="#L-234"><span class="linenos">234</span></a>
-</span><span id="L-235"><a href="#L-235"><span class="linenos">235</span></a><span class="sd">    - A dictionary with three keys:</span>
-</span><span id="L-236"><a href="#L-236"><span class="linenos">236</span></a><span class="sd">        - &#39;lower&#39;: A list containing the lower bucket of elements.</span>
-</span><span id="L-237"><a href="#L-237"><span class="linenos">237</span></a><span class="sd">        - &#39;higher&#39;: A list containing the higher bucket of elements.</span>
-</span><span id="L-238"><a href="#L-238"><span class="linenos">238</span></a><span class="sd">        - &#39;pivot&#39;: The max value in the lower bucket.</span>
-</span><span id="L-239"><a href="#L-239"><span class="linenos">239</span></a>
-</span><span id="L-240"><a href="#L-240"><span class="linenos">240</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-241"><a href="#L-241"><span class="linenos">241</span></a>    <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-242"><a href="#L-242"><span class="linenos">242</span></a>        <span class="n">lower_bucket_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
-</span><span id="L-243"><a href="#L-243"><span class="linenos">243</span></a>    <span class="k">assert</span> <span class="n">lower_bucket_size</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span>
-</span><span id="L-244"><a href="#L-244"><span class="linenos">244</span></a>        <span class="n">arr</span>
-</span><span id="L-245"><a href="#L-245"><span class="linenos">245</span></a>    <span class="p">),</span> <span class="s2">&quot;lower_bucket_size must be less than or equal to the length of the array&quot;</span>
-</span><span id="L-246"><a href="#L-246"><span class="linenos">246</span></a>    <span class="n">sorted_arr</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
-</span><span id="L-247"><a href="#L-247"><span class="linenos">247</span></a>    <span class="k">return</span> <span class="p">{</span>
-</span><span id="L-248"><a href="#L-248"><span class="linenos">248</span></a>        <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="n">sorted_arr</span><span class="p">[:</span><span class="n">lower_bucket_size</span><span class="p">],</span>
-</span><span id="L-249"><a href="#L-249"><span class="linenos">249</span></a>        <span class="s2">&quot;higher&quot;</span><span class="p">:</span> <span class="n">sorted_arr</span><span class="p">[</span><span class="n">lower_bucket_size</span><span class="p">:],</span>
-</span><span id="L-250"><a href="#L-250"><span class="linenos">250</span></a>        <span class="s2">&quot;pivot&quot;</span><span class="p">:</span> <span class="p">(</span>
-</span><span id="L-251"><a href="#L-251"><span class="linenos">251</span></a>            <span class="n">sorted_arr</span><span class="p">[</span><span class="n">lower_bucket_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
-</span><span id="L-252"><a href="#L-252"><span class="linenos">252</span></a>        <span class="p">),</span>
-</span><span id="L-253"><a href="#L-253"><span class="linenos">253</span></a>    <span class="p">}</span>
+</span><span id="L-235"><a href="#L-235"><span class="linenos">235</span></a><span class="sd">    Returns:</span>
+</span><span id="L-236"><a href="#L-236"><span class="linenos">236</span></a>
+</span><span id="L-237"><a href="#L-237"><span class="linenos">237</span></a><span class="sd">    - A dictionary with three keys:</span>
+</span><span id="L-238"><a href="#L-238"><span class="linenos">238</span></a><span class="sd">        - &#39;lower&#39;: A dict of the lower bucket of elements.</span>
+</span><span id="L-239"><a href="#L-239"><span class="linenos">239</span></a><span class="sd">        - &#39;higher&#39;: A dict of the higher bucket of elements.</span>
+</span><span id="L-240"><a href="#L-240"><span class="linenos">240</span></a><span class="sd">        - &#39;pivot&#39;: The max value in the lower bucket or None if the lower bucket is empty (i.e., lower_bucket_size is 0).</span>
+</span><span id="L-241"><a href="#L-241"><span class="linenos">241</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-242"><a href="#L-242"><span class="linenos">242</span></a>    <span class="c1"># If no lower bucket size is given, split in half or as close as possible</span>
+</span><span id="L-243"><a href="#L-243"><span class="linenos">243</span></a>    <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-244"><a href="#L-244"><span class="linenos">244</span></a>        <span class="n">lower_bucket_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="L-245"><a href="#L-245"><span class="linenos">245</span></a>    <span class="n">lower_bucket_size</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">lower_bucket_size</span><span class="p">)</span>
+</span><span id="L-246"><a href="#L-246"><span class="linenos">246</span></a>    <span class="k">assert</span> <span class="p">(</span>
+</span><span id="L-247"><a href="#L-247"><span class="linenos">247</span></a>        <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">lower_bucket_size</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="L-248"><a href="#L-248"><span class="linenos">248</span></a>    <span class="p">),</span> <span class="s2">&quot;lower_bucket_size must be positive and less than or equal to the length of the array&quot;</span>
+</span><span id="L-249"><a href="#L-249"><span class="linenos">249</span></a>    <span class="n">higher</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="L-250"><a href="#L-250"><span class="linenos">250</span></a>    <span class="n">lower</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="L-251"><a href="#L-251"><span class="linenos">251</span></a>    <span class="n">arr</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+</span><span id="L-252"><a href="#L-252"><span class="linenos">252</span></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span><span id="L-253"><a href="#L-253"><span class="linenos">253</span></a>        <span class="n">pivot</span> <span class="o">=</span> <span class="n">median_of_medians</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">],</span> <span class="n">split</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="L-254"><a href="#L-254"><span class="linenos">254</span></a>        <span class="c1"># Loop over the array once to partition into three lists</span>
+</span><span id="L-255"><a href="#L-255"><span class="linenos">255</span></a>        <span class="c1"># This is faster than using list 3 list comprehensions</span>
+</span><span id="L-256"><a href="#L-256"><span class="linenos">256</span></a>        <span class="n">below</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="L-257"><a href="#L-257"><span class="linenos">257</span></a>        <span class="n">pivots</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="L-258"><a href="#L-258"><span class="linenos">258</span></a>        <span class="n">above</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="L-259"><a href="#L-259"><span class="linenos">259</span></a>        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">:</span>
+</span><span id="L-260"><a href="#L-260"><span class="linenos">260</span></a>            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pivot</span><span class="p">:</span>
+</span><span id="L-261"><a href="#L-261"><span class="linenos">261</span></a>                <span class="n">below</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="L-262"><a href="#L-262"><span class="linenos">262</span></a>            <span class="k">elif</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">pivot</span><span class="p">:</span>
+</span><span id="L-263"><a href="#L-263"><span class="linenos">263</span></a>                <span class="n">above</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="L-264"><a href="#L-264"><span class="linenos">264</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="L-265"><a href="#L-265"><span class="linenos">265</span></a>                <span class="n">pivots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="L-266"><a href="#L-266"><span class="linenos">266</span></a>
+</span><span id="L-267"><a href="#L-267"><span class="linenos">267</span></a>        <span class="n">count_below</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">below</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span>
+</span><span id="L-268"><a href="#L-268"><span class="linenos">268</span></a>        <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="o">&lt;</span> <span class="n">count_below</span><span class="p">:</span>
+</span><span id="L-269"><a href="#L-269"><span class="linenos">269</span></a>            <span class="n">higher</span> <span class="o">=</span> <span class="n">pivots</span> <span class="o">+</span> <span class="n">above</span> <span class="o">+</span> <span class="n">higher</span>
+</span><span id="L-270"><a href="#L-270"><span class="linenos">270</span></a>            <span class="n">arr</span> <span class="o">=</span> <span class="n">below</span>
+</span><span id="L-271"><a href="#L-271"><span class="linenos">271</span></a>        <span class="k">elif</span> <span class="n">lower_bucket_size</span> <span class="o">&gt;</span> <span class="n">count_below</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">pivots</span><span class="p">):</span>
+</span><span id="L-272"><a href="#L-272"><span class="linenos">272</span></a>            <span class="n">lower</span> <span class="o">=</span> <span class="n">lower</span> <span class="o">+</span> <span class="n">below</span> <span class="o">+</span> <span class="n">pivots</span>
+</span><span id="L-273"><a href="#L-273"><span class="linenos">273</span></a>            <span class="n">arr</span> <span class="o">=</span> <span class="n">above</span>
+</span><span id="L-274"><a href="#L-274"><span class="linenos">274</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="L-275"><a href="#L-275"><span class="linenos">275</span></a>            <span class="n">pivot_split_idx</span> <span class="o">=</span> <span class="n">lower_bucket_size</span> <span class="o">-</span> <span class="n">count_below</span>
+</span><span id="L-276"><a href="#L-276"><span class="linenos">276</span></a>            <span class="n">lower</span> <span class="o">=</span> <span class="n">lower</span> <span class="o">+</span> <span class="n">below</span> <span class="o">+</span> <span class="n">pivots</span><span class="p">[:</span><span class="n">pivot_split_idx</span><span class="p">]</span>
+</span><span id="L-277"><a href="#L-277"><span class="linenos">277</span></a>            <span class="n">higher</span> <span class="o">=</span> <span class="n">pivots</span><span class="p">[</span><span class="n">pivot_split_idx</span><span class="p">:]</span> <span class="o">+</span> <span class="n">above</span> <span class="o">+</span> <span class="n">higher</span>
+</span><span id="L-278"><a href="#L-278"><span class="linenos">278</span></a>            <span class="k">if</span> <span class="n">pivot_split_idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="L-279"><a href="#L-279"><span class="linenos">279</span></a>                <span class="n">pivot</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">below</span><span class="p">])</span>
+</span><span id="L-280"><a href="#L-280"><span class="linenos">280</span></a>            <span class="k">return</span> <span class="p">{</span>
+</span><span id="L-281"><a href="#L-281"><span class="linenos">281</span></a>                <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">lower</span><span class="p">),</span>
+</span><span id="L-282"><a href="#L-282"><span class="linenos">282</span></a>                <span class="s2">&quot;higher&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">higher</span><span class="p">),</span>
+</span><span id="L-283"><a href="#L-283"><span class="linenos">283</span></a>                <span class="s2">&quot;pivot&quot;</span><span class="p">:</span> <span class="n">pivot</span><span class="p">,</span>
+</span><span id="L-284"><a href="#L-284"><span class="linenos">284</span></a>            <span class="p">}</span>
+</span><span id="L-285"><a href="#L-285"><span class="linenos">285</span></a>
+</span><span id="L-286"><a href="#L-286"><span class="linenos">286</span></a>
+</span><span id="L-287"><a href="#L-287"><span class="linenos">287</span></a><span class="k">def</span><span class="w"> </span><span class="nf">sortsplit</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">lower_bucket_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="L-288"><a href="#L-288"><span class="linenos">288</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-289"><a href="#L-289"><span class="linenos">289</span></a><span class="sd">    Function:</span>
+</span><span id="L-290"><a href="#L-290"><span class="linenos">290</span></a>
+</span><span id="L-291"><a href="#L-291"><span class="linenos">291</span></a><span class="sd">    - Splits an array into two buckets by sorting the array and dividing it at a specified index.</span>
+</span><span id="L-292"><a href="#L-292"><span class="linenos">292</span></a>
+</span><span id="L-293"><a href="#L-293"><span class="linenos">293</span></a><span class="sd">    Required Arguments:</span>
+</span><span id="L-294"><a href="#L-294"><span class="linenos">294</span></a>
+</span><span id="L-295"><a href="#L-295"><span class="linenos">295</span></a><span class="sd">    - arr: A list of integers or floats to be split.</span>
+</span><span id="L-296"><a href="#L-296"><span class="linenos">296</span></a>
+</span><span id="L-297"><a href="#L-297"><span class="linenos">297</span></a><span class="sd">    Optional Arguments:</span>
+</span><span id="L-298"><a href="#L-298"><span class="linenos">298</span></a>
+</span><span id="L-299"><a href="#L-299"><span class="linenos">299</span></a><span class="sd">    - lower_bucket_size: The desired size of the lower bucket.</span>
+</span><span id="L-300"><a href="#L-300"><span class="linenos">300</span></a><span class="sd">        - If not provided, the function will split the array into two equal halves (or as close as possible).</span>
+</span><span id="L-301"><a href="#L-301"><span class="linenos">301</span></a>
+</span><span id="L-302"><a href="#L-302"><span class="linenos">302</span></a><span class="sd">    Returns:</span>
+</span><span id="L-303"><a href="#L-303"><span class="linenos">303</span></a>
+</span><span id="L-304"><a href="#L-304"><span class="linenos">304</span></a><span class="sd">    - A dictionary with three keys:</span>
+</span><span id="L-305"><a href="#L-305"><span class="linenos">305</span></a><span class="sd">        - &#39;lower&#39;: A list containing the lower bucket of elements.</span>
+</span><span id="L-306"><a href="#L-306"><span class="linenos">306</span></a><span class="sd">        - &#39;higher&#39;: A list containing the higher bucket of elements.</span>
+</span><span id="L-307"><a href="#L-307"><span class="linenos">307</span></a><span class="sd">        - &#39;pivot&#39;: The max value in the lower bucket.</span>
+</span><span id="L-308"><a href="#L-308"><span class="linenos">308</span></a>
+</span><span id="L-309"><a href="#L-309"><span class="linenos">309</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-310"><a href="#L-310"><span class="linenos">310</span></a>    <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-311"><a href="#L-311"><span class="linenos">311</span></a>        <span class="n">lower_bucket_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+</span><span id="L-312"><a href="#L-312"><span class="linenos">312</span></a>    <span class="k">assert</span> <span class="n">lower_bucket_size</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span>
+</span><span id="L-313"><a href="#L-313"><span class="linenos">313</span></a>        <span class="n">arr</span>
+</span><span id="L-314"><a href="#L-314"><span class="linenos">314</span></a>    <span class="p">),</span> <span class="s2">&quot;lower_bucket_size must be less than or equal to the length of the array&quot;</span>
+</span><span id="L-315"><a href="#L-315"><span class="linenos">315</span></a>    <span class="n">sorted_arr</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</span><span id="L-316"><a href="#L-316"><span class="linenos">316</span></a>    <span class="k">return</span> <span class="p">{</span>
+</span><span id="L-317"><a href="#L-317"><span class="linenos">317</span></a>        <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="n">sorted_arr</span><span class="p">[:</span><span class="n">lower_bucket_size</span><span class="p">],</span>
+</span><span id="L-318"><a href="#L-318"><span class="linenos">318</span></a>        <span class="s2">&quot;higher&quot;</span><span class="p">:</span> <span class="n">sorted_arr</span><span class="p">[</span><span class="n">lower_bucket_size</span><span class="p">:],</span>
+</span><span id="L-319"><a href="#L-319"><span class="linenos">319</span></a>        <span class="s2">&quot;pivot&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="L-320"><a href="#L-320"><span class="linenos">320</span></a>            <span class="n">sorted_arr</span><span class="p">[</span><span class="n">lower_bucket_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span id="L-321"><a href="#L-321"><span class="linenos">321</span></a>        <span class="p">),</span>
+</span><span id="L-322"><a href="#L-322"><span class="linenos">322</span></a>    <span class="p">}</span>
 </span></pre></div>
 
 
@@ -649,6 +722,122 @@
 
 
                 </section>
+                <section id="quicksplit_tuple">
+                            <input id="quicksplit_tuple-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">quicksplit_tuple</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]]</span>,</span><span class="param">	<span class="n">lower_bucket_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">) -> <span class="nb">dict</span>:</span></span>
+
+                <label class="view-source-button" for="quicksplit_tuple-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#quicksplit_tuple"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="quicksplit_tuple-150"><a href="#quicksplit_tuple-150"><span class="linenos">150</span></a><span class="k">def</span><span class="w"> </span><span class="nf">quicksplit_tuple</span><span class="p">(</span>
+</span><span id="quicksplit_tuple-151"><a href="#quicksplit_tuple-151"><span class="linenos">151</span></a>    <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">lower_bucket_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="quicksplit_tuple-152"><a href="#quicksplit_tuple-152"><span class="linenos">152</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="quicksplit_tuple-153"><a href="#quicksplit_tuple-153"><span class="linenos">153</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="quicksplit_tuple-154"><a href="#quicksplit_tuple-154"><span class="linenos">154</span></a><span class="sd">    Function:</span>
+</span><span id="quicksplit_tuple-155"><a href="#quicksplit_tuple-155"><span class="linenos">155</span></a>
+</span><span id="quicksplit_tuple-156"><a href="#quicksplit_tuple-156"><span class="linenos">156</span></a><span class="sd">    - Splits a list of tuples into two lists using a variant of the Quickselect algorithm.</span>
+</span><span id="quicksplit_tuple-157"><a href="#quicksplit_tuple-157"><span class="linenos">157</span></a>
+</span><span id="quicksplit_tuple-158"><a href="#quicksplit_tuple-158"><span class="linenos">158</span></a><span class="sd">    Required Arguments:</span>
+</span><span id="quicksplit_tuple-159"><a href="#quicksplit_tuple-159"><span class="linenos">159</span></a>
+</span><span id="quicksplit_tuple-160"><a href="#quicksplit_tuple-160"><span class="linenos">160</span></a><span class="sd">    - data: A list of tuples where each tuple contains a key (any hashable type) and a value (integer or float) to be split.</span>
+</span><span id="quicksplit_tuple-161"><a href="#quicksplit_tuple-161"><span class="linenos">161</span></a>
+</span><span id="quicksplit_tuple-162"><a href="#quicksplit_tuple-162"><span class="linenos">162</span></a><span class="sd">    Optional Arguments:</span>
+</span><span id="quicksplit_tuple-163"><a href="#quicksplit_tuple-163"><span class="linenos">163</span></a>
+</span><span id="quicksplit_tuple-164"><a href="#quicksplit_tuple-164"><span class="linenos">164</span></a><span class="sd">    - lower_bucket_size: The desired size of the lower bucket.</span>
+</span><span id="quicksplit_tuple-165"><a href="#quicksplit_tuple-165"><span class="linenos">165</span></a><span class="sd">        - If not provided, the function will split the array into two equal halves (or as close as possible).</span>
+</span><span id="quicksplit_tuple-166"><a href="#quicksplit_tuple-166"><span class="linenos">166</span></a>
+</span><span id="quicksplit_tuple-167"><a href="#quicksplit_tuple-167"><span class="linenos">167</span></a><span class="sd">    Returns:</span>
+</span><span id="quicksplit_tuple-168"><a href="#quicksplit_tuple-168"><span class="linenos">168</span></a>
+</span><span id="quicksplit_tuple-169"><a href="#quicksplit_tuple-169"><span class="linenos">169</span></a><span class="sd">    - A dictionary with three keys:</span>
+</span><span id="quicksplit_tuple-170"><a href="#quicksplit_tuple-170"><span class="linenos">170</span></a><span class="sd">        - &#39;lower&#39;: A list of tuples in the lower bucket.</span>
+</span><span id="quicksplit_tuple-171"><a href="#quicksplit_tuple-171"><span class="linenos">171</span></a><span class="sd">        - &#39;higher&#39;: A list of tuples in the higher bucket.</span>
+</span><span id="quicksplit_tuple-172"><a href="#quicksplit_tuple-172"><span class="linenos">172</span></a><span class="sd">        - &#39;pivot&#39;: The max value in the lower bucket or None if the lower bucket is empty (i.e., lower_bucket_size is 0).</span>
+</span><span id="quicksplit_tuple-173"><a href="#quicksplit_tuple-173"><span class="linenos">173</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="quicksplit_tuple-174"><a href="#quicksplit_tuple-174"><span class="linenos">174</span></a>    <span class="c1"># If no lower bucket size is given, split in half or as close as possible</span>
+</span><span id="quicksplit_tuple-175"><a href="#quicksplit_tuple-175"><span class="linenos">175</span></a>    <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="quicksplit_tuple-176"><a href="#quicksplit_tuple-176"><span class="linenos">176</span></a>        <span class="n">lower_bucket_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="quicksplit_tuple-177"><a href="#quicksplit_tuple-177"><span class="linenos">177</span></a>    <span class="n">lower_bucket_size</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">lower_bucket_size</span><span class="p">)</span>
+</span><span id="quicksplit_tuple-178"><a href="#quicksplit_tuple-178"><span class="linenos">178</span></a>    <span class="k">assert</span> <span class="p">(</span>
+</span><span id="quicksplit_tuple-179"><a href="#quicksplit_tuple-179"><span class="linenos">179</span></a>        <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">lower_bucket_size</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="quicksplit_tuple-180"><a href="#quicksplit_tuple-180"><span class="linenos">180</span></a>    <span class="p">),</span> <span class="s2">&quot;lower_bucket_size must be positive and less than or equal to the length of the array&quot;</span>
+</span><span id="quicksplit_tuple-181"><a href="#quicksplit_tuple-181"><span class="linenos">181</span></a>    <span class="n">higher</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="quicksplit_tuple-182"><a href="#quicksplit_tuple-182"><span class="linenos">182</span></a>    <span class="n">lower</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="quicksplit_tuple-183"><a href="#quicksplit_tuple-183"><span class="linenos">183</span></a>    <span class="n">arr</span> <span class="o">=</span> <span class="n">data</span>
+</span><span id="quicksplit_tuple-184"><a href="#quicksplit_tuple-184"><span class="linenos">184</span></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span><span id="quicksplit_tuple-185"><a href="#quicksplit_tuple-185"><span class="linenos">185</span></a>        <span class="n">pivot</span> <span class="o">=</span> <span class="n">median_of_medians</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">],</span> <span class="n">split</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="quicksplit_tuple-186"><a href="#quicksplit_tuple-186"><span class="linenos">186</span></a>        <span class="c1"># Loop over the array once to partition into three lists</span>
+</span><span id="quicksplit_tuple-187"><a href="#quicksplit_tuple-187"><span class="linenos">187</span></a>        <span class="c1"># This is faster than using list 3 list comprehensions</span>
+</span><span id="quicksplit_tuple-188"><a href="#quicksplit_tuple-188"><span class="linenos">188</span></a>        <span class="n">below</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="quicksplit_tuple-189"><a href="#quicksplit_tuple-189"><span class="linenos">189</span></a>        <span class="n">pivots</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="quicksplit_tuple-190"><a href="#quicksplit_tuple-190"><span class="linenos">190</span></a>        <span class="n">above</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="quicksplit_tuple-191"><a href="#quicksplit_tuple-191"><span class="linenos">191</span></a>        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">:</span>
+</span><span id="quicksplit_tuple-192"><a href="#quicksplit_tuple-192"><span class="linenos">192</span></a>            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pivot</span><span class="p">:</span>
+</span><span id="quicksplit_tuple-193"><a href="#quicksplit_tuple-193"><span class="linenos">193</span></a>                <span class="n">below</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="quicksplit_tuple-194"><a href="#quicksplit_tuple-194"><span class="linenos">194</span></a>            <span class="k">elif</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">pivot</span><span class="p">:</span>
+</span><span id="quicksplit_tuple-195"><a href="#quicksplit_tuple-195"><span class="linenos">195</span></a>                <span class="n">above</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="quicksplit_tuple-196"><a href="#quicksplit_tuple-196"><span class="linenos">196</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="quicksplit_tuple-197"><a href="#quicksplit_tuple-197"><span class="linenos">197</span></a>                <span class="n">pivots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="quicksplit_tuple-198"><a href="#quicksplit_tuple-198"><span class="linenos">198</span></a>
+</span><span id="quicksplit_tuple-199"><a href="#quicksplit_tuple-199"><span class="linenos">199</span></a>        <span class="n">count_below</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">below</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span>
+</span><span id="quicksplit_tuple-200"><a href="#quicksplit_tuple-200"><span class="linenos">200</span></a>        <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="o">&lt;</span> <span class="n">count_below</span><span class="p">:</span>
+</span><span id="quicksplit_tuple-201"><a href="#quicksplit_tuple-201"><span class="linenos">201</span></a>            <span class="n">higher</span> <span class="o">=</span> <span class="n">pivots</span> <span class="o">+</span> <span class="n">above</span> <span class="o">+</span> <span class="n">higher</span>
+</span><span id="quicksplit_tuple-202"><a href="#quicksplit_tuple-202"><span class="linenos">202</span></a>            <span class="n">arr</span> <span class="o">=</span> <span class="n">below</span>
+</span><span id="quicksplit_tuple-203"><a href="#quicksplit_tuple-203"><span class="linenos">203</span></a>        <span class="k">elif</span> <span class="n">lower_bucket_size</span> <span class="o">&gt;</span> <span class="n">count_below</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">pivots</span><span class="p">):</span>
+</span><span id="quicksplit_tuple-204"><a href="#quicksplit_tuple-204"><span class="linenos">204</span></a>            <span class="n">lower</span> <span class="o">=</span> <span class="n">lower</span> <span class="o">+</span> <span class="n">below</span> <span class="o">+</span> <span class="n">pivots</span>
+</span><span id="quicksplit_tuple-205"><a href="#quicksplit_tuple-205"><span class="linenos">205</span></a>            <span class="n">arr</span> <span class="o">=</span> <span class="n">above</span>
+</span><span id="quicksplit_tuple-206"><a href="#quicksplit_tuple-206"><span class="linenos">206</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="quicksplit_tuple-207"><a href="#quicksplit_tuple-207"><span class="linenos">207</span></a>            <span class="n">pivot_split_idx</span> <span class="o">=</span> <span class="n">lower_bucket_size</span> <span class="o">-</span> <span class="n">count_below</span>
+</span><span id="quicksplit_tuple-208"><a href="#quicksplit_tuple-208"><span class="linenos">208</span></a>            <span class="n">lower</span> <span class="o">=</span> <span class="n">lower</span> <span class="o">+</span> <span class="n">below</span> <span class="o">+</span> <span class="n">pivots</span><span class="p">[:</span><span class="n">pivot_split_idx</span><span class="p">]</span>
+</span><span id="quicksplit_tuple-209"><a href="#quicksplit_tuple-209"><span class="linenos">209</span></a>            <span class="n">higher</span> <span class="o">=</span> <span class="n">pivots</span><span class="p">[</span><span class="n">pivot_split_idx</span><span class="p">:]</span> <span class="o">+</span> <span class="n">above</span> <span class="o">+</span> <span class="n">higher</span>
+</span><span id="quicksplit_tuple-210"><a href="#quicksplit_tuple-210"><span class="linenos">210</span></a>            <span class="k">if</span> <span class="n">pivot_split_idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="quicksplit_tuple-211"><a href="#quicksplit_tuple-211"><span class="linenos">211</span></a>                <span class="n">pivot</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">below</span><span class="p">])</span>
+</span><span id="quicksplit_tuple-212"><a href="#quicksplit_tuple-212"><span class="linenos">212</span></a>            <span class="k">return</span> <span class="p">{</span>
+</span><span id="quicksplit_tuple-213"><a href="#quicksplit_tuple-213"><span class="linenos">213</span></a>                <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="n">lower</span><span class="p">,</span>
+</span><span id="quicksplit_tuple-214"><a href="#quicksplit_tuple-214"><span class="linenos">214</span></a>                <span class="s2">&quot;higher&quot;</span><span class="p">:</span> <span class="n">higher</span><span class="p">,</span>
+</span><span id="quicksplit_tuple-215"><a href="#quicksplit_tuple-215"><span class="linenos">215</span></a>                <span class="s2">&quot;pivot&quot;</span><span class="p">:</span> <span class="n">pivot</span><span class="p">,</span>
+</span><span id="quicksplit_tuple-216"><a href="#quicksplit_tuple-216"><span class="linenos">216</span></a>            <span class="p">}</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Function:</p>
+
+<ul>
+<li>Splits a list of tuples into two lists using a variant of the Quickselect algorithm.</li>
+</ul>
+
+<p>Required Arguments:</p>
+
+<ul>
+<li>data: A list of tuples where each tuple contains a key (any hashable type) and a value (integer or float) to be split.</li>
+</ul>
+
+<p>Optional Arguments:</p>
+
+<ul>
+<li>lower_bucket_size: The desired size of the lower bucket.
+<ul>
+<li>If not provided, the function will split the array into two equal halves (or as close as possible).</li>
+</ul></li>
+</ul>
+
+<p>Returns:</p>
+
+<ul>
+<li>A dictionary with three keys:
+<ul>
+<li>'lower': A list of tuples in the lower bucket.</li>
+<li>'higher': A list of tuples in the higher bucket.</li>
+<li>'pivot': The max value in the lower bucket or None if the lower bucket is empty (i.e., lower_bucket_size is 0).</li>
+</ul></li>
+</ul>
+</div>
+
+
+                </section>
                 <section id="quicksplit_dict">
                             <input id="quicksplit_dict-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
@@ -660,73 +849,73 @@
 
     </div>
     <a class="headerlink" href="#quicksplit_dict"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="quicksplit_dict-150"><a href="#quicksplit_dict-150"><span class="linenos">150</span></a><span class="k">def</span><span class="w"> </span><span class="nf">quicksplit_dict</span><span class="p">(</span>
-</span><span id="quicksplit_dict-151"><a href="#quicksplit_dict-151"><span class="linenos">151</span></a>    <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">lower_bucket_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="quicksplit_dict-152"><a href="#quicksplit_dict-152"><span class="linenos">152</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-</span><span id="quicksplit_dict-153"><a href="#quicksplit_dict-153"><span class="linenos">153</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="quicksplit_dict-154"><a href="#quicksplit_dict-154"><span class="linenos">154</span></a><span class="sd">    Function:</span>
-</span><span id="quicksplit_dict-155"><a href="#quicksplit_dict-155"><span class="linenos">155</span></a>
-</span><span id="quicksplit_dict-156"><a href="#quicksplit_dict-156"><span class="linenos">156</span></a><span class="sd">    - Splits a dictionary of values into two dicts using a variant of the Quickselect algorithm.</span>
-</span><span id="quicksplit_dict-157"><a href="#quicksplit_dict-157"><span class="linenos">157</span></a>
-</span><span id="quicksplit_dict-158"><a href="#quicksplit_dict-158"><span class="linenos">158</span></a><span class="sd">    Required Arguments:</span>
-</span><span id="quicksplit_dict-159"><a href="#quicksplit_dict-159"><span class="linenos">159</span></a>
-</span><span id="quicksplit_dict-160"><a href="#quicksplit_dict-160"><span class="linenos">160</span></a><span class="sd">    - data: A dictionary where keys are any hashable type and values are lists of integers or floats to be split.</span>
-</span><span id="quicksplit_dict-161"><a href="#quicksplit_dict-161"><span class="linenos">161</span></a>
-</span><span id="quicksplit_dict-162"><a href="#quicksplit_dict-162"><span class="linenos">162</span></a><span class="sd">    Optional Arguments:</span>
-</span><span id="quicksplit_dict-163"><a href="#quicksplit_dict-163"><span class="linenos">163</span></a>
-</span><span id="quicksplit_dict-164"><a href="#quicksplit_dict-164"><span class="linenos">164</span></a><span class="sd">    - lower_bucket_size: The desired size of the lower bucket.</span>
-</span><span id="quicksplit_dict-165"><a href="#quicksplit_dict-165"><span class="linenos">165</span></a><span class="sd">        - If not provided, the function will split the array into two equal halves (or as close as possible).</span>
-</span><span id="quicksplit_dict-166"><a href="#quicksplit_dict-166"><span class="linenos">166</span></a>
-</span><span id="quicksplit_dict-167"><a href="#quicksplit_dict-167"><span class="linenos">167</span></a><span class="sd">    Returns:</span>
-</span><span id="quicksplit_dict-168"><a href="#quicksplit_dict-168"><span class="linenos">168</span></a>
-</span><span id="quicksplit_dict-169"><a href="#quicksplit_dict-169"><span class="linenos">169</span></a><span class="sd">    - A dictionary with three keys:</span>
-</span><span id="quicksplit_dict-170"><a href="#quicksplit_dict-170"><span class="linenos">170</span></a><span class="sd">        - &#39;lower&#39;: A dict of the lower bucket of elements.</span>
-</span><span id="quicksplit_dict-171"><a href="#quicksplit_dict-171"><span class="linenos">171</span></a><span class="sd">        - &#39;higher&#39;: A dict of the higher bucket of elements.</span>
-</span><span id="quicksplit_dict-172"><a href="#quicksplit_dict-172"><span class="linenos">172</span></a><span class="sd">        - &#39;pivot&#39;: The max value in the lower bucket or None if the lower bucket is empty (i.e., lower_bucket_size is 0).</span>
-</span><span id="quicksplit_dict-173"><a href="#quicksplit_dict-173"><span class="linenos">173</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="quicksplit_dict-174"><a href="#quicksplit_dict-174"><span class="linenos">174</span></a>    <span class="c1"># If no lower bucket size is given, split in half or as close as possible</span>
-</span><span id="quicksplit_dict-175"><a href="#quicksplit_dict-175"><span class="linenos">175</span></a>    <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="quicksplit_dict-176"><a href="#quicksplit_dict-176"><span class="linenos">176</span></a>        <span class="n">lower_bucket_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-</span><span id="quicksplit_dict-177"><a href="#quicksplit_dict-177"><span class="linenos">177</span></a>    <span class="n">lower_bucket_size</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">lower_bucket_size</span><span class="p">)</span>
-</span><span id="quicksplit_dict-178"><a href="#quicksplit_dict-178"><span class="linenos">178</span></a>    <span class="k">assert</span> <span class="p">(</span>
-</span><span id="quicksplit_dict-179"><a href="#quicksplit_dict-179"><span class="linenos">179</span></a>        <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">lower_bucket_size</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="quicksplit_dict-180"><a href="#quicksplit_dict-180"><span class="linenos">180</span></a>    <span class="p">),</span> <span class="s2">&quot;lower_bucket_size must be positive and less than or equal to the length of the array&quot;</span>
-</span><span id="quicksplit_dict-181"><a href="#quicksplit_dict-181"><span class="linenos">181</span></a>    <span class="n">higher</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="quicksplit_dict-182"><a href="#quicksplit_dict-182"><span class="linenos">182</span></a>    <span class="n">lower</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="quicksplit_dict-183"><a href="#quicksplit_dict-183"><span class="linenos">183</span></a>    <span class="n">arr</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-</span><span id="quicksplit_dict-184"><a href="#quicksplit_dict-184"><span class="linenos">184</span></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-</span><span id="quicksplit_dict-185"><a href="#quicksplit_dict-185"><span class="linenos">185</span></a>        <span class="n">pivot</span> <span class="o">=</span> <span class="n">median_of_medians</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">],</span> <span class="n">split</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="quicksplit_dict-186"><a href="#quicksplit_dict-186"><span class="linenos">186</span></a>        <span class="c1"># Loop over the array once to partition into three lists</span>
-</span><span id="quicksplit_dict-187"><a href="#quicksplit_dict-187"><span class="linenos">187</span></a>        <span class="c1"># This is faster than using list 3 list comprehensions</span>
-</span><span id="quicksplit_dict-188"><a href="#quicksplit_dict-188"><span class="linenos">188</span></a>        <span class="n">below</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="quicksplit_dict-189"><a href="#quicksplit_dict-189"><span class="linenos">189</span></a>        <span class="n">pivots</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="quicksplit_dict-190"><a href="#quicksplit_dict-190"><span class="linenos">190</span></a>        <span class="n">above</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="quicksplit_dict-191"><a href="#quicksplit_dict-191"><span class="linenos">191</span></a>        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">:</span>
-</span><span id="quicksplit_dict-192"><a href="#quicksplit_dict-192"><span class="linenos">192</span></a>            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pivot</span><span class="p">:</span>
-</span><span id="quicksplit_dict-193"><a href="#quicksplit_dict-193"><span class="linenos">193</span></a>                <span class="n">below</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-</span><span id="quicksplit_dict-194"><a href="#quicksplit_dict-194"><span class="linenos">194</span></a>            <span class="k">elif</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">pivot</span><span class="p">:</span>
-</span><span id="quicksplit_dict-195"><a href="#quicksplit_dict-195"><span class="linenos">195</span></a>                <span class="n">above</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-</span><span id="quicksplit_dict-196"><a href="#quicksplit_dict-196"><span class="linenos">196</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="quicksplit_dict-197"><a href="#quicksplit_dict-197"><span class="linenos">197</span></a>                <span class="n">pivots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-</span><span id="quicksplit_dict-198"><a href="#quicksplit_dict-198"><span class="linenos">198</span></a>
-</span><span id="quicksplit_dict-199"><a href="#quicksplit_dict-199"><span class="linenos">199</span></a>        <span class="n">count_below</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">below</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span>
-</span><span id="quicksplit_dict-200"><a href="#quicksplit_dict-200"><span class="linenos">200</span></a>        <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="o">&lt;</span> <span class="n">count_below</span><span class="p">:</span>
-</span><span id="quicksplit_dict-201"><a href="#quicksplit_dict-201"><span class="linenos">201</span></a>            <span class="n">higher</span> <span class="o">=</span> <span class="n">pivots</span> <span class="o">+</span> <span class="n">above</span> <span class="o">+</span> <span class="n">higher</span>
-</span><span id="quicksplit_dict-202"><a href="#quicksplit_dict-202"><span class="linenos">202</span></a>            <span class="n">arr</span> <span class="o">=</span> <span class="n">below</span>
-</span><span id="quicksplit_dict-203"><a href="#quicksplit_dict-203"><span class="linenos">203</span></a>        <span class="k">elif</span> <span class="n">lower_bucket_size</span> <span class="o">&gt;</span> <span class="n">count_below</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">pivots</span><span class="p">):</span>
-</span><span id="quicksplit_dict-204"><a href="#quicksplit_dict-204"><span class="linenos">204</span></a>            <span class="n">lower</span> <span class="o">=</span> <span class="n">lower</span> <span class="o">+</span> <span class="n">below</span> <span class="o">+</span> <span class="n">pivots</span>
-</span><span id="quicksplit_dict-205"><a href="#quicksplit_dict-205"><span class="linenos">205</span></a>            <span class="n">arr</span> <span class="o">=</span> <span class="n">above</span>
-</span><span id="quicksplit_dict-206"><a href="#quicksplit_dict-206"><span class="linenos">206</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="quicksplit_dict-207"><a href="#quicksplit_dict-207"><span class="linenos">207</span></a>            <span class="n">pivot_split_idx</span> <span class="o">=</span> <span class="n">lower_bucket_size</span> <span class="o">-</span> <span class="n">count_below</span>
-</span><span id="quicksplit_dict-208"><a href="#quicksplit_dict-208"><span class="linenos">208</span></a>            <span class="n">lower</span> <span class="o">=</span> <span class="n">lower</span> <span class="o">+</span> <span class="n">below</span> <span class="o">+</span> <span class="n">pivots</span><span class="p">[:</span><span class="n">pivot_split_idx</span><span class="p">]</span>
-</span><span id="quicksplit_dict-209"><a href="#quicksplit_dict-209"><span class="linenos">209</span></a>            <span class="n">higher</span> <span class="o">=</span> <span class="n">pivots</span><span class="p">[</span><span class="n">pivot_split_idx</span><span class="p">:]</span> <span class="o">+</span> <span class="n">above</span> <span class="o">+</span> <span class="n">higher</span>
-</span><span id="quicksplit_dict-210"><a href="#quicksplit_dict-210"><span class="linenos">210</span></a>            <span class="k">if</span> <span class="n">pivot_split_idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="quicksplit_dict-211"><a href="#quicksplit_dict-211"><span class="linenos">211</span></a>                <span class="n">pivot</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">below</span><span class="p">])</span>
-</span><span id="quicksplit_dict-212"><a href="#quicksplit_dict-212"><span class="linenos">212</span></a>            <span class="k">return</span> <span class="p">{</span>
-</span><span id="quicksplit_dict-213"><a href="#quicksplit_dict-213"><span class="linenos">213</span></a>                <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">lower</span><span class="p">),</span>
-</span><span id="quicksplit_dict-214"><a href="#quicksplit_dict-214"><span class="linenos">214</span></a>                <span class="s2">&quot;higher&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">higher</span><span class="p">),</span>
-</span><span id="quicksplit_dict-215"><a href="#quicksplit_dict-215"><span class="linenos">215</span></a>                <span class="s2">&quot;pivot&quot;</span><span class="p">:</span> <span class="n">pivot</span><span class="p">,</span>
-</span><span id="quicksplit_dict-216"><a href="#quicksplit_dict-216"><span class="linenos">216</span></a>            <span class="p">}</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="quicksplit_dict-219"><a href="#quicksplit_dict-219"><span class="linenos">219</span></a><span class="k">def</span><span class="w"> </span><span class="nf">quicksplit_dict</span><span class="p">(</span>
+</span><span id="quicksplit_dict-220"><a href="#quicksplit_dict-220"><span class="linenos">220</span></a>    <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">lower_bucket_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="quicksplit_dict-221"><a href="#quicksplit_dict-221"><span class="linenos">221</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="quicksplit_dict-222"><a href="#quicksplit_dict-222"><span class="linenos">222</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="quicksplit_dict-223"><a href="#quicksplit_dict-223"><span class="linenos">223</span></a><span class="sd">    Function:</span>
+</span><span id="quicksplit_dict-224"><a href="#quicksplit_dict-224"><span class="linenos">224</span></a>
+</span><span id="quicksplit_dict-225"><a href="#quicksplit_dict-225"><span class="linenos">225</span></a><span class="sd">    - Splits a dictionary of values into two dicts using a variant of the Quickselect algorithm.</span>
+</span><span id="quicksplit_dict-226"><a href="#quicksplit_dict-226"><span class="linenos">226</span></a>
+</span><span id="quicksplit_dict-227"><a href="#quicksplit_dict-227"><span class="linenos">227</span></a><span class="sd">    Required Arguments:</span>
+</span><span id="quicksplit_dict-228"><a href="#quicksplit_dict-228"><span class="linenos">228</span></a>
+</span><span id="quicksplit_dict-229"><a href="#quicksplit_dict-229"><span class="linenos">229</span></a><span class="sd">    - data: A dictionary where keys are any hashable type and values are lists of integers or floats to be split.</span>
+</span><span id="quicksplit_dict-230"><a href="#quicksplit_dict-230"><span class="linenos">230</span></a>
+</span><span id="quicksplit_dict-231"><a href="#quicksplit_dict-231"><span class="linenos">231</span></a><span class="sd">    Optional Arguments:</span>
+</span><span id="quicksplit_dict-232"><a href="#quicksplit_dict-232"><span class="linenos">232</span></a>
+</span><span id="quicksplit_dict-233"><a href="#quicksplit_dict-233"><span class="linenos">233</span></a><span class="sd">    - lower_bucket_size: The desired size of the lower bucket.</span>
+</span><span id="quicksplit_dict-234"><a href="#quicksplit_dict-234"><span class="linenos">234</span></a><span class="sd">        - If not provided, the function will split the array into two equal halves (or as close as possible).</span>
+</span><span id="quicksplit_dict-235"><a href="#quicksplit_dict-235"><span class="linenos">235</span></a>
+</span><span id="quicksplit_dict-236"><a href="#quicksplit_dict-236"><span class="linenos">236</span></a><span class="sd">    Returns:</span>
+</span><span id="quicksplit_dict-237"><a href="#quicksplit_dict-237"><span class="linenos">237</span></a>
+</span><span id="quicksplit_dict-238"><a href="#quicksplit_dict-238"><span class="linenos">238</span></a><span class="sd">    - A dictionary with three keys:</span>
+</span><span id="quicksplit_dict-239"><a href="#quicksplit_dict-239"><span class="linenos">239</span></a><span class="sd">        - &#39;lower&#39;: A dict of the lower bucket of elements.</span>
+</span><span id="quicksplit_dict-240"><a href="#quicksplit_dict-240"><span class="linenos">240</span></a><span class="sd">        - &#39;higher&#39;: A dict of the higher bucket of elements.</span>
+</span><span id="quicksplit_dict-241"><a href="#quicksplit_dict-241"><span class="linenos">241</span></a><span class="sd">        - &#39;pivot&#39;: The max value in the lower bucket or None if the lower bucket is empty (i.e., lower_bucket_size is 0).</span>
+</span><span id="quicksplit_dict-242"><a href="#quicksplit_dict-242"><span class="linenos">242</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="quicksplit_dict-243"><a href="#quicksplit_dict-243"><span class="linenos">243</span></a>    <span class="c1"># If no lower bucket size is given, split in half or as close as possible</span>
+</span><span id="quicksplit_dict-244"><a href="#quicksplit_dict-244"><span class="linenos">244</span></a>    <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="quicksplit_dict-245"><a href="#quicksplit_dict-245"><span class="linenos">245</span></a>        <span class="n">lower_bucket_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span id="quicksplit_dict-246"><a href="#quicksplit_dict-246"><span class="linenos">246</span></a>    <span class="n">lower_bucket_size</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">lower_bucket_size</span><span class="p">)</span>
+</span><span id="quicksplit_dict-247"><a href="#quicksplit_dict-247"><span class="linenos">247</span></a>    <span class="k">assert</span> <span class="p">(</span>
+</span><span id="quicksplit_dict-248"><a href="#quicksplit_dict-248"><span class="linenos">248</span></a>        <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">lower_bucket_size</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="quicksplit_dict-249"><a href="#quicksplit_dict-249"><span class="linenos">249</span></a>    <span class="p">),</span> <span class="s2">&quot;lower_bucket_size must be positive and less than or equal to the length of the array&quot;</span>
+</span><span id="quicksplit_dict-250"><a href="#quicksplit_dict-250"><span class="linenos">250</span></a>    <span class="n">higher</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="quicksplit_dict-251"><a href="#quicksplit_dict-251"><span class="linenos">251</span></a>    <span class="n">lower</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="quicksplit_dict-252"><a href="#quicksplit_dict-252"><span class="linenos">252</span></a>    <span class="n">arr</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+</span><span id="quicksplit_dict-253"><a href="#quicksplit_dict-253"><span class="linenos">253</span></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span><span id="quicksplit_dict-254"><a href="#quicksplit_dict-254"><span class="linenos">254</span></a>        <span class="n">pivot</span> <span class="o">=</span> <span class="n">median_of_medians</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">],</span> <span class="n">split</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="quicksplit_dict-255"><a href="#quicksplit_dict-255"><span class="linenos">255</span></a>        <span class="c1"># Loop over the array once to partition into three lists</span>
+</span><span id="quicksplit_dict-256"><a href="#quicksplit_dict-256"><span class="linenos">256</span></a>        <span class="c1"># This is faster than using list 3 list comprehensions</span>
+</span><span id="quicksplit_dict-257"><a href="#quicksplit_dict-257"><span class="linenos">257</span></a>        <span class="n">below</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="quicksplit_dict-258"><a href="#quicksplit_dict-258"><span class="linenos">258</span></a>        <span class="n">pivots</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="quicksplit_dict-259"><a href="#quicksplit_dict-259"><span class="linenos">259</span></a>        <span class="n">above</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="quicksplit_dict-260"><a href="#quicksplit_dict-260"><span class="linenos">260</span></a>        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">arr</span><span class="p">:</span>
+</span><span id="quicksplit_dict-261"><a href="#quicksplit_dict-261"><span class="linenos">261</span></a>            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pivot</span><span class="p">:</span>
+</span><span id="quicksplit_dict-262"><a href="#quicksplit_dict-262"><span class="linenos">262</span></a>                <span class="n">below</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="quicksplit_dict-263"><a href="#quicksplit_dict-263"><span class="linenos">263</span></a>            <span class="k">elif</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">pivot</span><span class="p">:</span>
+</span><span id="quicksplit_dict-264"><a href="#quicksplit_dict-264"><span class="linenos">264</span></a>                <span class="n">above</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="quicksplit_dict-265"><a href="#quicksplit_dict-265"><span class="linenos">265</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="quicksplit_dict-266"><a href="#quicksplit_dict-266"><span class="linenos">266</span></a>                <span class="n">pivots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="quicksplit_dict-267"><a href="#quicksplit_dict-267"><span class="linenos">267</span></a>
+</span><span id="quicksplit_dict-268"><a href="#quicksplit_dict-268"><span class="linenos">268</span></a>        <span class="n">count_below</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">below</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span>
+</span><span id="quicksplit_dict-269"><a href="#quicksplit_dict-269"><span class="linenos">269</span></a>        <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="o">&lt;</span> <span class="n">count_below</span><span class="p">:</span>
+</span><span id="quicksplit_dict-270"><a href="#quicksplit_dict-270"><span class="linenos">270</span></a>            <span class="n">higher</span> <span class="o">=</span> <span class="n">pivots</span> <span class="o">+</span> <span class="n">above</span> <span class="o">+</span> <span class="n">higher</span>
+</span><span id="quicksplit_dict-271"><a href="#quicksplit_dict-271"><span class="linenos">271</span></a>            <span class="n">arr</span> <span class="o">=</span> <span class="n">below</span>
+</span><span id="quicksplit_dict-272"><a href="#quicksplit_dict-272"><span class="linenos">272</span></a>        <span class="k">elif</span> <span class="n">lower_bucket_size</span> <span class="o">&gt;</span> <span class="n">count_below</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">pivots</span><span class="p">):</span>
+</span><span id="quicksplit_dict-273"><a href="#quicksplit_dict-273"><span class="linenos">273</span></a>            <span class="n">lower</span> <span class="o">=</span> <span class="n">lower</span> <span class="o">+</span> <span class="n">below</span> <span class="o">+</span> <span class="n">pivots</span>
+</span><span id="quicksplit_dict-274"><a href="#quicksplit_dict-274"><span class="linenos">274</span></a>            <span class="n">arr</span> <span class="o">=</span> <span class="n">above</span>
+</span><span id="quicksplit_dict-275"><a href="#quicksplit_dict-275"><span class="linenos">275</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="quicksplit_dict-276"><a href="#quicksplit_dict-276"><span class="linenos">276</span></a>            <span class="n">pivot_split_idx</span> <span class="o">=</span> <span class="n">lower_bucket_size</span> <span class="o">-</span> <span class="n">count_below</span>
+</span><span id="quicksplit_dict-277"><a href="#quicksplit_dict-277"><span class="linenos">277</span></a>            <span class="n">lower</span> <span class="o">=</span> <span class="n">lower</span> <span class="o">+</span> <span class="n">below</span> <span class="o">+</span> <span class="n">pivots</span><span class="p">[:</span><span class="n">pivot_split_idx</span><span class="p">]</span>
+</span><span id="quicksplit_dict-278"><a href="#quicksplit_dict-278"><span class="linenos">278</span></a>            <span class="n">higher</span> <span class="o">=</span> <span class="n">pivots</span><span class="p">[</span><span class="n">pivot_split_idx</span><span class="p">:]</span> <span class="o">+</span> <span class="n">above</span> <span class="o">+</span> <span class="n">higher</span>
+</span><span id="quicksplit_dict-279"><a href="#quicksplit_dict-279"><span class="linenos">279</span></a>            <span class="k">if</span> <span class="n">pivot_split_idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="quicksplit_dict-280"><a href="#quicksplit_dict-280"><span class="linenos">280</span></a>                <span class="n">pivot</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">below</span><span class="p">])</span>
+</span><span id="quicksplit_dict-281"><a href="#quicksplit_dict-281"><span class="linenos">281</span></a>            <span class="k">return</span> <span class="p">{</span>
+</span><span id="quicksplit_dict-282"><a href="#quicksplit_dict-282"><span class="linenos">282</span></a>                <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">lower</span><span class="p">),</span>
+</span><span id="quicksplit_dict-283"><a href="#quicksplit_dict-283"><span class="linenos">283</span></a>                <span class="s2">&quot;higher&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">higher</span><span class="p">),</span>
+</span><span id="quicksplit_dict-284"><a href="#quicksplit_dict-284"><span class="linenos">284</span></a>                <span class="s2">&quot;pivot&quot;</span><span class="p">:</span> <span class="n">pivot</span><span class="p">,</span>
+</span><span id="quicksplit_dict-285"><a href="#quicksplit_dict-285"><span class="linenos">285</span></a>            <span class="p">}</span>
 </span></pre></div>
 
 
@@ -776,42 +965,42 @@
 
     </div>
     <a class="headerlink" href="#sortsplit"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="sortsplit-219"><a href="#sortsplit-219"><span class="linenos">219</span></a><span class="k">def</span><span class="w"> </span><span class="nf">sortsplit</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">lower_bucket_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-</span><span id="sortsplit-220"><a href="#sortsplit-220"><span class="linenos">220</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="sortsplit-221"><a href="#sortsplit-221"><span class="linenos">221</span></a><span class="sd">    Function:</span>
-</span><span id="sortsplit-222"><a href="#sortsplit-222"><span class="linenos">222</span></a>
-</span><span id="sortsplit-223"><a href="#sortsplit-223"><span class="linenos">223</span></a><span class="sd">    - Splits an array into two buckets by sorting the array and dividing it at a specified index.</span>
-</span><span id="sortsplit-224"><a href="#sortsplit-224"><span class="linenos">224</span></a>
-</span><span id="sortsplit-225"><a href="#sortsplit-225"><span class="linenos">225</span></a><span class="sd">    Required Arguments:</span>
-</span><span id="sortsplit-226"><a href="#sortsplit-226"><span class="linenos">226</span></a>
-</span><span id="sortsplit-227"><a href="#sortsplit-227"><span class="linenos">227</span></a><span class="sd">    - arr: A list of integers or floats to be split.</span>
-</span><span id="sortsplit-228"><a href="#sortsplit-228"><span class="linenos">228</span></a>
-</span><span id="sortsplit-229"><a href="#sortsplit-229"><span class="linenos">229</span></a><span class="sd">    Optional Arguments:</span>
-</span><span id="sortsplit-230"><a href="#sortsplit-230"><span class="linenos">230</span></a>
-</span><span id="sortsplit-231"><a href="#sortsplit-231"><span class="linenos">231</span></a><span class="sd">    - lower_bucket_size: The desired size of the lower bucket.</span>
-</span><span id="sortsplit-232"><a href="#sortsplit-232"><span class="linenos">232</span></a><span class="sd">        - If not provided, the function will split the array into two equal halves (or as close as possible).</span>
-</span><span id="sortsplit-233"><a href="#sortsplit-233"><span class="linenos">233</span></a>
-</span><span id="sortsplit-234"><a href="#sortsplit-234"><span class="linenos">234</span></a><span class="sd">    Returns:</span>
-</span><span id="sortsplit-235"><a href="#sortsplit-235"><span class="linenos">235</span></a>
-</span><span id="sortsplit-236"><a href="#sortsplit-236"><span class="linenos">236</span></a><span class="sd">    - A dictionary with three keys:</span>
-</span><span id="sortsplit-237"><a href="#sortsplit-237"><span class="linenos">237</span></a><span class="sd">        - &#39;lower&#39;: A list containing the lower bucket of elements.</span>
-</span><span id="sortsplit-238"><a href="#sortsplit-238"><span class="linenos">238</span></a><span class="sd">        - &#39;higher&#39;: A list containing the higher bucket of elements.</span>
-</span><span id="sortsplit-239"><a href="#sortsplit-239"><span class="linenos">239</span></a><span class="sd">        - &#39;pivot&#39;: The max value in the lower bucket.</span>
-</span><span id="sortsplit-240"><a href="#sortsplit-240"><span class="linenos">240</span></a>
-</span><span id="sortsplit-241"><a href="#sortsplit-241"><span class="linenos">241</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="sortsplit-242"><a href="#sortsplit-242"><span class="linenos">242</span></a>    <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="sortsplit-243"><a href="#sortsplit-243"><span class="linenos">243</span></a>        <span class="n">lower_bucket_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
-</span><span id="sortsplit-244"><a href="#sortsplit-244"><span class="linenos">244</span></a>    <span class="k">assert</span> <span class="n">lower_bucket_size</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span>
-</span><span id="sortsplit-245"><a href="#sortsplit-245"><span class="linenos">245</span></a>        <span class="n">arr</span>
-</span><span id="sortsplit-246"><a href="#sortsplit-246"><span class="linenos">246</span></a>    <span class="p">),</span> <span class="s2">&quot;lower_bucket_size must be less than or equal to the length of the array&quot;</span>
-</span><span id="sortsplit-247"><a href="#sortsplit-247"><span class="linenos">247</span></a>    <span class="n">sorted_arr</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
-</span><span id="sortsplit-248"><a href="#sortsplit-248"><span class="linenos">248</span></a>    <span class="k">return</span> <span class="p">{</span>
-</span><span id="sortsplit-249"><a href="#sortsplit-249"><span class="linenos">249</span></a>        <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="n">sorted_arr</span><span class="p">[:</span><span class="n">lower_bucket_size</span><span class="p">],</span>
-</span><span id="sortsplit-250"><a href="#sortsplit-250"><span class="linenos">250</span></a>        <span class="s2">&quot;higher&quot;</span><span class="p">:</span> <span class="n">sorted_arr</span><span class="p">[</span><span class="n">lower_bucket_size</span><span class="p">:],</span>
-</span><span id="sortsplit-251"><a href="#sortsplit-251"><span class="linenos">251</span></a>        <span class="s2">&quot;pivot&quot;</span><span class="p">:</span> <span class="p">(</span>
-</span><span id="sortsplit-252"><a href="#sortsplit-252"><span class="linenos">252</span></a>            <span class="n">sorted_arr</span><span class="p">[</span><span class="n">lower_bucket_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
-</span><span id="sortsplit-253"><a href="#sortsplit-253"><span class="linenos">253</span></a>        <span class="p">),</span>
-</span><span id="sortsplit-254"><a href="#sortsplit-254"><span class="linenos">254</span></a>    <span class="p">}</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="sortsplit-288"><a href="#sortsplit-288"><span class="linenos">288</span></a><span class="k">def</span><span class="w"> </span><span class="nf">sortsplit</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">lower_bucket_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="sortsplit-289"><a href="#sortsplit-289"><span class="linenos">289</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="sortsplit-290"><a href="#sortsplit-290"><span class="linenos">290</span></a><span class="sd">    Function:</span>
+</span><span id="sortsplit-291"><a href="#sortsplit-291"><span class="linenos">291</span></a>
+</span><span id="sortsplit-292"><a href="#sortsplit-292"><span class="linenos">292</span></a><span class="sd">    - Splits an array into two buckets by sorting the array and dividing it at a specified index.</span>
+</span><span id="sortsplit-293"><a href="#sortsplit-293"><span class="linenos">293</span></a>
+</span><span id="sortsplit-294"><a href="#sortsplit-294"><span class="linenos">294</span></a><span class="sd">    Required Arguments:</span>
+</span><span id="sortsplit-295"><a href="#sortsplit-295"><span class="linenos">295</span></a>
+</span><span id="sortsplit-296"><a href="#sortsplit-296"><span class="linenos">296</span></a><span class="sd">    - arr: A list of integers or floats to be split.</span>
+</span><span id="sortsplit-297"><a href="#sortsplit-297"><span class="linenos">297</span></a>
+</span><span id="sortsplit-298"><a href="#sortsplit-298"><span class="linenos">298</span></a><span class="sd">    Optional Arguments:</span>
+</span><span id="sortsplit-299"><a href="#sortsplit-299"><span class="linenos">299</span></a>
+</span><span id="sortsplit-300"><a href="#sortsplit-300"><span class="linenos">300</span></a><span class="sd">    - lower_bucket_size: The desired size of the lower bucket.</span>
+</span><span id="sortsplit-301"><a href="#sortsplit-301"><span class="linenos">301</span></a><span class="sd">        - If not provided, the function will split the array into two equal halves (or as close as possible).</span>
+</span><span id="sortsplit-302"><a href="#sortsplit-302"><span class="linenos">302</span></a>
+</span><span id="sortsplit-303"><a href="#sortsplit-303"><span class="linenos">303</span></a><span class="sd">    Returns:</span>
+</span><span id="sortsplit-304"><a href="#sortsplit-304"><span class="linenos">304</span></a>
+</span><span id="sortsplit-305"><a href="#sortsplit-305"><span class="linenos">305</span></a><span class="sd">    - A dictionary with three keys:</span>
+</span><span id="sortsplit-306"><a href="#sortsplit-306"><span class="linenos">306</span></a><span class="sd">        - &#39;lower&#39;: A list containing the lower bucket of elements.</span>
+</span><span id="sortsplit-307"><a href="#sortsplit-307"><span class="linenos">307</span></a><span class="sd">        - &#39;higher&#39;: A list containing the higher bucket of elements.</span>
+</span><span id="sortsplit-308"><a href="#sortsplit-308"><span class="linenos">308</span></a><span class="sd">        - &#39;pivot&#39;: The max value in the lower bucket.</span>
+</span><span id="sortsplit-309"><a href="#sortsplit-309"><span class="linenos">309</span></a>
+</span><span id="sortsplit-310"><a href="#sortsplit-310"><span class="linenos">310</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="sortsplit-311"><a href="#sortsplit-311"><span class="linenos">311</span></a>    <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="sortsplit-312"><a href="#sortsplit-312"><span class="linenos">312</span></a>        <span class="n">lower_bucket_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+</span><span id="sortsplit-313"><a href="#sortsplit-313"><span class="linenos">313</span></a>    <span class="k">assert</span> <span class="n">lower_bucket_size</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span>
+</span><span id="sortsplit-314"><a href="#sortsplit-314"><span class="linenos">314</span></a>        <span class="n">arr</span>
+</span><span id="sortsplit-315"><a href="#sortsplit-315"><span class="linenos">315</span></a>    <span class="p">),</span> <span class="s2">&quot;lower_bucket_size must be less than or equal to the length of the array&quot;</span>
+</span><span id="sortsplit-316"><a href="#sortsplit-316"><span class="linenos">316</span></a>    <span class="n">sorted_arr</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</span><span id="sortsplit-317"><a href="#sortsplit-317"><span class="linenos">317</span></a>    <span class="k">return</span> <span class="p">{</span>
+</span><span id="sortsplit-318"><a href="#sortsplit-318"><span class="linenos">318</span></a>        <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="n">sorted_arr</span><span class="p">[:</span><span class="n">lower_bucket_size</span><span class="p">],</span>
+</span><span id="sortsplit-319"><a href="#sortsplit-319"><span class="linenos">319</span></a>        <span class="s2">&quot;higher&quot;</span><span class="p">:</span> <span class="n">sorted_arr</span><span class="p">[</span><span class="n">lower_bucket_size</span><span class="p">:],</span>
+</span><span id="sortsplit-320"><a href="#sortsplit-320"><span class="linenos">320</span></a>        <span class="s2">&quot;pivot&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="sortsplit-321"><a href="#sortsplit-321"><span class="linenos">321</span></a>            <span class="n">sorted_arr</span><span class="p">[</span><span class="n">lower_bucket_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">lower_bucket_size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span id="sortsplit-322"><a href="#sortsplit-322"><span class="linenos">322</span></a>        <span class="p">),</span>
+</span><span id="sortsplit-323"><a href="#sortsplit-323"><span class="linenos">323</span></a>    <span class="p">}</span>
 </span></pre></div>
 
 

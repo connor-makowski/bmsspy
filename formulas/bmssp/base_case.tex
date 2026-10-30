@@ -1,5 +1,6 @@
 \begin{algorithm}[!htbp]
 \SingleSpacedXI
+\small
 \caption{Base Case (\texttt{BmsspCore.base\_case})}
 \label{alg:bmssp_base_case}
 \SetAlgoLined
@@ -12,7 +13,7 @@ $B' \leftarrow B$\;\label{alg:bmssp_base_case_heap_init}
 
 \While{$Heap \neq \emptyset$}{
   $(d,u) \leftarrow Heap.\textsc{ExtractMin}()$\;
-  {\color{Blue}\If{$|S'| \geq k$}{
+  {\color{Fuchsia}\If{$|S'| \geq k$}{
     $B' \leftarrow d$; \textbf{break}\tcp*{FIN: stop at $(k{+}1)$st vertex}\label{alg:bmssp_base_case_early_break}
   }}
   $S' \leftarrow S' \cup \{u\}$\;
