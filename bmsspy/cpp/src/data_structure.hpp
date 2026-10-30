@@ -10,11 +10,9 @@
 #include "fast.hpp"
 #include "rbtree.hpp"
 #include "quicksplit.hpp"
+#include "int128.hpp"
 
 namespace bmsspy {
-
-using dist_t = __int128_t;
-constexpr dist_t INF_VAL = static_cast<__int128_t>((static_cast<unsigned __int128>(1) << 126) - 1);
 
 struct LinkedList;
 
