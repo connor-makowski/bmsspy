@@ -91,7 +91,7 @@ pythonpath = ["."]
 build = "cp311-* cp312-* cp313-* cp314-*"
 skip = "*-win32 *_i686"
 test-command = "pytest {project}/test"
-test-requires = ["pytest>=9.0.3"]
+test-requires = ["pytest>=9.0.3", "scgraph==3.4.1", "pamda==2.8.1"]
 
 [tool.cibuildwheel.linux]
 manylinux-x86_64-image = "manylinux_2_28"

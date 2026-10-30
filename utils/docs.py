@@ -58,7 +58,7 @@ except ImportError:
             )
 
 """
-bmsspy_init.write_text(f'"""\n{readme}\n"""\n\n{import_string}\n')
+bmsspy_init.write_text(f'r"""\n{readme}\n"""\n\n{import_string}\n')
 
 generate_docs("./")
 generate_docs(VERSION)

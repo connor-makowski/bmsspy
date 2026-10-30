@@ -1,4 +1,4 @@
-"""
+r"""
 # BMSSPy
 [![PyPI version](https://badge.fury.io/py/bmsspy.svg)](https://badge.fury.io/py/bmsspy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
