@@ -102,7 +102,7 @@ wheels = [
 
 [[package]]
 name = "bmsspy"
-version = "2.2.2"
+version = "2.3.0b1"
 source = { editable = "." }
 
 [package.optional-dependencies]

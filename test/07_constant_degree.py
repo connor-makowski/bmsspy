@@ -59,7 +59,7 @@ def test_constant_degree():
     from bmsspy import has_cpp
 
     if has_cpp():
-        from bmsspy._cpp import (
+        from bmsspy.cpp import (
             convert_to_constant_degree as cpp_convert_to_constant_degree,
             convert_to_constant_out_degree as cpp_convert_to_constant_out_degree,
         )
@@ -89,6 +89,17 @@ def test_constant_degree():
         assert (
             cpp_cd_out["original_graph_len"]
             == expected_out["original_graph_len"]
+        )
+
+        cpp_cd_out_3 = cpp_convert_to_constant_out_degree(raw_graph, 3)
+        expected_cpp_out_3_graph = [
+            {k: float(v) for k, v in d.items()} for d in expected_out_3["graph"]
+        ]
+        assert cpp_cd_out_3["graph"] == expected_cpp_out_3_graph
+        assert cpp_cd_out_3["idx_map"] == expected_out_3["idx_map"]
+        assert (
+            cpp_cd_out_3["original_graph_len"]
+            == expected_out_3["original_graph_len"]
         )
 
 

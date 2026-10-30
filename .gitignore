@@ -6,3 +6,4 @@
 penv
 .venv
 build
+dist/

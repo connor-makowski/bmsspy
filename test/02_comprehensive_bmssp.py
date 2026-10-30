@@ -113,6 +113,26 @@ def test_bmssp_time():
     Graph(us_freeway_graph).get_shortest_path_tree(origin_id=0)
     # Graph(world_highways_and_marnet_graph).get_shortest_path_tree(origin_id=0)
 
+    if has_cpp():
+        marnet_cpp = BmsspC(graph=marnet_graph)
+        us_freeway_cpp = BmsspC(graph=us_freeway_graph)
+        marnet_cpp_no_cd = BmsspC(
+            graph=marnet_graph, use_constant_degree_graph=False
+        )
+        us_freeway_cpp_no_cd = BmsspC(
+            graph=us_freeway_graph, use_constant_degree_graph=False
+        )
+
+        marnet_cpp.solve(origin_id=0, destination_id=5)
+        marnet_cpp.solve(origin_id=100, destination_id=7999)
+        marnet_cpp.solve(origin_id=4022, destination_id=8342)
+
+        us_freeway_cpp.solve(origin_id=0, destination_id=5)
+        us_freeway_cpp.solve(origin_id=4022, destination_id=8342)
+
+        marnet_cpp_no_cd.solve(origin_id=0, destination_id=5)
+        us_freeway_cpp_no_cd.solve(origin_id=0, destination_id=5)
+
 
 if __name__ == "__main__":
     import time

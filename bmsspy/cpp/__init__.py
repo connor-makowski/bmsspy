@@ -1,5 +1,5 @@
 try:
-    from bmsspy._cpp import (
+    from bmsspy.cpp import (
         Bmssp,
         BmsspC,
         reconstruct_path,

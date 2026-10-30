@@ -6,6 +6,39 @@ from bmsspy.data_structures.unique_data_structure import (
 )
 from bmsspy.data_structures.list_data_structure import ListBmsspDataStructure
 from bmsspy.helpers.fast import FastLookup
+from bmsspy import has_cpp
+
+if has_cpp():
+    from bmsspy.cpp import ListBmsspDataStructure as CppListBmsspDataStructure
+
+    class CppListBmsspDataStructureAdapter:
+        def __init__(
+            self,
+            subset_size,
+            upper_bound,
+            recursion_data_struct_lookup=None,
+            **kwargs,
+        ):
+            lookup_size = (
+                len(recursion_data_struct_lookup.lookup)
+                if recursion_data_struct_lookup
+                else 100000
+            )
+            self._ds = CppListBmsspDataStructure(
+                subset_size, upper_bound, lookup_size
+            )
+
+        def insert_key_value(self, key, value):
+            self._ds.insert_key_value(key, value)
+
+        def batch_prepend(self, pairs):
+            self._ds.batch_prepend(list(pairs))
+
+        def pull(self):
+            return self._ds.pull()
+
+        def is_empty(self):
+            return self._ds.is_empty()
 
 
 def basic_test(ds_class):
@@ -47,6 +80,8 @@ def test_data_structure_parity_func():
     basic_test(BmsspHeapDataStructure)
     basic_test(UniqueBmsspDataStructure)
     basic_test(ListBmsspDataStructure)
+    if has_cpp():
+        basic_test(CppListBmsspDataStructureAdapter)
 
     for i in range(1000):
         # First test parity between non-unique data structures
@@ -59,6 +94,10 @@ def test_data_structure_parity_func():
         run_data_structure_parity(
             i, UniqueBmsspDataStructure, ListBmsspDataStructure
         )
+        if has_cpp():
+            run_data_structure_parity(
+                i, ListBmsspDataStructure, CppListBmsspDataStructureAdapter
+            )
 
 
 def run_data_structure_parity(seed, ds_class_1, ds_class_2):
@@ -135,6 +174,8 @@ if __name__ == "__main__":
     basic_test(BmsspHeapDataStructure)
     basic_test(UniqueBmsspDataStructure)
     basic_test(ListBmsspDataStructure)
+    if has_cpp():
+        basic_test(CppListBmsspDataStructureAdapter)
     for i in range(10000):
         # First test parity between non-unique data structures
         run_data_structure_parity(i, BmsspDataStructure, BmsspHeapDataStructure)
@@ -146,4 +187,8 @@ if __name__ == "__main__":
         run_data_structure_parity(
             i, UniqueBmsspDataStructure, ListBmsspDataStructure
         )
+        if has_cpp():
+            run_data_structure_parity(
+                i, ListBmsspDataStructure, CppListBmsspDataStructureAdapter
+            )
     print("Data Structure tests passed!")

@@ -22,6 +22,14 @@ def test_bmssp_tiny():
         assert output["distance_matrix"] == [0, 1]
 
 
+def test_bmssp_tiny_with_destination():
+    for solver in get_solvers([{1: 1}, {0: 1}]):
+        output = solver.solve(1, 0)
+        assert output["path"] == [1, 0]
+        assert output["length"] == 1.0
+        assert output["distance_matrix"] == [1.0, 0.0]
+
+
 def test_bmssp_no_destination():
     graph = [
         {1: 1, 2: 1, 3: 10},
@@ -76,6 +84,12 @@ if __name__ == "__main__":
         print("BMSSP Tiny Test: PASS")
     except AssertionError:
         print("BMSSP Tiny Test: FAIL")
+
+    try:
+        test_bmssp_tiny_with_destination()
+        print("BMSSP Tiny Test with destination: PASS")
+    except AssertionError:
+        print("BMSSP Tiny Test with destination: FAIL")
 
     try:
         test_bmssp_no_destination()

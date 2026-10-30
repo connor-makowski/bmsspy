@@ -196,7 +196,7 @@ public:
 
 } // namespace bmsspy
 
-NB_MODULE(_cpp, m) {
+NB_MODULE(cpp, m) {
     m.doc() = "C++ accelerated BMSSP shortest path solver for BMSSPy";
 
     nb::class_<bmsspy::PyBmsspWrapper> bmssp_cls(m, "BmsspC");

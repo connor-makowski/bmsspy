@@ -6,8 +6,8 @@ from pathlib import Path
 root = Path(__file__).parent.parent
 bmsspy_init = root / "bmsspy" / "__init__.py"
 
-VERSION = "2.2.2"
-OLD_DOC_VERSIONS = ["2.1.1", "2.0.1"]
+VERSION = "2.3.0"
+OLD_DOC_VERSIONS = ["2.2.2", "2.1.1", "2.0.1"]
 
 env = {
     **os.environ,
@@ -44,7 +44,21 @@ def generate_docs(version):
 
 # Build __init__.py from README
 readme = (root / "README.md").read_text()
-bmsspy_init.write_text(f'"""\n{readme}\n"""\n\nfrom bmsspy.entrypoint import Bmssp\n')
+import_string = """
+from bmsspy.entrypoint import Bmssp
+from bmsspy.helpers.utils import has_cpp, cpp_check
+
+try:
+    from bmsspy.cpp import BmsspC
+except ImportError:
+    class BmsspC:  # type: ignore
+        def __init__(self, *args, **kwargs):
+            raise ImportError(
+                "C++ implementation 'BmsspC' is not available. Please install the C++ supported wheels or build the C++ extension."
+            )
+
+"""
+bmsspy_init.write_text(f'"""\n{readme}\n"""\n\n{import_string}\n')
 
 generate_docs("./")
 generate_docs(VERSION)

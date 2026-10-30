@@ -273,8 +273,7 @@ def has_cpp() -> bool:
     Check if the compiled C++ extension is available.
     """
     try:
-        from bmsspy._cpp import BmsspC  # noqa: F401
-
+        from bmsspy.cpp import BmsspC  # noqa: F401
         return True
     except ImportError:
         return False

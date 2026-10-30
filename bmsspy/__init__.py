@@ -154,7 +154,7 @@ from bmsspy.entrypoint import Bmssp
 from bmsspy.helpers.utils import has_cpp, cpp_check
 
 try:
-    from bmsspy._cpp import BmsspC
+    from bmsspy.cpp import BmsspC
 except ImportError:
 
     class BmsspC:  # type: ignore
