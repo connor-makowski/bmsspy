@@ -35,7 +35,7 @@ include = [
 
 [project]
 name = "bmsspy"
-version = "2.3.0b1"
+version = "2.3.0"
 description = "A pure python and C++ bmssp solver"
 authors = [
     {name="Connor Makowski", email="conmak@mit.edu"}

@@ -28,6 +28,61 @@
 
 
 
+            <h2>API Documentation</h2>
+                <ul class="memberlist">
+            <li>
+                    <a class="class" href="#BmsspC">BmsspC</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#BmsspC.__init__">BmsspC</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#BmsspC.solve">solve</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="variable" href="#Bmssp">Bmssp</a>
+            </li>
+            <li>
+                    <a class="class" href="#ListBmsspDataStructure">ListBmsspDataStructure</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#ListBmsspDataStructure.__init__">ListBmsspDataStructure</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#ListBmsspDataStructure.insert_key_value">insert_key_value</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#ListBmsspDataStructure.batch_prepend">batch_prepend</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#ListBmsspDataStructure.pull">pull</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#ListBmsspDataStructure.is_empty">is_empty</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="variable" href="#reconstruct_path">reconstruct_path</a>
+            </li>
+            <li>
+                    <a class="variable" href="#median">median</a>
+            </li>
+            <li>
+                    <a class="variable" href="#median_of_medians">median_of_medians</a>
+            </li>
+            <li>
+                    <a class="variable" href="#convert_to_constant_degree">convert_to_constant_degree</a>
+            </li>
+            <li>
+                    <a class="variable" href="#convert_to_constant_out_degree">convert_to_constant_out_degree</a>
+            </li>
+    </ul>
+
 
 <footer>
 <select id="version-selector">
@@ -78,28 +133,214 @@
                     <h1 class="modulename">
 <a href="./../bmsspy.html">bmsspy</a><wbr>.cpp    </h1>
 
+                        <div class="docstring"><p>C++ accelerated BMSSP shortest path solver for BMSSPy</p>
+</div>
+
                 
-                        <input id="mod-cpp-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-
-                        <label class="view-source-button" for="mod-cpp-view-source"><span>View Source</span></label>
-
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="k">try</span><span class="p">:</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">bmsspy.cpp</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>        <span class="n">Bmssp</span><span class="p">,</span>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>        <span class="n">BmsspC</span><span class="p">,</span>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>        <span class="n">reconstruct_path</span><span class="p">,</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>        <span class="n">median</span><span class="p">,</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>        <span class="n">median_of_medians</span><span class="p">,</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>        <span class="n">ListBmsspDataStructure</span><span class="p">,</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>        <span class="n">convert_to_constant_degree</span><span class="p">,</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>        <span class="n">convert_to_constant_out_degree</span><span class="p">,</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>    <span class="p">)</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="k">pass</span>
-</span></pre></div>
-
-
+                
+                
             </section>
+                <section id="BmsspC">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">BmsspC</span>:
+
+        
+    </div>
+    <a class="headerlink" href="#BmsspC"></a>
+    
+    
+
+                            <div id="BmsspC.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">BmsspC</span><span class="signature pdoc-code condensed">()</span>
+
+        
+    </div>
+    <a class="headerlink" href="#BmsspC.__init__"></a>
+    
+            <div class="docstring"><p>__init__(self, graph: object, precision: int = 6, use_constant_degree_graph: object | None = True) -> None</p>
+</div>
+
+
+                            </div>
+                            <div id="BmsspC.solve" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">solve</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">unknown</span></span><span class="return-annotation">):</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#BmsspC.solve"></a>
+    
+            <div class="docstring"><p>solve(self, origin_id: object, destination_id: object | None = None, pivot_relaxation_steps: object | None = None, target_tree_depth: object | None = None) -> dict</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="Bmssp">
+                    <div class="attr variable">
+            <span class="name">Bmssp</span>        =
+<span class="default_value">&lt;class &#39;<a href="#BmsspC">BmsspC</a>&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Bmssp"></a>
+    
+    
+
+                </section>
+                <section id="ListBmsspDataStructure">
+                    <div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">ListBmsspDataStructure</span>:
+
+        
+    </div>
+    <a class="headerlink" href="#ListBmsspDataStructure"></a>
+    
+    
+
+                            <div id="ListBmsspDataStructure.__init__" class="classattr">
+                                <div class="attr function">
+            
+        <span class="name">ListBmsspDataStructure</span><span class="signature pdoc-code condensed">()</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ListBmsspDataStructure.__init__"></a>
+    
+            <div class="docstring"><p>__init__(self, subset_size: int, upper_bound: float, lookup_size: int = 100000) -> None</p>
+</div>
+
+
+                            </div>
+                            <div id="ListBmsspDataStructure.insert_key_value" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">insert_key_value</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">unknown</span></span><span class="return-annotation">):</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#ListBmsspDataStructure.insert_key_value"></a>
+    
+            <div class="docstring"><p>insert_key_value(self, key: int, value: float) -> None</p>
+</div>
+
+
+                            </div>
+                            <div id="ListBmsspDataStructure.batch_prepend" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">batch_prepend</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">unknown</span></span><span class="return-annotation">):</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#ListBmsspDataStructure.batch_prepend"></a>
+    
+            <div class="docstring"><p>batch_prepend(self, key_value_pairs: object) -> None</p>
+</div>
+
+
+                            </div>
+                            <div id="ListBmsspDataStructure.pull" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">pull</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">unknown</span></span><span class="return-annotation">):</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#ListBmsspDataStructure.pull"></a>
+    
+            <div class="docstring"><p>pull(self) -> tuple</p>
+</div>
+
+
+                            </div>
+                            <div id="ListBmsspDataStructure.is_empty" class="classattr">
+                                <div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">is_empty</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">unknown</span></span><span class="return-annotation">):</span></span>
+
+        
+    </div>
+    <a class="headerlink" href="#ListBmsspDataStructure.is_empty"></a>
+    
+            <div class="docstring"><p>is_empty(self) -> bool</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="reconstruct_path">
+                    <div class="attr variable">
+            <span class="name">reconstruct_path</span>        =
+<span class="default_value">&lt;nanobind.nb_func object&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#reconstruct_path"></a>
+    
+    
+
+                </section>
+                <section id="median">
+                    <div class="attr variable">
+            <span class="name">median</span>        =
+<span class="default_value">&lt;nanobind.nb_func object&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#median"></a>
+    
+    
+
+                </section>
+                <section id="median_of_medians">
+                    <div class="attr variable">
+            <span class="name">median_of_medians</span>        =
+<span class="default_value">&lt;nanobind.nb_func object&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#median_of_medians"></a>
+    
+    
+
+                </section>
+                <section id="convert_to_constant_degree">
+                    <div class="attr variable">
+            <span class="name">convert_to_constant_degree</span>        =
+<span class="default_value">&lt;nanobind.nb_func object&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#convert_to_constant_degree"></a>
+    
+    
+
+                </section>
+                <section id="convert_to_constant_out_degree">
+                    <div class="attr variable">
+            <span class="name">convert_to_constant_out_degree</span>        =
+<span class="default_value">&lt;nanobind.nb_func object&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#convert_to_constant_out_degree"></a>
+    
+    
+
+                </section>
     </main>
 <script>
     function escapeHTML(html) {
