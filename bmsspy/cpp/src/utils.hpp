@@ -174,7 +174,16 @@ inline std::pair<std::vector<T>, std::vector<int>> convert_from_constant_degree(
     const ConstantDegreeResult& cd_info
 ) {
     size_t orig_len = cd_info.original_graph_len;
-    std::vector<T> converted_dist(distance_matrix.begin(), distance_matrix.begin() + orig_len);
+    std::vector<T> min_dist(distance_matrix.begin(), distance_matrix.begin() + orig_len);
+    for (size_t cd_idx = orig_len; cd_idx < cd_info.idx_map.size(); ++cd_idx) {
+        int orig_idx = cd_info.idx_map[cd_idx];
+        if (orig_idx >= 0 && static_cast<size_t>(orig_idx) < orig_len) {
+            if (distance_matrix[cd_idx] < min_dist[orig_idx]) {
+                min_dist[orig_idx] = distance_matrix[cd_idx];
+            }
+        }
+    }
+
     std::vector<int> converted_pred;
     converted_pred.reserve(orig_len);
 
@@ -186,7 +195,7 @@ inline std::pair<std::vector<T>, std::vector<int>> convert_from_constant_degree(
                 break;
             } else {
                 int mapped = cd_info.idx_map[node_idx];
-                if (static_cast<size_t>(mapped) < orig_len && mapped != static_cast<int>(loc_idx)) {
+                if (static_cast<size_t>(mapped) < orig_len && min_dist[mapped] < min_dist[loc_idx]) {
                     converted_pred.push_back(mapped);
                     break;
                 } else {
@@ -196,7 +205,7 @@ inline std::pair<std::vector<T>, std::vector<int>> convert_from_constant_degree(
         }
     }
 
-    return {converted_dist, converted_pred};
+    return {min_dist, converted_pred};
 }
 
 inline std::vector<int> reconstruct_path(int destination_id, const std::vector<int>& predecessor) {

@@ -243,6 +243,13 @@ def convert_from_constant_degree(
     cd_idx_map = constant_degree_dict["idx_map"]
     cd_original_graph_len = constant_degree_dict["original_graph_len"]
 
+    # Necessary to prevent 0 weight loops to other nodes from breaking 1 dimensional predecessor array
+    # conversion to the original graph. 
+    min_dist = [inf] * cd_original_graph_len
+    for cd_idx, orig_idx in enumerate(cd_idx_map):
+        if distance_matrix[cd_idx] < min_dist[orig_idx]:
+            min_dist[orig_idx] = distance_matrix[cd_idx]
+
     predecessor_matrix_converted = []
     for loc_idx, node_idx in enumerate(
         predecessor_matrix[:cd_original_graph_len]
@@ -255,7 +262,7 @@ def convert_from_constant_degree(
                 mapped_node_idx = cd_idx_map[node_idx]
                 if (
                     mapped_node_idx < cd_original_graph_len
-                    and mapped_node_idx != loc_idx
+                    and min_dist[mapped_node_idx] < min_dist[loc_idx]
                 ):
                     predecessor_matrix_converted.append(mapped_node_idx)
                     break
@@ -263,7 +270,7 @@ def convert_from_constant_degree(
                     node_idx = predecessor_matrix[node_idx]
 
     return {
-        "distance_matrix": distance_matrix[:cd_original_graph_len],
+        "distance_matrix": min_dist,
         "predecessor_matrix": predecessor_matrix_converted,
     }
 
